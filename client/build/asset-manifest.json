@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9ba5199c.chunk.css",
+    "main.js": "/static/js/main.dc0eb84c.chunk.js",
+    "main.js.map": "/static/js/main.dc0eb84c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/js/2.b34637ff.chunk.js": "/static/js/2.b34637ff.chunk.js",
+    "static/js/2.b34637ff.chunk.js.map": "/static/js/2.b34637ff.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.768e9aa5892c51f8ead887efc19a22cf.js": "/precache-manifest.768e9aa5892c51f8ead887efc19a22cf.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.9ba5199c.chunk.css.map": "/static/css/main.9ba5199c.chunk.css.map",
+    "static/js/2.b34637ff.chunk.js.LICENSE.txt": "/static/js/2.b34637ff.chunk.js.LICENSE.txt",
+    "static/media/happyCommunity.jpg": "/static/media/happyCommunity.910bdf94.jpg",
+    "static/media/innovation.jpg": "/static/media/innovation.835b3bb7.jpg",
+    "static/media/keepCalm.png": "/static/media/keepCalm.19057d04.png",
+    "static/media/navlogo.png": "/static/media/navlogo.49b2597f.png",
+    "static/media/writersLove.jpg": "/static/media/writersLove.af11bb3f.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09b85ec0.js",
+    "static/js/2.b34637ff.chunk.js",
+    "static/css/main.9ba5199c.chunk.css",
+    "static/js/main.dc0eb84c.chunk.js"
+  ]
+}
