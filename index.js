@@ -25,6 +25,7 @@ cookie: {
     sameSite: 'strict'
 }
 }));
+sessionStore.sync();
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -48,9 +49,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => {
-    res.send('Hi, googler!');
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-});
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
 const server = app.listen(process.env.PORT || 4000, () => console.log('App running!'));
