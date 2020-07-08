@@ -14,13 +14,17 @@
 .NavbarItems li {
     padding: 1%;
 }
+.NavbarItems li a {
+    text-decoration: none;
+    color: #fff;
+}
 .NavbarLogo {
     max-width: 10%;
 }
 .NavbarLogout {
     margin-left: auto;
 }
-.NavbarItems li:hover {
+.NavbarItems li a:hover {
    color: darkturquoise;
 }
 @media only screen and (max-width: 784px) {
@@ -31,7 +35,6 @@
         margin-left: 0;
     }
     .NavbarItems {
-        flex-direction: column;
-        font-size: 2em;
+        flex-direction: column; 
     }
 }
