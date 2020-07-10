@@ -53,7 +53,7 @@ passport.use(new GoogleStrategy({
       err = e;
       console.error(err);
     }
-    cb(err, user);
+     return cb(err, user);
  })); 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
