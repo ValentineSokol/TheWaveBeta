@@ -7,6 +7,7 @@ const passport = require('passport');
 const db = require('./models/index');
 const { Users } = require('./models');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const VKontakteStrategy = require('passport-vk-strategy').Strategy;
 
 const app = express();
 app.use(bodyParser.json());
@@ -44,11 +45,15 @@ passport.use(new GoogleStrategy({
     callbackURL: `${process.env.DOMAIN}/auth/google/callback`
   },
   async function(accessToken, refreshToken, profile, cb) {
-    const [user] = await Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName, email: profile.emails[0] } });
+    let err;
+    try {
+     const [user] = await Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName } });
+    }
+    catch(e) {
+      err = e;
+    }
     cb(err, user);
-  }
-));
-
+ }));
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
