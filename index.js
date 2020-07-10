@@ -20,7 +20,7 @@ saveUninitialized: false,
 rolling: false,
 resave: false,
 cookie: {
-    secure: process.env.NODE_ENV == 'production',
+    secure: false,
     maxAge: 1000 * 60 * 60 * 24 * 3, // 3 days
     httpOnly: true,
     sameSite: 'strict'
