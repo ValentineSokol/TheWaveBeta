@@ -44,16 +44,10 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: `${process.env.DOMAIN}/auth/google/callback`
   },
-  async function(accessToken, refreshToken, profile, cb) {
-    let err;
-    try {
-     const [user] = await Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName } });
-    }
-    catch(e) {
-      err = e;
-      console.error(err);
-    }
-     return cb(err, user);
+  function(accessToken, refreshToken, profile, cb) {
+    Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName } })
+    .then(([user]) => cb(null, user))
+    .catch(err => cb(err, null));
  })); 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google'));
