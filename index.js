@@ -51,9 +51,10 @@ passport.use(new GoogleStrategy({
     }
     catch(e) {
       err = e;
+      console.error(err);
     }
     cb(err, user);
- }));
+ })); 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
