@@ -56,6 +56,7 @@ passport.use(new GoogleStrategy({
      return cb(err, user);
  })); 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback', passport.authenticate('google'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
 const server = app.listen(process.env.PORT || 4000, () => console.log('App running!'));
