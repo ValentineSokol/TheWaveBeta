@@ -6,6 +6,7 @@ const SessionStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const db = require('./models/index');
 const { Users } = require('./models');
+const { Router } = require('express');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vk-strategy').Strategy;
 
@@ -49,8 +50,22 @@ passport.use(new GoogleStrategy({
     .then(([user]) => cb(null, user))
     .catch(err => cb(err, null));
  })); 
+
+ passport.use(new VKontakteStrategy(
+     {
+     clientId: process.env.VK_CLIENT_ID,
+     clientSecret: process.env.VK_CLIENT_SECRET,
+     callbackURL:  "/auth/vk/callback"
+    },
+    function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
+        User.findOrCreate({ vkId: profile.id })
+            .then(function (user) { done(null, user); })
+            .catch(done);
+      }
+ ))
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google'));
+app.get('/auth/vk/callback', passport.authenticate('vk'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
 const server = app.listen(process.env.PORT || 4000, () => console.log('App running!'));
