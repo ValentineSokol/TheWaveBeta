@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy({
     callbackURL: `${process.env.DOMAIN}/auth/google/callback`
   },
   function(accessToken, refreshToken, profile, cb) {
-    Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName, email: profile.emails[0] } })
+    Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName, email: profile.emails[0].value } })
     .then(([user]) => cb(null, user))
     .catch(err => cb(err, null));
  })); 
@@ -55,10 +55,10 @@ passport.use(new GoogleStrategy({
     {
     clientID: process.env.VK_CLIENT_ID,
     clientSecret: process.env.VK_CLIENT_SECRET,
-    callbackURL:   `${process.env.DOMAIN}/auth/vk/callback`
+    callbackURL: `${process.env.DOMAIN}/auth/vk/callback`
    },
    function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
-       Users.findOrCreate({ where: { vkId: profile.id }, defaults: { vkId: profile.id,  username: profile.displayName, email: profile.emails[0] } })
+       Users.findOrCreate({ where: { vkId: profile.id }, defaults: { vkId: profile.id,  username: profile.displayName, email: profile.emails[0].value } })
            .then(function (user) { done(null, user); })
            .catch(done);
      }
