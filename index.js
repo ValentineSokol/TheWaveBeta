@@ -65,7 +65,7 @@ passport.use(new GoogleStrategy({
 ))
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google'));
-app.get('/auth/vk/callback', passport.authenticate('vk'));
+app.get('/auth/vk/callback', passport.authenticate('vkontakte'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
 const server = app.listen(process.env.PORT || 4000, () => console.log('App running!'));
