@@ -65,6 +65,7 @@ passport.use(new GoogleStrategy({
 ))
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google'));
+app.get('/auth/vk/', passport.authenticate('vkontakte', { scope: ['profile', 'email'] }));
 app.get('/auth/vk/callback', passport.authenticate('vkontakte'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
