@@ -58,7 +58,7 @@ passport.use(new GoogleStrategy({
     callbackURL:   `${process.env.DOMAIN}/auth/vk/callback`
    },
    function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
-       User.findOrCreate({ vkId: profile.id })
+       Users.findOrCreate({ vkId: profile.id })
            .then(function (user) { done(null, user); })
            .catch(done);
      }
