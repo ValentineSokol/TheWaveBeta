@@ -59,8 +59,8 @@ passport.use(new GoogleStrategy({
    },
    function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
        Users.findOrCreate({ where: { vkId: profile.id }, defaults: { vkId: profile.id,  username: profile.displayName, email: profile.emails[0].value } })
-           .then(function (user) { done(null, user); })
-           .catch(done);
+           .then(([user]) =>  done(null, user))
+           .catch(err => done(err, null));
      }
 ))
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
