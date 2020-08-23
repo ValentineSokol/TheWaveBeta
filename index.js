@@ -79,7 +79,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', passport.authenticate('google'));
 app.get('/auth/vk/', passport.authenticate('vkontakte', { scope: ['profile', 'email'] }));
 app.get('/auth/vk/callback', passport.authenticate('vkontakte'));
-app.get('/auth/facebook/', passport.authenticate('facebook', { scope: ['publish_actions'] }));
+app.get('/auth/facebook/', passport.authenticate('facebook', { scope: ['email', 'user_photos', ''] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
