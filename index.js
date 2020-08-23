@@ -9,6 +9,7 @@ const { Users } = require('./models');
 const { Router } = require('express');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 const app = express();
 app.use(bodyParser.json());
@@ -62,11 +63,24 @@ passport.use(new GoogleStrategy({
            .then(([user]) =>  done(null, user))
            .catch(err => done(err, null));
      }
-))
+));
+passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+    callbackURL: `${process.env.DOMAIN}/auth/facebook/callback`
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    Users.findOrCreate({ where: { facebookId: profile.id }, defaults: { facebookId: profile.id,  username: profile.displayName, email: profile.emails[0].value } })
+    .then(([user]) =>  done(null, user))
+    .catch(err => done(err, null));
+  }
+));
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google'));
 app.get('/auth/vk/', passport.authenticate('vkontakte', { scope: ['profile', 'email'] }));
 app.get('/auth/vk/callback', passport.authenticate('vkontakte'));
+app.get('/auth/facebook/', passport.authenticate('facebook', { scope: ['profile', 'email'] }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook'));
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
 const server = app.listen(process.env.PORT || 4000, () => console.log('App running!'));
