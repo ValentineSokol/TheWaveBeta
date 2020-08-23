@@ -67,10 +67,11 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: `${process.env.DOMAIN}/auth/facebook/callback`
+    callbackURL: `${process.env.DOMAIN}/auth/facebook/callback`,
+    profileFields: ['id', 'emails', 'name'] 
   },
   function(accessToken, refreshToken, profile, cb) {
-    Users.findOrCreate({ where: { facebookId: profile.id }, defaults: { facebookId: profile.id,  username: profile.displayName, email: profile.emails[0].value } })
+    Users.findOrCreate({ where: { facebookId: profile.id }, defaults: { facebookId: profile.id,  username: profile.displayName, email: profile.emails? profile.emails[0].value : '' } })
     .then(([user]) =>  done(null, user))
     .catch(err => done(err, null));
   }
