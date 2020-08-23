@@ -70,7 +70,7 @@ passport.use(new FacebookStrategy({
     callbackURL: `${process.env.DOMAIN}/auth/facebook/callback`,
     profileFields: ['id', 'emails', 'name'] 
   },
-  function(accessToken, refreshToken, profile, cb) {
+  function(accessToken, refreshToken, profile, done) {
     Users.findOrCreate({ where: { facebookId: profile.id }, defaults: { facebookId: profile.id,  username: profile.displayName, email: profile.emails? profile.emails[0].value : '' } })
     .then(([user]) =>  done(null, user))
     .catch(err => done(err, null));
