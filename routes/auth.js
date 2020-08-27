@@ -95,13 +95,13 @@ module.exports = (server) => {
     }
     ));
     router.post('/local', passport.authenticate('local'), (req, res) => res.json({ success: true }));
-    router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+    router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => res.json({ success: true }));
     router.get('/google/callback', passport.authenticate('google'));
     router.get('/vk', passport.authenticate('vkontakte', { scope: ['profile', 'email'] }));
     router.get('/vk/callback', passport.authenticate('vkontakte'));
     router.get('/facebook/', passport.authenticate('facebook', { scope: ['email', 'user_photos'] }));
     router.get('/facebook/callback', passport.authenticate('facebook'));
     router.delete('/logout', (req, res) => req.logOut());
-    
+
     return router;
 }
