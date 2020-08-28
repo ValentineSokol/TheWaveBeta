@@ -24,8 +24,9 @@
 .NavbarLogout {
     margin-left: auto;
 }
-.NavbarItems li a:hover {
+.NavbarItems li a:hover, .NavbarLogout:hover {
    color: darkturquoise;
+   cursor: pointer;
 }
 @media only screen and (max-width: 784px) {
     .NavbarLogo {

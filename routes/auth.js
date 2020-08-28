@@ -101,7 +101,27 @@ module.exports = (server) => {
     router.get('/vk/callback', passport.authenticate('vkontakte'));
     router.get('/facebook/', passport.authenticate('facebook', { scope: ['email', 'user_photos'] }));
     router.get('/facebook/callback', passport.authenticate('facebook'));
-    router.delete('/logout', (req, res) => req.logOut());
+    router.get('/isLoggedIn', async (req, res) => {
+        if (!req.session || !req.session.passport) {
+            res.json({ isLoggedIn: false });
+            return;
+        }
+        const userId = req.session.passport.user;
+        const user = await Users.findByPk(userId);
+        if (!user) {
+            res.status(400).json({ reason: 'There is no user for given id!' });
+            return;
+        }
+        res.json({
+            isLoggedIn: true,
+            username: user.username,
+            userId: user.id
+        });
+    });
+    router.delete('/logout', (req, res) => {
+      req.logOut();
+      res.json({ success: true }); 
+    });
 
     return router;
 }

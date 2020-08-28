@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faFacebook, faVk } from '@fortawesome/free-brands-svg-icons';
 import '../css/RegisterForm.css';
 import { connect } from 'react-redux';
-import submitRegister from '../redux/actions/submitRegister';
+import { submitRegister } from '../redux/actions/async';
+import { Link } from 'react-router-dom';
 class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
@@ -30,6 +31,7 @@ class RegisterForm extends React.Component {
                     <form onSubmit={this.onSubmit}>
                         <input name='username' onChange={this.onChange} placeholder='Username' /> 
                         <input name='password' onChange={this.onChange} type='password' placeholder='Password' />
+                        <p> <Link to='/password/reset' className='PasswordReset'>Forgot your password?</Link> </p>
                         <input className='FormSubmitButton' type='submit' />   
                     </form>
                 </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import logger from 'redux-logger';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux'
 import rootReducer from './redux/reducers/root';
