@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import fetcher from './fetcher';
 
-export default async (url, actionType, method, payload, dispatch) => createAsyncThunk(
+export default async (actionType, url, method, payload, dispatch) => createAsyncThunk(
     actionType,
     async function thunk() {
         const fetcherOptions = {};

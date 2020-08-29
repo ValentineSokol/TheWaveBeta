@@ -122,6 +122,18 @@ module.exports = (server) => {
       req.logOut();
       res.json({ success: true }); 
     });
+    router.put('/sendMail', async (req, res) => {
+        const message ={
+            from: '"ValentineSokol 👻"', // sender address
+            to: "vallyull98@gmail.com", // list of receivers
+            subject: "Hello ✔", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<b>Hello world?</b>", // html body
+          }
+         await server.emailer.sendMail(message);
+         res.json({ success: true });
+         
+    })
 
     return router;
 }
