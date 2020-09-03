@@ -17,13 +17,17 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    privilege: DataTypes.ENUM('USER','ADMIN','MODERATOR'),
+    privilege: {
+      type: DataTypes.ENUM('User','Admin'),
+      defaultValue: 'User',
+      allowNull: false
+    }, 
     googleId: DataTypes.STRING,
     vkId: DataTypes.STRING,
     facebookId: DataTypes.STRING,
-    instagramId: DataTypes.STRING,
     birthday: DataTypes.DATE,
-    recoveryEmail: DataTypes.STRING
+    recoveryEmail: DataTypes.STRING,
+    avatarUrl: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Users',

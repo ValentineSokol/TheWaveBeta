@@ -18,7 +18,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       privilege: {
-        type: Sequelize.ENUM('USER','ADMIN','MODERATOR')
+        type: Sequelize.ENUM('User','Admin'),
+        defaultValue: 'User',
+        allowNull: false
       },
       googleId: {
         type: Sequelize.STRING
@@ -29,13 +31,13 @@ module.exports = {
       facebookId: {
         type: Sequelize.STRING
       },
-       instagramId: {
-        type: Sequelize.STRING
-      },
       birthday: {
         type: Sequelize.DATE
       },
       recoveryEmail: {
+        type: Sequelize.STRING
+      },
+      avatarUrl: {
         type: Sequelize.STRING
       },
       createdAt: {
