@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './components/reusable/Navbar';
 import LandingPage from './components/landing/LandingPage';
 import RegisterForm from './components/RegisterForm';
+import Profile from './components/Profile';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/async';
@@ -17,7 +18,8 @@ class App extends React.Component {
        <Router>
        <Navbar /> 
         <Route exact path='/' component={LandingPage} />
-        <Route exact path='/register' component={RegisterForm} /> 
+        <Route exact path='/register' component={RegisterForm} />
+        <Route path='/profile/:id' component={Profile} /> 
 
        </Router>
      
