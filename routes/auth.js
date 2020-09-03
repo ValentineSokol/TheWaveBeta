@@ -124,7 +124,7 @@ module.exports = (server) => {
     });
     router.put('/sendMail', async (req, res) => {
         const message ={
-            from: '"ValentineSokol 👻"', // sender address
+            from: 'valentinesokolovskiy@gmail.com', // sender address
             to: "vallyull98@gmail.com", // list of receivers
             subject: "Hello ✔", // Subject line
             text: "Hello world?", // plain text body
