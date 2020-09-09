@@ -4,6 +4,7 @@ import Navbar from './components/reusable/Navbar';
 import LandingPage from './components/landing/LandingPage';
 import RegisterForm from './components/RegisterForm';
 import Profile from './components/Profile';
+import AvatarResizer from './components/reusable/AvatarResizer';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/async';
@@ -20,6 +21,7 @@ class App extends React.Component {
         <Route exact path='/' component={LandingPage} />
         <Route exact path='/register' component={RegisterForm} />
         <Route path='/profile/:id' component={Profile} /> 
+        <Route path='/avatar/upload' render={props => <AvatarResizer {...props} sizes={[350, 60]} />} />
 
        </Router>
      

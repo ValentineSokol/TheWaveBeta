@@ -1,8 +1,5 @@
 const { Router } = require('express');
-const session = require('express-session');
-const SessionStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
-const db = require('../models');
 const { Users } = require('../models');
 const bcrypt = require('bcryptjs');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -12,21 +9,6 @@ const LocalStrategy = require('passport-local').Strategy;
 
 module.exports = (server) => {
     const router = Router();
-    const sessionStore = new SessionStore({ db: db.sequelize });
-    router.use(session({
-    secret: process.env.SESSION_SECRET,
-    store: sessionStore,
-    saveUninitialized: false,
-    rolling: false,
-    resave: false,
-    cookie: {
-        secure: false,
-        maxAge: 1000 * 60 * 60 * 24 * 3, // 3 days
-        httpOnly: true,
-        sameSite: 'strict'
-    }
-    }));
-    sessionStore.sync();
     router.use(passport.initialize());
     router.use(passport.session());
 

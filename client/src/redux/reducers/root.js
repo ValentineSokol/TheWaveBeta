@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { checkLogin, logout, loadProfile } from '../actions/async';
+import { checkLogin, logout, loadProfile, uploadFiles } from '../actions/async';
 export default combineReducers({
     global: createReducer({}, {
         [checkLogin.fulfilled]: (state, action) => {
@@ -8,12 +8,14 @@ export default combineReducers({
         },
         [logout.fulfilled]: (state, action) => {
             state.user = {};
-        }
-    }),
-    profile: createReducer({}, {
+        },
         [loadProfile.fulfilled]: (state, action) => {
             const { user } = action.payload; 
-            state.user = user; 
+            state.loadedProfile = user;
+            state.ownsProfile = state.user && user && state.user.userId === user.id;   
+        },
+        [uploadFiles.fulfilled]: (state, action) => {
+            state.uploadedFiles = action.payload.urls;
         }
-    })
+    }),
 });

@@ -1,0 +1,24 @@
+.imageToResize {
+    width: 100%;
+}
+.Draggable {
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    height:  50%;
+    position: relative;
+}
+.AvatarResultCanvas {
+    display: none;
+}
+.AvatarImageContainer {
+ display: inline;
+}
+.Dragger {
+    border: 2px solid black;
+    z-index: 1;
+}
+.WidthSliderContainer {
+    width: 25%;
+    margin: 0 auto;
+}

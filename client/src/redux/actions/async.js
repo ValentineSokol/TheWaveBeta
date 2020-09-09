@@ -17,3 +17,11 @@ export const loadProfile = createAsyncThunk(
     'profile',
     (id) => fetcher(`/user/profile/${id}`)
 )
+export const uploadFiles = createAsyncThunk(
+    'uploadFiles',
+    (body) => fetcher('/user/files/upload', 'PUT', body, { isFormData: true } )
+)
+export const updateUser = createAsyncThunk(
+    'updateUser',
+    (payload) => fetcher('/user/update', 'PATCH', payload)
+)
