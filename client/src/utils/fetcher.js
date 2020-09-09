@@ -1,4 +1,4 @@
-const objectToFormData = require('./objectToFormData');
+import objectToFormData from './objectToFormData';
 export default async (url, method, payload, { isFormData } = {}) => {
         const fetcherOptions = {};
         if (method) fetcherOptions.method =  method;

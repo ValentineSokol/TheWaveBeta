@@ -16,6 +16,9 @@ export default combineReducers({
         },
         [uploadFiles.fulfilled]: (state, action) => {
             state.uploadedFiles = action.payload.urls;
+        },
+        [uploadFiles.rejected]: (state, action) => {
+            console.log(action);
         }
     }),
 });
