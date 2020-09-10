@@ -7,7 +7,7 @@ import '../css/Profile.css';
 class Profile extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         const { id } = this.props.match.params;
-        if (!this.props.loginChecked || (this.props.user && prevProps.match.params.id === id)) alert();
+        if (!this.props.loginChecked || (this.props.user && prevProps.match.params.id === id)) return;
         this.props.dispatch(loadProfile(id));
       
     }
