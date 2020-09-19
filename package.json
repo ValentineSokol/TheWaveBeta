@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index",
-    "heroku-postbuild": "cd client && npm i && npm run build && npx sequelize-cli db:migrate"
+    "heroku-postbuild": "cd client && npm i && npm run build"
   },
   "keywords": [],
   "author": "",
