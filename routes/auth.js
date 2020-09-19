@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const passport = require('passport');
-const { Users } = require('../models');
+const { Users, RecoveryCodes } = require('../models');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -105,12 +106,27 @@ module.exports = (server) => {
       res.json({ success: true }); 
     });
     router.put('/sendMail', async (req, res) => {
+        const  { username } = req.body;
+        const user = await Users.findOne({ where: { username } });
+        if (!user) {
+            res.status(404).json({
+                reason: `No user with name ${username} found!`
+            });
+            return;
+        }
+        const recoveryCode = await RecoveryCodes.create({
+            userId: user.id,
+            code: crypto.randomBytes(16).toString('ascii')
+        }); 
         const message ={
             from: 'valentinesokolovskiy@gmail.com', // sender address
-            to: "vallyull98@gmail.com", // list of receivers
-            subject: "Hello ✔", // Subject line
-            text: "Hello world?", // plain text body
-            html: "<b>Hello world?</b>", // html body
+            to: email, // list of receivers
+            subject: "TheWave Password Recovery", // Subject line
+            html: `<h3>Dear, ${username}!</h3>
+                   <p>You are seeing this email because someone requested a password recovery.</p>
+                   <b color='red'>If you did not request it, just ignore this email!<b>
+                   <b color='green'>Your recovery code is: ${recoveryCode.code}. It is valid for 7 days</b>     
+            `, // html body
           }
          await server.emailer.sendMail(message);
          res.json({ success: true });
