@@ -29,10 +29,10 @@ cookie: {
 }));
 sessionStore.sync();
 server.emailer = nodemailer.createTransport({
-    service: "SendinBlue", // no need to set host or port etc.
+    service: "gmail", // no need to set host or port etc.
      auth: {
          user: 'valentinesokolovskiy@gmail.com',
-         pass: 'k18sGcDtQzdJLFIR'
+         pass: 'Valentine02'
      }
 });
 app.use('/auth', authRouter(server));
