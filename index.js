@@ -32,7 +32,7 @@ server.emailer = nodemailer.createTransport({
     service: "gmail", // no need to set host or port etc.
      auth: {
          user: 'valentinesokolovskiy@gmail.com',
-         pass: 'Valentine02'
+         pass: 'ValentineSonya02'
      }
 });
 app.use('/auth', authRouter(server));
