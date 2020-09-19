@@ -120,7 +120,7 @@ module.exports = (server) => {
         }); 
         const message ={
             from: 'valentinesokolovskiy@gmail.com', // sender address
-            to: email, // list of receivers
+            to: user.email, // list of receivers
             subject: "TheWave Password Recovery", // Subject line
             html: `<h3>Dear, ${username}!</h3>
                    <p>You are seeing this email because someone requested a password recovery.</p>
