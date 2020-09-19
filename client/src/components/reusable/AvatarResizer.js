@@ -76,8 +76,7 @@ import '../../css/AvatarResizer.css';
                     {() => (
                       <section>
                         <div className='card'>
-                          <input value={this.state.filename} />
-                          <p>Drag 'n' drop some files here, or click to select files</p>
+                          <input className='ResizerDropzoneInput' placeholder="Drag 'n' drop some files here, or click to select files" value={this.state.filename} />
                         </div>
                       </section>
   )}
@@ -96,10 +95,11 @@ import '../../css/AvatarResizer.css';
                     }
                  ref='dragger'                 
                  />
-                     <img ref='image' alt='imageToResize' className='imageToResize' src={this.state.blob || this.props.blob}/>
+                     <img ref='image' alt='' className='imageToResize' src={this.state.blob || this.props.blob}/>
                 </div>   
-         <canvas className='AvatarResultCanvas'  ref='canvas'/> 
-         <div className='WidthSliderContainer'>   
+         <canvas className='AvatarResultCanvas'  ref='canvas'/>
+         { this.state.image &&
+         <div className='ResizerButtonPanel'>   
             <Slider
                 value={this.state.widthSelector}
                 onChange={this.OnWidthChange}
@@ -108,8 +108,9 @@ import '../../css/AvatarResizer.css';
                 step={0.01}
                 aria-labelledby="input-slider"
           />
-          <button onClick={this.onSubmit}>Upload</button>    
-          </div> 
+                <button onClick={this.onSubmit}>Upload</button>     
+          </div>
+    } 
             </div>    
         );
     }

@@ -5,9 +5,11 @@ import { CircularProgress } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import '../css/Profile.css';
 class Profile extends React.Component {
-    componentDidMount() {
+    componentDidUpdate(prevProps, prevState) {
         const { id } = this.props.match.params;
+        if (!this.props.loginChecked || (this.props.user && prevProps.match.params.id === id)) return;
         this.props.dispatch(loadProfile(id));
+      
     }
     render() {
         const { user } = this.props;
@@ -17,7 +19,7 @@ class Profile extends React.Component {
         <div className='ProfileContainer'>     
             <div className='ProfileAvatar'>
              <img src={user.avatarUrl} alt='profile' />
-             <Link to='/avatar/upload'>Change the Avatar</Link>
+             { this.props.isOwner && <Link to='/avatar/upload'>Change the Avatar</Link> }
                 
             </div> 
             <div className='ProfileInfo'>
@@ -28,5 +30,5 @@ class Profile extends React.Component {
         );
     }
 }
-const mapStateToProps = (state) => ({ user: state.global.loadedProfile, isOwner: state.global.ownsProfile });
+const mapStateToProps = (state) => ({ loginChecked: state.global.loginChecked,  user: state.global.loadedProfile, isOwner: state.global.ownsProfile });
 export default connect(mapStateToProps, null)(Profile); 

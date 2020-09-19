@@ -8,6 +8,7 @@ import AvatarResizer from './components/reusable/AvatarResizer';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/async';
+import { CircularProgress } from '@material-ui/core';
 
 class App extends React.Component {
   componentDidMount() {
@@ -29,5 +30,6 @@ class App extends React.Component {
     )
   }
 }
-export default connect(null, null)(App);
+const mapStateToProps = (state) => ({ loading: state.global.loading });
+export default connect(mapStateToProps, null)(App);
 

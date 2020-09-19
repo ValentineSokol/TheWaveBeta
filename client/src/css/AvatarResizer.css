@@ -2,7 +2,7 @@
     width: 100%;
 }
 .Draggable {
-    margin: 0;
+    margin: .5% auto;
     padding: 0;
     width: 50%;
     height:  50%;
@@ -18,7 +18,14 @@
     border: 2px solid black;
     z-index: 1;
 }
-.WidthSliderContainer {
+.ResizerButtonPanel {
     width: 25%;
     margin: 0 auto;
+}
+.ResizerDropzoneInput {
+    padding: 1%;
+    width: 90%;
+}
+.AvatarContainer {
+    margin: .5%;
 }

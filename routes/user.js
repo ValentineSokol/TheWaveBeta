@@ -41,7 +41,7 @@ module.exports = (server) => {
         res.sendStatus(502);
         return;
       };
-      return `https://f002.backblazeb2.com/file/theWaveFiles/${fileInfo.value.data.fileName}`;
+      return `https://thewavefiles.s3.us-west-002.backblazeb2.com/${fileInfo.value.data.fileName}`;
     });
     res.json({ success: true, urls });
   });
