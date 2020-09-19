@@ -116,7 +116,7 @@ module.exports = (server) => {
         }
         const recoveryCode = await RecoveryCodes.create({
             userId: user.id,
-            code: crypto.randomBytes(16).toString('ascii')
+            code: crypto.randomBytes(16).toString('base64')
         }); 
         const message ={
             from: 'valentinesokolovskiy@gmail.com', // sender address
@@ -124,8 +124,8 @@ module.exports = (server) => {
             subject: "TheWave Password Recovery", // Subject line
             html: `<h3>Dear, ${username}!</h3>
                    <p>You are seeing this email because someone requested a password recovery.</p>
-                   <b color='red'>If you did not request it, just ignore this email!<b>
-                   <b color='green'>Your recovery code is: ${recoveryCode.code}. It is valid for 7 days</b>     
+                   <p><b style="color: red;">If you did not request it, just ignore this email!</b></p>
+                   <p><b style="color: green;">Your recovery code is: ${recoveryCode.code}</b></p>     
             `, // html body
           }
          await server.emailer.sendMail(message);
