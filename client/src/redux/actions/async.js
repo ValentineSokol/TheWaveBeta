@@ -25,3 +25,7 @@ export const updateUser = createAsyncThunk(
     'updateUser',
     (payload) => fetcher('/user/update', 'PATCH', payload)
 )
+export const sendPasswordRecoveryCode = createAsyncThunk(
+    'sendPasswordRecoveryCode',
+    (payload) => fetcher('/auth/password/recover', 'PUT', payload)
+)

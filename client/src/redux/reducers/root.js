@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { checkLogin, logout, loadProfile, uploadFiles } from '../actions/async';
+import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode } from '../actions/async';
 export default combineReducers({
     global: createReducer({
         loginChecked: false
@@ -36,6 +36,9 @@ export default combineReducers({
         },
         [uploadFiles.rejected]: (state, action) => {
             console.log(action);
+        },
+        [sendPasswordRecoveryCode.fulfilled]: (state, action) => {
+            state.recoveryCodeSent = true;
         }
     }),
 });

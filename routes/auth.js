@@ -105,7 +105,7 @@ module.exports = (server) => {
       req.logOut();
       res.json({ success: true }); 
     });
-    router.put('/sendMail', async (req, res) => {
+    router.put('/password/recover', async (req, res) => {
         const  { username } = req.body;
         const user = await Users.findOne({ where: { username } });
         if (!user) {

@@ -15,7 +15,6 @@ class RegisterForm extends React.Component {
     onSubmit = (e) => {
         e.preventDefault();
         const { username, password } = this.state;
-        console.log(username, password);
         this.props.dispatch(submitRegister({ username, password }));
     }
     render() {
@@ -31,7 +30,7 @@ class RegisterForm extends React.Component {
                     <form onSubmit={this.onSubmit}>
                         <input name='username' onChange={this.onChange} placeholder='Username' /> 
                         <input name='password' onChange={this.onChange} type='password' placeholder='Password' />
-                        <p> <Link to='/password/reset' className='PasswordReset'>Forgot your password?</Link> </p>
+                        <p> <Link to='/password/recover' className='PasswordReset'>Forgot your password?</Link> </p>
                         <input className='FormSubmitButton' type='submit' />   
                     </form>
                 </div>
