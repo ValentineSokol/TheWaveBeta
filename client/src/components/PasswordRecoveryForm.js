@@ -24,7 +24,7 @@ import Typed from './reusable/Typed';
             <div className='RegisterModalWrapper'>
             <h1 className='RegisterFormHeading'><Typed strings={['Recover your password:']}/></h1>
             <div className='RegisterFormWrapper'>
-                <form onSubmit={this.onSubmit}>
+                <form>
                     {!this.props.recoveryCodeSent?
                     <> 
                     <input name='username' onChange={this.onChange} placeholder='Username' />
