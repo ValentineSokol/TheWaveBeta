@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const passport = require('passport');
 const { Users, RecoveryCodes } = require('../models');
-const bcrypt = require('bcryptjs');
+const { hashPassword, verifyPassword } = require('../utils/auth');
 const crypto = require('crypto');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
@@ -26,13 +26,13 @@ module.exports = (server) => {
         async function(username, password, done) {
             let user = await Users.findOne({ where: { username } });
             if (!user) {
-                const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+                const passwordHash = hashPassword(password);
                 const [record, created] = await Users.findOrCreate({ where: { username }, defaults: { username, password: passwordHash } });
                 if (!created) done(null, false);
                 else done(null, record);
                 return;
             }
-            const passwordVerified = bcrypt.compareSync(password, user.password);
+            const passwordVerified = verifyPassword(password, user.password);
             if (!passwordVerified) {
                 done(null, false);
                 return;
@@ -107,7 +107,7 @@ module.exports = (server) => {
     });
     router.put('/password/recover', async (req, res) => {
         const  { username } = req.body;
-        const user = await Users.findOne({ where: { username } });
+        const user = await Users.findByUsername(username);
         if (!user) {
             res.status(404).json({
                 reason: `No user with name ${username} found!`
@@ -118,20 +118,45 @@ module.exports = (server) => {
             userId: user.id,
             code: crypto.randomBytes(16).toString('base64')
         }); 
-        const message ={
+        const message = {
             from: 'valentinesokolovskiy@gmail.com', // sender address
             to: user.email, // list of receivers
             subject: "TheWave Password Recovery", // Subject line
             html: `<h3>Dear, ${username}!</h3>
                    <p>You are seeing this email because someone requested a password recovery.</p>
                    <p><b style="color: red;">If you did not request it, just ignore this email!</b></p>
-                   <p><b style="color: green;">Your recovery code is: ${recoveryCode.code}</b></p>     
-            `, // html body
+                   <p><b style="color: green;">Your recovery code is: ${recoveryCode.code}</b></p>`, // html body
           }
          await server.emailer.sendMail(message);
          res.json({ success: true });
-         
-    })
+    });
+    router.patch('/password/update', async (req, res) => {
+        const { recoveryCode, username, password } = req.body;
+        const userPromise = Users.findByUsername(username);
+        const codePromise = RecoveryCodes.findByCode(recoveryCode);
+        const [user, codeRecord] = await Promise.all([userPromise, codePromise]);
+        if (!user || !codeRecord) {
+            res.status(400).json({
+                reason: 'Invalid data provided!'
+            });
+            return;
+        }
+        if (verifyPassword(password, user.password)) {
+            res.status(400).json({
+                reason: 'You cannot use your current password.'
+            });
+            await codeRecord.destroy();
+            return;
+        }
+        if (codeRecord.userId !== user.id) {
+            res.status(403).json({
+                reason: 'This code was issued for another account!'
+            });
+            return;
+        }
+        await Promise.all([codeRecord.destroy(), user.update({ password: hashPassword(password) })]);
+        res.json({ success: true });
+    });
 
     return router;
 }

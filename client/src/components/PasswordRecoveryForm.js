@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { sendPasswordRecoveryCode } from '../redux/actions/async';
+import { sendPasswordRecoveryCode, changePassword } from '../redux/actions/async';
 import Typed from './reusable/Typed';
 
   class PasswordRecoveryForm extends Component {
@@ -17,6 +17,7 @@ import Typed from './reusable/Typed';
     onSubmit = (e) => {
         e.preventDefault();
         const { username, recoveryCode, password } = this.state;
+        this.props.dispatch(changePassword({ username, recoveryCode, password }));
     }
     render() {
         return (
@@ -33,7 +34,7 @@ import Typed from './reusable/Typed';
                     <>
                     <input name='recoveryCode' onChange={this.onChange} placeholder='16-symbol recovery code' /> 
                     <input name='password' onChange={this.onChange} type='password' placeholder='New Password' />
-                    <input className='FormSubmitButton' type='submit' />
+                    <input onClick={this.onSubmit} className='FormSubmitButton' type='submit' />
                     </>
                 }   
                 </form>

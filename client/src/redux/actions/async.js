@@ -29,3 +29,7 @@ export const sendPasswordRecoveryCode = createAsyncThunk(
     'sendPasswordRecoveryCode',
     (payload) => fetcher('/auth/password/recover', 'PUT', payload)
 )
+export const changePassword = createAsyncThunk(
+    'changePassword',
+    (payload) => fetcher('/auth/password/update', 'PATCH', payload)
+)
