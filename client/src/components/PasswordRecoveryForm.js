@@ -9,7 +9,8 @@ import Typed from './reusable/Typed';
         this.state = {};
     }
     onChange = (e) => this.setState({ [e.target.name]: e.target.value });
-    sendCode = () => {
+    sendCode = (e) => {
+        e.preventDefault();
         const { username } = this.state;
         if (!username) return;
         this.props.dispatch(sendPasswordRecoveryCode({ username }));
