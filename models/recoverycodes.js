@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-    findByCode(code) {
+    static findByCode(code) {
       return this.findOne({ where:  { code } });
     }
   };
