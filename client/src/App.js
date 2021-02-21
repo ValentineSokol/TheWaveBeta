@@ -1,21 +1,21 @@
-import React from 'react';
-import './App.css';
+import React, { useEffect } from 'react';
+import './App.scss';
 import Navbar from './components/reusable/Navbar';
 import LandingPage from './components/landing/LandingPage';
 import RegisterForm from './components/RegisterForm';
 import PasswordRecoveryForm from './components/PasswordRecoveryForm';
-import Profile from './components/Profile';
-import AvatarResizer from './components/reusable/AvatarResizer';
+import Profile from './components/Profile/Profile';
+import PostStory from "./components/Story/PostStory/PostStory";
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/async';
-import { CircularProgress } from '@material-ui/core';
 
-class App extends React.Component {
-  componentDidMount() {
-   this.props.dispatch(checkLogin());
-  }
-  render() {
+const App = ({ dispatch }) => {
+
+  useEffect(
+      () => dispatch(checkLogin()),
+       []
+  );
     return (
       <div className="App">
        <Router>
@@ -23,14 +23,12 @@ class App extends React.Component {
         <Route exact path='/' component={LandingPage} />
         <Route exact path='/register' component={RegisterForm} />
         <Route path='/password/recover' component={PasswordRecoveryForm} />
-        <Route path='/profile/:id' component={Profile} /> 
-        <Route path='/avatar/upload' render={props => <AvatarResizer {...props} sizes={[350, 60]} />} />
-
+        <Route path='/profile/:id' component={Profile} />
+        <Route path='/stories/post' component={PostStory} />
        </Router>
      
       </div>
     )
-  }
 }
 const mapStateToProps = (state) => ({ loading: state.global.loading });
 export default connect(mapStateToProps, null)(App);

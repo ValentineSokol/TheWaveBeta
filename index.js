@@ -27,12 +27,15 @@ cookie: {
     sameSite: 'strict'
 }
 }));
+setInterval(() => {
+    
+})
 sessionStore.sync();
 server.emailer = nodemailer.createTransport({
     service: "gmail", // no need to set host or port etc.
      auth: {
-         user: 'valentinesokolovskiy@gmail.com',
-         pass: 'ValentineSonya02'
+         user: process.env.GMAIL_USERNAME,
+         pass: process.env.GMAIL_PASSWORD
      }
 });
 app.use('/auth', authRouter(server));

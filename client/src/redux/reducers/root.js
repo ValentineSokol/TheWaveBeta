@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode } from '../actions/async';
+import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/async';
 export default combineReducers({
     global: createReducer({
         loginChecked: false
@@ -20,9 +20,9 @@ export default combineReducers({
             state.user = {};
         },
         [loadProfile.fulfilled]: (state, action) => {
-            const { user } = action.payload; 
-            state.loadedProfile = user;
-            state.ownsProfile = state.user.userId === user.id;   
+            const { user } = action.payload;
+            state.loadedUser = user;
+            state.loading = false;
         },
         [uploadFiles.pending]: (state, action) => {
             state.loading = true;
@@ -39,6 +39,9 @@ export default combineReducers({
         },
         [sendPasswordRecoveryCode.fulfilled]: (state, action) => {
             state.recoveryCodeSent = true;
+        },
+        [submitRegister.fulfilled]: (state, action) => {
+            window.location.reload();
         }
     }),
 });

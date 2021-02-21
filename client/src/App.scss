@@ -1,0 +1,20 @@
+@use './src/scss/common/colors';
+body {
+  margin: 0;
+  padding: 0;
+  background-color:  colors.$dark-background;
+  color: colors.$light-blue;
+}
+.App {
+  text-align: center;
+}
+footer {
+  padding-bottom: 6%;
+}
+
+.RoundImage {
+  border-radius: 50%;
+}
+
+
+

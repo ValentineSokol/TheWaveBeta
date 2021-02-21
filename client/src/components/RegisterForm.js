@@ -1,41 +1,30 @@
-import React from 'react';
-import Typed from '../components/reusable/Typed';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle, faFacebook, faVk } from '@fortawesome/free-brands-svg-icons';
-import '../css/RegisterForm.css';
+import React, { useState, useReducer } from 'react';
+import Card from "./reusable/UIKit/Cards/Card/Card";
+import '../scss/RegisterForm.css';
 import { connect } from 'react-redux';
 import { submitRegister } from '../redux/actions/async';
 import { Link } from 'react-router-dom';
-class RegisterForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-    onChange = (e) => this.setState({ [e.target.name]: e.target.value });
-    onSubmit = (e) => {
+import SocialLogin from "./reusable/SocialLogin/SocialLogin";
+const  RegisterForm = ({ dispatch }) => {
+   const [state, setState] = useState({});
+
+   const onChange = (e) => setState({ ...state, [e.target.name]: e.target.value });
+   const onSubmit = (e) => {
         e.preventDefault();
-        const { username, password } = this.state;
-        this.props.dispatch(submitRegister({ username, password }));
+        dispatch(submitRegister(state));
     }
-    render() {
         return (
-            <div className='RegisterModalWrapper'>
-                <h1 className='RegisterFormHeading'><Typed strings={['Be On The Wave!']}/></h1>
-                <div className='SocialLoginWrapper'>
-                    <a href='/auth/google' className='SocialLogin' id='GoogleLoginButton'> <FontAwesomeIcon icon={faGoogle} />  Login with Google</a>
-                    <a href='/auth/facebook' className='SocialLogin' id='FacebookLoginButton'><FontAwesomeIcon icon={faFacebook} />  Login with Facebook</a>
-                    <a href='/auth/vk' className='SocialLogin' id='VKLoginButton'><FontAwesomeIcon icon={faVk} />  Login with VK</a> 
-                </div>
+              <Card headingStrings={['Welcome! We\'re so happy to see you!']}>
                 <div className='RegisterFormWrapper'>
-                    <form onSubmit={this.onSubmit}>
-                        <input name='username' onChange={this.onChange} placeholder='Username' /> 
-                        <input name='password' onChange={this.onChange} type='password' placeholder='Password' />
+                    <form onSubmit={onSubmit}>
+                        <SocialLogin />
+                        <input name='username' onChange={onChange} placeholder='Username' />
+                        <input name='password' onChange={onChange} type='password' placeholder='Password' />
                         <p> <Link to='/password/recover' className='PasswordReset'>Forgot your password?</Link> </p>
                         <input className='FormSubmitButton' type='submit' />   
                     </form>
                 </div>
-            </div>
-        )
-    }
+              </Card>
+        );
 }
 export default connect(null, null)(RegisterForm);

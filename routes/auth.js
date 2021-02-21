@@ -90,15 +90,14 @@ module.exports = (server) => {
             return;
         }
         const userId = req.session.passport.user;
-        const user = await Users.findByPk(userId);
+        const user = await Users.findByPk(userId, { attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] } });
         if (!user) {
             res.status(400).json({ reason: 'There is no user for given id!' });
             return;
         }
         res.json({
             isLoggedIn: true,
-            username: user.username,
-            userId: user.id
+            ...user.dataValues
         });
     });
     router.delete('/logout', (req, res) => {
