@@ -3,15 +3,12 @@ import { connect } from 'react-redux';
 import { createNotification, actions  } from "../../redux/NotificationSlice";
 import Notification from "./Notification";
 
+import './NotificationManager.scss';
+
 
 class NotificationManager extends Component {
     render() {
-        return <div className='NotificationManager' style={{
-            position: 'fixed',
-            left: '70vw',
-            top: '5%',
-        }}>
-            <button onClick={() => this.props.createNotification('Hi, Vally!', 'warning', 5000)}>Notify</button>
+        return <div className='NotificationManager'>
             {
                 this.props.notifications.map(notification => (
                     <Notification key={notification.id} clearNotification={this.props.clearNotification} notification={notification}/>
