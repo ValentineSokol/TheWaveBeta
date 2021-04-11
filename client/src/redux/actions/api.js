@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import fetcher from '../../utils/fetcher';
-import {createNotification} from "../NotificationSlice";
+import {createNotification} from "../../redux/NotificationSlice/index";
 
 export const submitRegister = createAsyncThunk(
     'registerFormSubmit',
