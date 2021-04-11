@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/async';
+import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
+import { notificationReducer } from "../NotificationSlice";
+import {createNotification} from "../../components/NotificationManager";
+
 export default combineReducers({
     global: createReducer({
         loginChecked: false
@@ -41,7 +44,7 @@ export default combineReducers({
             state.recoveryCodeSent = true;
         },
         [submitRegister.fulfilled]: (state, action) => {
-            window.location.reload();
         }
     }),
+    notifications: notificationReducer
 });
