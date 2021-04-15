@@ -1,3 +1,5 @@
+@use './src/scss/common/colors';
 .Label {
+  color: colors.$dark-background;
   font-weight: 500;
 }
