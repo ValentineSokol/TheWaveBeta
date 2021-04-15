@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
 const store = configureStore({
    reducer: rootReducer,
   // middleware: [logger] 
