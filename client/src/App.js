@@ -10,7 +10,6 @@ import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';
 import NotificationManager from "./components/NotificationManager";
-import Footer from "./components/Footer/Footer";
 
 const App = ({ dispatch }) => {
 
@@ -29,7 +28,6 @@ const App = ({ dispatch }) => {
         <Route path='/profile/:id' component={Profile} />
         <Route path='/stories/post' component={PostStory} />
        </Router>
-       <Footer />
      
       </div>
     )
