@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { sendPasswordRecoveryCode, changePassword } from '../redux/actions/async';
+import { sendPasswordRecoveryCode, changePassword } from '../redux/actions/api';
 import Card from "./reusable/UIKit/Cards/Card/Card";
 
   const PasswordRecoveryForm = ({ dispatch }) =>  {

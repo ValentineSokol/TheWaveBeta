@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.scss';
-import Navbar from './components/reusable/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import LandingPage from './components/landing/LandingPage';
 import RegisterForm from './components/RegisterForm';
 import PasswordRecoveryForm from './components/PasswordRecoveryForm';
@@ -8,7 +8,8 @@ import Profile from './components/Profile/Profile';
 import PostStory from "./components/Story/PostStory/PostStory";
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
-import { checkLogin } from './redux/actions/async';
+import { checkLogin } from './redux/actions/api';
+import NotificationManager from "./components/NotificationManager";
 
 const App = ({ dispatch }) => {
 
@@ -18,6 +19,7 @@ const App = ({ dispatch }) => {
   );
     return (
       <div className="App">
+       <NotificationManager />
        <Router>
        <Navbar /> 
         <Route exact path='/' component={LandingPage} />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { connect } from 'react-redux';
-import { loadProfile } from '../../redux/actions/async';
-import {CircularProgress, setRef} from '@material-ui/core';
+import { loadProfile } from '../../redux/actions/api';
+import {CircularProgress} from '@material-ui/core';
 import '../../scss/Profile.css';
 import Card from "../reusable/UIKit/Cards/Card/Card";
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";

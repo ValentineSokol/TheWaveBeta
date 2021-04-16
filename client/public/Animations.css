@@ -1,0 +1,18 @@
+.scale-fade-appear {
+  opacity: 0;
+  transform: scale(0);
+}
+.scale-fade-appear-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+.scale-fade-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.scale-fade-exit-active {
+  opacity: 0;
+  transform: scale(0);
+  transition: 300ms;
+}

@@ -1,17 +1,26 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState } from 'react';
+import {createNotification} from "../redux/NotificationSlice";
 import Card from "./reusable/UIKit/Cards/Card/Card";
 import '../scss/RegisterForm.css';
 import { connect } from 'react-redux';
-import { submitRegister } from '../redux/actions/async';
+import { submitRegister } from '../redux/actions/api';
 import { Link } from 'react-router-dom';
 import SocialLogin from "./reusable/SocialLogin/SocialLogin";
-const  RegisterForm = ({ dispatch }) => {
+
+const  RegisterForm = ({ createNotification,  submitRegister }) => {
    const [state, setState] = useState({});
 
    const onChange = (e) => setState({ ...state, [e.target.name]: e.target.value });
    const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(submitRegister(state));
+        if (!state.username) {
+            createNotification(
+                'Please, provide a valid username!',
+                'warning'
+            );
+            return;
+        }
+       submitRegister(state);
     }
         return (
               <Card headingStrings={['Welcome! We\'re so happy to see you!']}>
@@ -27,4 +36,4 @@ const  RegisterForm = ({ dispatch }) => {
               </Card>
         );
 }
-export default connect(null, null)(RegisterForm);
+export default connect(null, { createNotification, submitRegister })(RegisterForm);

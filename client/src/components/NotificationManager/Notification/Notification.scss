@@ -1,0 +1,26 @@
+._notification {
+  color: white;
+  width: 200px;
+  padding: 1%;
+  margin-bottom: 2%;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  img {
+    max-width: 20%;
+    margin: 2%;
+  }
+}
+
+.success-notification {
+  @extend  ._notification;
+  background: rgb(77, 175, 124);
+}
+.error-notification {
+  @extend ._notification;
+  background: darkred;
+}
+.warning-notification {
+  @extend ._notification;
+  background: #DBA800;
+}

@@ -1,9 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import fetcher from '../../utils/fetcher';
+import {createNotification} from "../../redux/NotificationSlice/index";
 
 export const submitRegister = createAsyncThunk(
     'registerFormSubmit',
-    async (body) => fetcher('/auth/local', 'POST', body)
+    async (body, { dispatch}) => fetcher('/auth/local', 'POST', body)
+        .then(res => {
+            if (!res.success) {
+             return;
+            }
+            dispatch(createNotification('Success!', 'success'));
+        })
+        .catch(err => dispatch(
+            createNotification(`Failed to register.`, 'error')
+        ))
 );
 export const checkLogin = createAsyncThunk(
     'checkLogin',

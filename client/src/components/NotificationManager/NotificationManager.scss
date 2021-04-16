@@ -1,0 +1,9 @@
+.NotificationManager {
+  position: fixed;
+  left: 70%;
+}
+@media screen and (max-width: 784px) {
+.NotificationManager {
+  left: 0;
+}
+}
