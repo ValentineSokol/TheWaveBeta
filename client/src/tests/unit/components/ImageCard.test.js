@@ -35,7 +35,7 @@ describe("correctly creates a landing card.", () => {
   });
   it('Renders Heading, if \'headingStrings\' props is passed a single string.', () => {
     const renderedComponent = shallow(component);
-    component.setProps({ headingStrings: ['a'] });
+    renderedComponent.setProps({ headingStrings: ['a'] });
     const foundHeadings = renderedComponent.find(TypedHeading);
     expect(foundHeadings.length).toBe(1);
   });
