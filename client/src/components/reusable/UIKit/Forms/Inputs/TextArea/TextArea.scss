@@ -1,4 +1,9 @@
+@use './src/scss/common/colors';
 .TextAreaContainer {
   display: flex;
   flex-direction: column;
+  padding: 1%;
+  textarea {
+    background: colors.$input-background;
+  }
 }

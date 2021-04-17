@@ -1,5 +1,10 @@
+@use './src/scss/common/colors';
 .LabeledInputContainer {
   display: flex;
   flex-direction: column;
   padding: 1%;
+  input {
+    color: colors.$dark-background;
+    background: colors.$input-background;
+  }
 }
