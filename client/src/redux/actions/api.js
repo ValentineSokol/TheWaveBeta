@@ -10,6 +10,7 @@ export const submitRegister = createAsyncThunk(
              return;
             }
             dispatch(createNotification('Success!', 'success'));
+            dispatch(checkLogin());
         })
         .catch(err => dispatch(
             createNotification(`Failed to register.`, 'error')

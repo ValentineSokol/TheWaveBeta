@@ -1,0 +1,19 @@
+@use './src/scss/common/colors';
+button {
+  border: none;
+}
+.Button {
+  width: 80px;
+  background: royalblue;
+  color: white;
+  padding: .8%;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 200ms;
+  &:hover {
+    background: dodgerblue;
+  }
+}
+.ButtonContainer {
+  padding: 1%;
+}

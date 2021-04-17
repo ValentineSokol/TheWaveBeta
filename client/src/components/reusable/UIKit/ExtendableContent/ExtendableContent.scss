@@ -1,0 +1,17 @@
+.arrow-open, .arrow-closed {
+  img {
+    transition: all 200ms;
+    max-width: .8%;
+  }
+}
+.arrow-open {
+  img {
+    transform: rotate(180deg);
+  }
+}
+.ExtendableContentLabel {
+  cursor: pointer;
+  &:hover {
+    color: blue;
+  }
+}
