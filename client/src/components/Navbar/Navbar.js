@@ -9,8 +9,8 @@ const Navbar = ({ user, logout }) => {
  const onLogout = () => logout();
     return (
         <div className="Navbar">
-          <ul className="NavbarItems">
             <img className='NavbarLogo' src={logo} alt="logo"/>
+          <ul className="NavbarItems">
             <li><NavigationLink to='/'>Home</NavigationLink></li>
             {
               user && user.isLoggedIn?

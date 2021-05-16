@@ -4,7 +4,16 @@
   flex-direction: column;
   padding: 1%;
   input {
-    color: colors.$dark-background;
-    background: colors.$input-background;
+    background: colors.$dark-background;
+    border: 3px solid colors.$important-element;
+    outline: none;
+    &::selection {
+      background: colors.$important-element;
+      color: colors.$dark-background;
+    }
+    &-moz-::selection {
+      background: colors.$important-element;
+      color: colors.$dark-background;
+    }
   }
 }

@@ -6,7 +6,8 @@
   justify-content: center;
   flex-direction: column;
   background-color:	colors.$card-background;
-  color: colors.$dark-background;
+  color: colors.$black;
+  box-shadow: 4px 6px colors.$black;
   img {
     height: 100%;
   }
