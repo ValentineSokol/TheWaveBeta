@@ -4,14 +4,14 @@ button {
 }
 .Button {
   width: 80px;
-  background: royalblue;
+  background: colors.$important-element;
   color: white;
   padding: .8%;
   border-radius: 3px;
   cursor: pointer;
   transition: background 200ms;
   &:hover {
-    background: dodgerblue;
+    background: #27A8E1;
   }
 }
 .ButtonContainer {

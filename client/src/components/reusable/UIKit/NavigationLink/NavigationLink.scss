@@ -1,3 +1,7 @@
+@use './src/scss/common/colors';
 .NavigationLink.Active {
-  color: dodgerblue;
+  padding: 5%;
+  background: colors.$important-element;
+  color: colors.$dark-background;
+  border-radius: 3px;
 }

@@ -38,10 +38,23 @@ import storyConstants from "../../../consts/Story/storyConstants";
           <>
               <Heading>Advanced Settings.</Heading>
               <Card className='AdvancedSettingsCard'>
-                  <ExtendableContent label='Cowriters' tooltip='Manage your cowriters and their permissions.'>
-                      {storyConstants.COWRITER_ROLES.map(role => <p style={{ color: role.color}}>{role.name}</p>)}
-                      <a href='#'>Add</a>
+                  <ExtendableContent label='Collaborators' tooltip='Manage your cowriters and their permissions.'>
+                      <div style={{ padding: '3px'}}>
+                       <ExtendableContent label='John Doe'>
+                          {
+                              storyConstants.COLLABORATOR_PERMISSIONS.map(permission =>
+                                  <>
+                                      <input type='checkbox' />
+                                  <label>{permission.name}</label>
+                                  </>
+
+                              )
+                          }
+                       </ExtendableContent>
+                      </div>
+                      <Button>Add</Button>
                   </ExtendableContent>
+                  <ExtendableContent label='Search Tags'>
                   <ExtendableContent label='Maturity' tooltip='Here you can choose adult themes, depicted in your story. Our system will assign an appropriate maturity rating, based on your choices. '>
                     <ItemGrid>
                     <label>Nudity and sex</label>
@@ -65,6 +78,7 @@ import storyConstants from "../../../consts/Story/storyConstants";
                     <label>Bad Language</label>
                     <input type='checkbox' />
                     </ItemGrid>
+                  </ExtendableContent>
                   </ExtendableContent>
                   <ExtendableContent label='Fandoms' tooltip='Here you can choose, which fandom characters participate in the story and what are their relationships'>
                      <ExtendableContent label='Characters'>
