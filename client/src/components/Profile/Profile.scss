@@ -1,11 +1,13 @@
 .ProfileContainer {
     display: flex;
     justify-content: space-around;
+    align-items: flex-start;
     width: 30%;
     margin: 1% auto;
 }
 .ProfileInfo {
     padding: 0.1%;
+    margin: 3%;
 }
 .ProfileUsername {
     margin: 0;
