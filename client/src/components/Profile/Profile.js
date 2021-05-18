@@ -29,7 +29,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             </div>
            </Card>
             <div className='ProfileInfo'>
-                <Heading>{user.username}</Heading>
+                <Heading size='2'>{user.username}</Heading>
                 <span>{user.privilege}</span>
             </div>
         </div>

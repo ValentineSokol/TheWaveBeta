@@ -17,8 +17,7 @@ const Navbar = ({ user, logout }) => {
               <>
               <li><NavigationLink  to={`/profile/${user.id}`}>Profile</NavigationLink></li>
               <li><NavigationLink to='/stories/post'>Post</NavigationLink></li>
-              <li><NavigationLink to='/search'>Search</NavigationLink></li>
-              <li data-testid='logout-button' onClick={onLogout} className='NavbarLogout'>Log Out</li>
+              <li onClick={onLogout} className='NavbarLogout'>Logout</li>
               </>  
               :
               <>
