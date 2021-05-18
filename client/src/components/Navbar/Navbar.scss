@@ -33,8 +33,11 @@
     .NavbarLogout {
         margin-left: 0;
     }
+    .Navbar {
+        margin-left: 35%;
+        width: 100vw;
+    }
     .NavbarItems {
-        margin: 0 auto;
         flex-direction: column;
         align-items: flex-start;
     }
