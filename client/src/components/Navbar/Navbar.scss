@@ -1,4 +1,4 @@
-@use './common/_colors';
+@use '../../scss/common/colors';
 .Navbar {
     display: flex;
 }
@@ -35,6 +35,7 @@
     }
     .NavbarItems {
         margin: 0 auto;
-        flex-direction: column; 
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

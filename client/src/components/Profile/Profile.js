@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../redux/actions/api';
-//import {CircularProgress} from '@material-ui/core';
-import '../../scss/Profile.css';
+
+import './Profile.scss';
 import Card from "../reusable/UIKit/Cards/Card/Card";
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
+import defaultAvatar from '../../assets/defaultAvatar.webp';
+
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
     const { id } = useParams();
@@ -23,7 +25,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
         <div className='ProfileContainer'>
            <Card>
             <div className='ProfileAvatar'>
-             <img src={user.avatarUrl} alt='profile' />
+             <img src={user.avatarUrl || defaultAvatar} alt='profile' />
             </div>
            </Card>
             <div className='ProfileInfo'>

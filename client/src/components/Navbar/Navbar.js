@@ -2,7 +2,7 @@ import React from 'react';
 import NavigationLink from "../reusable/UIKit/NavigationLink/NavigationLink";
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/api';
-import '../../scss/Navbar.scss';
+import './Navbar.scss';
 import logo from '../../img/navlogo.png';
 
 const Navbar = ({ user, logout }) => {
