@@ -11,29 +11,42 @@ import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';
 import NotificationManager from "./components/NotificationManager";
 import Footer from "./components/Footer/Footer";
+import { actions as preferencesAPI } from './redux/PreferencesSlice';
 
-const App = ({ dispatch }) => {
 
-  useEffect(
-      () => dispatch(checkLogin()),
-       []
-  );
-    return (
-      <div className="App">
-       <NotificationManager />
-       <Router>
-       <Navbar /> 
-        <Route exact path='/' component={LandingPage} />
-        <Route exact path='/register' component={RegisterForm} />
-        <Route path='/password/recover' component={PasswordRecoveryForm} />
-        <Route path='/profile/:id' component={Profile} />
-        <Route path='/stories/post' component={PostStory} />
-       </Router>
-       <Footer />
-     
-      </div>
-    )
+const App = class App extends  React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    async componentDidMount() {
+        this.setState({ loading: true });
+        const { language } = this.props;
+        const translations = await import(`./consts/Locale/locale-${language}`);
+        this.props.setLanguage({ newLanguage: language, newTranslations: translations.default });
+        this.setState({ loading: false });
+        this.props.checkLogin();
+
+    }
+
+    render() {
+        if (this.state.loading) return 'Loading...'
+        return (
+            <div className="App">
+                <NotificationManager />
+                <Router>
+                    <Navbar />
+                    <Route exact path='/' component={LandingPage} />
+                    <Route exact path='/register' component={RegisterForm} />
+                    <Route path='/password/recover' component={PasswordRecoveryForm} />
+                    <Route path='/profile/:id' component={Profile} />
+                    <Route path='/stories/post' component={PostStory} />
+                </Router>
+                <Footer />
+            </div>
+        )
+    }
 }
-const mapStateToProps = (state) => ({ loading: state.global.loading });
-export default connect(mapStateToProps, null)(App);
+const mapStateToProps = (state) => ({ loading: state.global.loading,  language: state.preferences.language });
+export default connect(mapStateToProps, { checkLogin, setLanguage: preferencesAPI.setLanguage })(App);
 

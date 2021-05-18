@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";
 import {createNotification} from "../../components/NotificationManager";
+import {preferencesReducer} from "../PreferencesSlice";
 
 export default combineReducers({
     global: createReducer({
@@ -46,5 +47,6 @@ export default combineReducers({
         [submitRegister.fulfilled]: (state, action) => {
         }
     }),
-    notifications: notificationReducer
+    notifications: notificationReducer,
+    preferences: preferencesReducer,
 });

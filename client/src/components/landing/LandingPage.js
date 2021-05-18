@@ -1,21 +1,21 @@
 import React from 'react';
-import strings from '../../consts/Landing/TypedStrings';
+import {connect} from 'react-redux';
 import TypedHeading from "../reusable/UIKit/Headings/TypedHeading/TypedHeading";
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import ItemsGrid from "../reusable/UIKit/Layout/ItemGrid/ItemGrid";
-import landingCards from "../../consts/Landing/landingCards";
-const LandingPage = () => {
+import ImageCard from "../reusable/UIKit/Cards/ImageCard/ImageCard";
+const LandingPage = ({ translations }) => {
         return (
             <div>
-                <TypedHeading headingStrings={strings} loop />
-                <Heading size='2'>So, what are we all about?</Heading>
+                <TypedHeading headingStrings={translations?.typedStrings} loop />
+                <Heading size='2'>{translations?.heading}</Heading>
                 <div className='LandingCards'>
                     <ItemsGrid>
-                        {landingCards}
+                        {translations?.cards.map((cardData, index) => <ImageCard width='50%' headingSize='3' key={index} {...cardData} />)}
                     </ItemsGrid>
                 </div>
             </div>
         );
 }
 
-export default LandingPage;
+export default connect(state => ({ translations: state.preferences.translations.landing }), null)(LandingPage);
