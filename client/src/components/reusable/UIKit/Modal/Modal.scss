@@ -1,0 +1,44 @@
+@use './src/scss/common/colors';
+
+.ModalContainer {
+  z-index: 1;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  background: colors.$card-background;
+  justify-content: flex-start;
+}
+.ModalHeader {
+  width: 100%;
+  background: colors.$important-element;
+  border-bottom: 2px solid darken(colors.$important-element, 30%);
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1%;
+  box-sizing: border-box;
+}
+.CloseIcon {
+  cursor: pointer;
+  color: darkorange;
+  transition: color .3s ease-in-out;
+  &:hover {
+    color: orange;
+  }
+  font-weight: bold;
+}
+.BlockInteraction {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: all;
+  background: rgba(0,0,0,0.3);
+}
+.ModalBody {
+  padding: 2%;
+}

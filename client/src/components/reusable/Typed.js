@@ -14,7 +14,7 @@ const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infi
             });
            return () => typed.destroy();
         },
-        []
+        [strings, typeSpeed, backSpeed, loop, loopCount]
     );
         return <span ref={typedContainerRef} className="TypedContainer" />;
 }

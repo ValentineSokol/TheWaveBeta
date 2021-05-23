@@ -1,19 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
-import { changeTranslations } from '../../../../redux/PreferencesSlice';
+import { loadTranslations } from '../../../../redux/PreferencesSlice';
 import './LanguageSelector.scss';
 
 import ukrainianFlag from '../../../../assets/ukrainianFlag.svg';
 import ukFlag from '../../../../assets/ukFlag.svg';
 import russianFlag from '../../../../assets/russianFlag.svg';
 
-const LanguageSelector = ({changeTranslations}) => {
+const LanguageSelector = ({ loadTranslations }) => {
   return (
       <div className='LanguageSelector'>
-          <img onClick={() => changeTranslations('ukr')} className='language-icon' src={ukrainianFlag} alt='ukrainian' />
-          <img onClick={() => changeTranslations('en')} className='language-icon' src={ukFlag} alt='english' />
-          <img onClick={() => changeTranslations('ru')} className='language-icon' src={russianFlag} alt='russian' />
+          <img onClick={() => loadTranslations('ukr')} className='language-icon' src={ukrainianFlag} alt='ukrainian' />
+          <img onClick={() => loadTranslations('en')} className='language-icon' src={ukFlag} alt='english' />
+          <img onClick={() => loadTranslations('ru')} className='language-icon' src={russianFlag} alt='russian' />
       </div>
   );
 };
-export default connect(state => ({ language: state.preferences.language }), { changeTranslations } )(LanguageSelector);
+export default connect(state => ({ language: state.preferences.language }), { loadTranslations } )(LanguageSelector);

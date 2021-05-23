@@ -10,6 +10,7 @@
     align-items: center;
     font-size: 1.5em;
 }
+
 .NavbarItems li  {
     margin: 10%;
 }
@@ -35,5 +36,8 @@
         padding: 0;
         flex-direction: column;
         align-items: flex-start;
+    }
+    .LanguageSelectorLi {
+        align-self: center;
     }
 }

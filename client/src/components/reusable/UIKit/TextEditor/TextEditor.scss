@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.preview-container {
+  background: #fff;
+  margin: 0 auto;
+  border: 2px black solid;
+  word-break: break-all;
+  overflow: scroll;
+}
+.tools {
+  text-align: center;
+}
+.tools span {
+  cursor: pointer;
+  margin: 2px;
+}
+.TextAreaContainer {
+  display: flex;
+}
+.TextEditor {
+  width: 40%;
+  height: 40%;
+  background: #fff;
+  margin: 0 auto;
+}

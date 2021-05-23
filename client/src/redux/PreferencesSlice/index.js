@@ -1,28 +1,28 @@
 import {createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import getBrowserLanguage from '../../utils/getBrowserLanguage';
 
-const loadTranslations = createAsyncThunk(
+const loadTranslationsThunk = createAsyncThunk(
     'loadTranslations',
     async (language) => {
        const translationsModule = await import(`../../consts/Locale/locale-${language}`);
-       return translationsModule.default;
+       return { language, translations: translationsModule.default };
     }
     );
 const preferencesSlice = createSlice( {
     name: 'preferencesSlice',
-    initialState: { language: getBrowserLanguage(), translations: {} },
+    initialState: { language: '', translations: {} },
     reducers: {
-        setLanguage: (state, { payload:  { newLanguage, newTranslations } }) => {
-            state.language = newLanguage;
-            state.translations = newTranslations;
-            return state;
-        }
+        setStartLanguage: (state, action) => { state.language = action.payload }
     },
     extraReducers: {
-        [loadTranslations.fulfilled]: (state, action) => { state.translations = action.payload; }
+        [loadTranslationsThunk.fulfilled]: (state, {payload: { language, translations }}) => {
+            state.translations = translations;
+            state.language = language;
+            localStorage.setItem('language', language);
+        }
     }
 });
 
 export const preferencesReducer = preferencesSlice.reducer;
 export const actions = preferencesSlice.actions;
-export const changeTranslations = loadTranslations;
+export const loadTranslations = loadTranslationsThunk;
+;

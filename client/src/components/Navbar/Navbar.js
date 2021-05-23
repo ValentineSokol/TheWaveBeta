@@ -12,7 +12,7 @@ const Navbar = ({ user, logout, language, translations }) => {
         <div className="Navbar">
             <img className='NavbarLogo' src={logo} alt="logo"/>
             <ul className="NavbarItems">
-                <li>
+                <li className='LanguageSelectorLi'>
                     <LanguageSelector />
                 </li>
             <li><NavigationLink to='/'>{translations?.home}</NavigationLink></li>
@@ -25,7 +25,7 @@ const Navbar = ({ user, logout, language, translations }) => {
               </>
               :
               <>
-                <li><NavigationLink to='/register'>Register</NavigationLink></li>
+                <li><NavigationLink to='/register'>{translations?.register}</NavigationLink></li>
               </>
             }
           </ul>

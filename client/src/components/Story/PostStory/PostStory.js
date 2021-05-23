@@ -10,6 +10,7 @@ import Button from "../../reusable/UIKit/Forms/Button";
 import ItemGrid from "../../reusable/UIKit/Layout/ItemGrid/ItemGrid";
 
 import storyConstants from "../../../consts/Story/storyConstants";
+import TextEditor from "../../reusable/UIKit/TextEditor/TextEditor";
 
   const PostStory  = () => {
       const [step, setStep] = useState(0);
@@ -25,7 +26,7 @@ import storyConstants from "../../../consts/Story/storyConstants";
                   </section>
                   <section>
                     <LabeledInput label='Chapter Name: ' />
-                    <TextArea label={'Chapter Text:'} />
+                    <TextEditor />
                   </section>
                   <section className='StoryControlButtons'>
                     <Button>Publish</Button>

@@ -11,22 +11,33 @@ import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';
 import NotificationManager from "./components/NotificationManager";
 import Footer from "./components/Footer/Footer";
-import { actions as preferencesAPI } from './redux/PreferencesSlice';
+import { actions as preferencesAPI, loadTranslations } from './redux/PreferencesSlice';
+import getBrowserLanguage from './utils/getBrowserLanguage';
+
 
 
 const App = class App extends  React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            displayLangModal: true
+        };
+    }
+    setStartLanguage() {
+        const storedLanguage = localStorage.getItem('language');
+        if (storedLanguage) return this.props.setStartLanguage(storedLanguage);
+        const inferredLanguage = getBrowserLanguage();
+        this.props.setStartLanguage(inferredLanguage);
+        this.setState({ displayLangModal: true });
     }
     async componentDidMount() {
-        this.setState({ loading: true });
-        const { language } = this.props;
-        const translations = await import(`./consts/Locale/locale-${language}`);
-        this.props.setLanguage({ newLanguage: language, newTranslations: translations.default });
-        this.setState({ loading: false });
+        this.setStartLanguage();
         this.props.checkLogin();
-
+    }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!prevProps.language && this.props.language) {
+            this.props.loadTranslations(this.props.language);
+        }
     }
 
     render() {
@@ -48,5 +59,5 @@ const App = class App extends  React.Component {
     }
 }
 const mapStateToProps = (state) => ({ loading: state.global.loading,  language: state.preferences.language });
-export default connect(mapStateToProps, { checkLogin, setLanguage: preferencesAPI.setLanguage })(App);
+export default connect(mapStateToProps, { checkLogin, loadTranslations, setStartLanguage: preferencesAPI.setStartLanguage })(App);
 

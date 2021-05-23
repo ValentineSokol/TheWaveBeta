@@ -8,7 +8,7 @@ const LandingPage = ({ translations }) => {
         return (
             <div>
                 <TypedHeading headingStrings={translations?.typedStrings} loop />
-                <Heading size='2'>{translations?.heading}</Heading>
+                <Heading size='3'>{translations?.heading}</Heading>
                 <div className='LandingCards'>
                     <ItemsGrid>
                         {translations?.cards.map((cardData, index) => <ImageCard width='50%' headingSize='3' key={index} {...cardData} />)}

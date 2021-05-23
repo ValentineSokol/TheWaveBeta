@@ -6,6 +6,7 @@ import writersLove from "../../img/landing/writersLove.jpg";
 export default {
     navbar: {
         home: 'Home',
+        register: 'Register',
         profile: 'Profile',
         post: 'Post',
         logout: 'Logout'
