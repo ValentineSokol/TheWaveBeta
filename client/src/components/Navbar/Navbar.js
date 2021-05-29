@@ -5,8 +5,9 @@ import { logout } from '../../redux/actions/api';
 import './Navbar.scss';
 import logo from '../../img/navlogo.png';
 import LanguageSelector from "../reusable/UIKit/LanguageSelector";
+import withTranslation from '../reusable/withTranslation/index';
 
-const Navbar = ({ user, logout, language, translations }) => {
+const Navbar = ({ user, logout, translation }) => {
  const onLogout = () => logout();
     return (
         <div className="Navbar">
@@ -15,22 +16,25 @@ const Navbar = ({ user, logout, language, translations }) => {
                 <li className='LanguageSelectorLi'>
                     <LanguageSelector />
                 </li>
-            <li><NavigationLink to='/'>{translations?.home}</NavigationLink></li>
+            <li><NavigationLink to='/'>{translation?.home}</NavigationLink></li>
             {
               user && user.isLoggedIn?
               <>
-              <li><NavigationLink  to={`/profile/${user.id}`}>{translations?.profile}</NavigationLink></li>
-              <li><NavigationLink to='/stories/post'>{translations?.post}</NavigationLink></li>
-              <li onClick={onLogout} className='NavbarLogout'>{translations?.logout}</li>
+              <li><NavigationLink  to={`/profile/${user.id}`}>{translation?.profile}</NavigationLink></li>
+              <li><NavigationLink to='/stories/post'>{translation?.post}</NavigationLink></li>
+              <li onClick={onLogout} className='NavbarLogout'>{translation?.logout}</li>
               </>
               :
               <>
-                <li><NavigationLink to='/register'>{translations?.register}</NavigationLink></li>
+                <li><NavigationLink to='/register'>{translation?.register}</NavigationLink></li>
               </>
             }
           </ul>
         </div>
     );
 }
-const mapStateToProps = (state) => ({ user: state.global.user, language: state.preferences.language, translations: state.preferences.translations.navbar });
-export default connect(mapStateToProps, { logout })(Navbar);
+
+const mapStateToProps = (state) => ({
+    user: state.global.user
+});
+export default withTranslation(Navbar, 'navbar', mapStateToProps);

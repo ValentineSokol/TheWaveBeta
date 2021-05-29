@@ -34,14 +34,8 @@ const App = class App extends  React.Component {
         this.setStartLanguage();
         this.props.checkLogin();
     }
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (!prevProps.language && this.props.language) {
-            this.props.loadTranslations(this.props.language);
-        }
-    }
 
     render() {
-        if (this.state.loading) return 'Loading...'
         return (
             <div className="App">
                 <NotificationManager />
