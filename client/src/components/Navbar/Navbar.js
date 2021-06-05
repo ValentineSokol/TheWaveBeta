@@ -37,4 +37,5 @@ const Navbar = ({ user, logout, translation }) => {
 const mapStateToProps = (state) => ({
     user: state.global.user
 });
-export default withTranslation(Navbar, 'navbar', mapStateToProps);
+const mapDispatchToProps = { logout };
+export default withTranslation(Navbar, 'navbar', mapStateToProps, mapDispatchToProps);

@@ -1,0 +1,51 @@
+  @use '../client/src/scss/common/colors';
+  .TopOverlay {
+    background: colors.$important-element;
+    color: colors.$dark-background;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+    section {
+      border: none;
+      margin-left: 2%;
+    }
+    .OverlayInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: baseline;
+    }
+  }
+  .CompanionAvatar {
+    img, .Card {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+    }
+  }
+  .OutcomingMessage {
+    background: colors.$light-blue;
+    padding: 1%;
+    border-radius: 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .MessageBox {
+    padding: 5%;
+  }
+  .MessageContainer {
+    display: flex;
+    align-items: center;
+    img, .Card {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+    }
+  }
+  .right-arrow {
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid colors.$light-blue;
+  }

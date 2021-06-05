@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import Card from "../../reusable/UIKit/Cards/Card/Card";
 import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput/LabeledInput";
 import ExtendableContent from '../../reusable/UIKit/ExtendableContent/index';
-import TextArea from "../../reusable/UIKit/Forms/Inputs/TextArea/TextArea";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 import './PostStory.scss';
 import Heading from "../../reusable/UIKit/Headings/Heading/Heading";
@@ -10,10 +11,12 @@ import Button from "../../reusable/UIKit/Forms/Button";
 import ItemGrid from "../../reusable/UIKit/Layout/ItemGrid/ItemGrid";
 
 import storyConstants from "../../../consts/Story/storyConstants";
-import TextEditor from "../../reusable/UIKit/TextEditor/TextEditor";
+
 
   const PostStory  = () => {
+      const [text, setText] = useState('');
       const [step, setStep] = useState(0);
+      const onTextChange = text => setText(text);
       const onChapterWritten = () => {
           setStep(1);
       }
@@ -26,7 +29,7 @@ import TextEditor from "../../reusable/UIKit/TextEditor/TextEditor";
                   </section>
                   <section>
                     <LabeledInput label='Chapter Name: ' />
-                    <TextEditor />
+                  <ReactQuill value={text} onChange={onTextChange} />
                   </section>
                   <section className='StoryControlButtons'>
                     <Button>Publish</Button>
@@ -46,7 +49,7 @@ import TextEditor from "../../reusable/UIKit/TextEditor/TextEditor";
                               storyConstants.COLLABORATOR_PERMISSIONS.map(permission =>
                                   <>
                                       <input type='checkbox' />
-                                  <label>{permission.name}</label>
+                                  <label key={permission.name}>{permission.name}</label>
                                   </>
 
                               )

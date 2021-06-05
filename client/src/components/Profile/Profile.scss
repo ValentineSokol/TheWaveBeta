@@ -16,7 +16,11 @@
     display: flex;
     flex-direction: column;
 }
-
+.ProfileUserActions {
+    .Button {
+        width: 100%;
+    }
+}
 @media only screen and (max-width: 784px) {
     .ProfileContainer {
         display: flex;
