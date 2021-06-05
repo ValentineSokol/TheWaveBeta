@@ -6,9 +6,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import dynamicImportPolyfill from 'dynamic-import-polyfill';
+
+// This needs to be done before any dynamic imports are used.
+dynamicImportPolyfill.initialize({
+    modulePath: '/public', // Defaults to '.'
+    importFunctionName: '$$import' // Defaults to '__import__'
+});
 const store = configureStore({
    reducer: rootReducer,
-  // middleware: [logger] 
 });
 ReactDOM.render(
   <React.StrictMode>
