@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { loadTranslationForComponent } from '../../../redux/PreferencesSlice';
 
-export default (ComponentToTranslate, translationKey, mapStateToProps, mapDispatchToProps = {}) => {
+export default (ComponentToTranslate, translationKey, mapStateToProps, mapDispatchToProps = {}, noLoaders = false) => {
  const mapState = state => {
   const defaultPayload = { language: state.preferences.language, translation: state.preferences.translations[translationKey] };
    return mapStateToProps ? {...mapStateToProps(state), ...defaultPayload } : defaultPayload;
@@ -29,7 +29,7 @@ export default (ComponentToTranslate, translationKey, mapStateToProps, mapDispat
    const componentProps = {...this.props };
    delete componentProps.loadTranslationForComponent;
    delete componentProps.language;
-   return translation? <ComponentToTranslate {...componentProps} /> : <p>Loading....</p>
+   return translation || noLoaders? <ComponentToTranslate {...componentProps} /> : <p>Loading....</p>
   }
 
  }

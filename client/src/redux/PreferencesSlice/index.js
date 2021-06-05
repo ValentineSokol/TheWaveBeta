@@ -16,11 +16,15 @@ const loadTranslationForComponentThunk = createAsyncThunk(
 );
 const preferencesSlice = createSlice( {
     name: 'preferencesSlice',
-    initialState: { language: '', translations: {} },
+    initialState: { isNavbarVisible: true, language: '', translations: {} },
     reducers: {
         setStartLanguage: (state, action) => {
             state.language = action.payload;
             localStorage.setItem('language', action.payload);
+        },
+        setNavbarVisibility: (state, action) => {
+            const updatedVisibility = action.payload;
+            state.isNavbarVisible = updatedVisibility ?? !state.isNavbarVisible;
         }
     },
     extraReducers: {
