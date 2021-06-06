@@ -5,6 +5,8 @@ import Card from '../reusable/UIKit/Cards/Card/Card';
 import ReactQuill from "react-quill";
 import withTranslation from '../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
+import sendMessage from '../../assets/sendMessage.svg';
+import Button from "../reusable/UIKit/Forms/Button";
 
 class ChatWindow extends Component {
     componentDidMount() {
@@ -29,13 +31,21 @@ class ChatWindow extends Component {
                 <div className='MessageBox'>
               <span className='MessageContainer'>
                   <img src={url} alt={'companion\'s avatar'}  />
-                <p className='right-arrow' />
-                <span className='OutcomingMessage'>Hi, I am a chat component!</span>
+                  <p className='right-arrow' />
+                  <span className='OutcomingMessage'>Hi, I am a chat component!</span>
+              </span>
+                    <span className='MessageContainer'>
+                  <img src={url} alt={'companion\'s avatar'}  />
+                  <p className='right-arrow' />
+                  <span className='OutcomingMessage'>Hello!</span>
               </span>
                 </div>
-
+                <section className='SendMessagePanel'>
                 <ReactQuill placeholder='Write your message here...' />
-
+                <Button>
+                    <img src={sendMessage} alt='Send Message Button' />
+                </Button>
+                </section>
             </div>
         );
     }

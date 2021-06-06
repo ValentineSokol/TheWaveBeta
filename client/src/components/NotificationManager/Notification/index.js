@@ -13,7 +13,8 @@ const Notification = ({ clearNotification, notification: { id, show, lifespan, t
             in={show}
             appear={true}
             onExited={() => clearNotification(id) }
-            timeout={lifespan} classNames='scale-fade'
+            timeout={lifespan}
+            classNames='scale-fade'
         >
           <div className={`${severity}-notification`}>
               <img alt={`${severity}-icon.`} src={icon}/>

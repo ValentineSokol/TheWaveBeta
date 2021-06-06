@@ -25,7 +25,7 @@
   }
   .OutcomingMessage {
     background: colors.$light-blue;
-    padding: 1%;
+    padding: .5%;
     border-radius: 5px;
     text-align: center;
     vertical-align: middle;
@@ -36,9 +36,10 @@
   .MessageContainer {
     display: flex;
     align-items: center;
+    margin-bottom: 3%;
     img, .Card {
-      width: 90px;
-      height: 90px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
     }
   }
@@ -48,4 +49,31 @@
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-right: 8px solid colors.$light-blue;
+  }
+  footer {
+    display: none;
+  }
+  .SendMessagePanel  {
+    height: 15%;
+    display: flex;
+    .quill { flex: 1; }
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    .ButtonContainer {
+      display: flex;
+      align-items: flex-end;
+      padding: 0;
+    }
+    img {
+      max-width: 40px;
+    }
+    .Button {
+      height: 100%;
+      width: 50px;
+    }
+  }
+  .ql-editor p {
+    width: 100%;
+    word-break: break-all;
   }
