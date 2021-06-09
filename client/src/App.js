@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.scss';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';

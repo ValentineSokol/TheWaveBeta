@@ -1,5 +1,6 @@
   @use '../client/src/scss/common/colors';
   .TopOverlay {
+    position: sticky;
     background: colors.$important-element;
     color: colors.$dark-background;
     display: flex;
@@ -18,8 +19,8 @@
   }
   .CompanionAvatar {
     img, .Card {
-      width: 90px;
-      height: 90px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
     }
   }
@@ -31,7 +32,9 @@
     vertical-align: middle;
   }
   .MessageBox {
-    padding: 5%;
+    padding: 1%;
+    height: 300px;
+    overflow-y: scroll;
   }
   .MessageContainer {
     display: flex;
@@ -54,12 +57,9 @@
     display: none;
   }
   .SendMessagePanel  {
-    height: 15%;
     display: flex;
-    .quill { flex: 1; }
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    justify-content: center;
+    padding: 1%;
     .ButtonContainer {
       display: flex;
       align-items: flex-end;
@@ -73,7 +73,7 @@
       width: 50px;
     }
   }
-  .ql-editor p {
+  textarea {
     width: 100%;
     word-break: break-all;
   }

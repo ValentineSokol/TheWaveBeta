@@ -18,7 +18,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             dispatch(loadProfile(id));
             if (loggedInUser && loggedInUser.id === id) setisOwner(true);
         },
-        [id]
+        [id, dispatch, loggedInUser]
     );
         const user = isOwner? loggedInUser : loadedUser;
         return (

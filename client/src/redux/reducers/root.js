@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
 import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";
-import {createNotification} from "../../components/NotificationManager";
 import {preferencesReducer} from "../PreferencesSlice";
 
 export default combineReducers({
