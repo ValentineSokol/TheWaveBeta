@@ -12,7 +12,8 @@
     align-items: center;
     padding: 1%;
     box-sizing: border-box;
-    margin-bottom: 2%;
+    position: fixed;
+    top: 0;
     section {
       border: none;
       margin-left: 2%;
@@ -38,6 +39,7 @@
     vertical-align: middle;
   }
   .MessageBox {
+    margin-top: 4%;
     padding: 1%;
     overflow-y: scroll;
     box-sizing: border-box;
