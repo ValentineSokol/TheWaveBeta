@@ -30,7 +30,7 @@ class ChatWindow extends Component {
                         <span>Last seen 5 min ago....</span>
                     </section>
                 </section>
-                <div className='MessageBox'>
+                <div className='MessageBox' style={{ height: `${window.screen.height - 100}px` }}>
               <span className='MessageContainer'>
                   <img src={url} alt={'companion\'s avatar'}  />
                   <p className='right-arrow' />

@@ -15,7 +15,6 @@ const Navbar = ({ isNavbarVisible, setNavbarVisibility, user, logout, translatio
  const onLogout = () => logout();
     return (
         <nav>
-            <Button clickHandler={toggleNavbar}>{`Click here to ${isNavbarVisible? 'collapse' : 'expand'} the navigation bar.`}</Button>
             {
                 isNavbarVisible &&
                     <div className="Navbar">
