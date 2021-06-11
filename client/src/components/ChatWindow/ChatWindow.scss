@@ -4,8 +4,6 @@
     overflow: hidden;
   }
   .TopOverlay {
-    position: fixed;
-    top: 0;
     width: 100%;
     background: colors.$important-element;
     color: colors.$dark-background;
@@ -14,6 +12,7 @@
     align-items: center;
     padding: 1%;
     box-sizing: border-box;
+    margin-bottom: 2%;
     section {
       border: none;
       margin-left: 2%;
