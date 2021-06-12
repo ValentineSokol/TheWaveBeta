@@ -1,6 +1,8 @@
   @use '../client/src/scss/common/colors';
+
   .TopOverlay {
     width: 100%;
+    height: 100px;
     background: colors.$important-element;
     color: colors.$dark-background;
     display: flex;
@@ -24,8 +26,8 @@
   }
   .CompanionAvatar {
     img, .Card {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
     }
   }
@@ -39,7 +41,8 @@
   .MessageBox {
     padding-top: 1%;
     overflow-y: auto;
-    box-sizing: border-box;
+    margin-bottom: 120px;
+    margin-top: 120px;
   }
   .MessageContainer {
     display: flex;
@@ -64,9 +67,11 @@
   .SendMessagePanel  {
     display: flex;
     justify-content: center;
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    height: 50px;
     margin: 2%;
+    height: 80px;
     box-sizing: border-box;
     .ButtonContainer {
       display: flex;

@@ -7,32 +7,39 @@ import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import sendMessage from '../../assets/sendMessage.svg';
 import Button from "../reusable/UIKit/Forms/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExpandAlt as navbarToggle } from '@fortawesome/free-solid-svg-icons';
+import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse } from '@fortawesome/free-solid-svg-icons';
 class ChatWindow extends Component {
-    toggleBodyScroll() {
-        const {isNavbarVisible} = this.props;
-        document.body.style = isNavbarVisible? '' : 'height:100vh; overflow:hidden';
+    sendMessage = () => {
+        this.setState({
+            messages: [...this.state.messages, this.state.message]
+        });
+    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            messages: [],
+            message: ''
+        };
     }
+
+    typeMessage = e => {
+        this.setState({ message: e.target.value });
+   }
+
     toggleNavbar = () => {
         const { isNavbarVisible, setNavbarVisibility } = this.props;
         setNavbarVisibility(!isNavbarVisible);
     }
     componentDidMount() {
         this.props.setNavbarVisibility(false);
-        this.toggleBodyScroll();
         this.inputRef = React.createRef();
     }
-    componentDidUpdate(prevProps) {
-        if (this.props.isNavbarVisible === prevProps.isNavbarVisible) return;
-        this.toggleBodyScroll();
-    }
-
-
     render() {
+        const { isNavbarVisible } = this.props;
         const url = 'https://f002.backblazeb2.com/file/theWaveFiles/Valentine-eb8ec682bebe38c31381b8a78b08a9e569a14a191a142d6a478adc5b104d94337e604011e432fea0e857760b7fb6b12914e52182eae27e91b87ba232e6b87fb1';
         return (
             <div className='ChatWindow'>
-                <section className='TopOverlay'>
+                <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
                     <section className='CompanionAvatar'>
                         <Card>
                             <img src={url} alt={'companion\'s avatar'}  />
@@ -42,68 +49,26 @@ class ChatWindow extends Component {
                         <Heading size='1'>Valentine</Heading>
                         <span>Last seen 5 min ago....</span>
                     </section>
-                    <span className='NavbarToggle' onClick={this.toggleNavbar}><FontAwesomeIcon icon={navbarToggle} /></span>
+                    <span className='NavbarToggle' onClick={this.toggleNavbar}>
+                        <FontAwesomeIcon
+                            icon={isNavbarVisible? navbarToggleCollapse: navbarToggleExpand}
+                        />
+                    </span>
                 </section>
-                <div className='MessageBox' style={{ height: `${window.screen.height - 100}px` }}>
-              <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hi, I am a chat component!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>   <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-                    <span className='MessageContainer'>
-                  <img src={url} alt={'companion\'s avatar'}  />
-                  <p className='right-arrow' />
-                  <span className='OutcomingMessage'>Hello!</span>
-              </span>
-
+                <div className='MessageBox' >
+                    {
+                        this.state.messages.map(message => (
+                            <span className='MessageContainer'>
+                    <img src={url} alt={'companion\'s avatar'}  />
+                    <p className='right-arrow' />
+                    <span className='OutcomingMessage'>{message}</span>
+                </span>
+                        ))
+                    }
                 </div>
                 <section id={'inputRef'}  className='SendMessagePanel'>
-                <textarea placeholder='Write your message here' />
-                <Button>
+                <textarea onChange={this.typeMessage} placeholder='Write your message here' />
+                <Button clickHandler={this.sendMessage}>
                     <img src={sendMessage} alt='Send Message Button' />
                 </Button>
                 </section>
