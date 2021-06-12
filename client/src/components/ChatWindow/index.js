@@ -9,14 +9,25 @@ import Button from "../reusable/UIKit/Forms/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExpandAlt as navbarToggle } from '@fortawesome/free-solid-svg-icons';
 class ChatWindow extends Component {
+    toggleBodyScroll() {
+        const {isNavbarVisible} = this.props;
+        document.body.style = isNavbarVisible? '' : 'height:100vh; overflow:hidden';
+    }
     toggleNavbar = () => {
         const { isNavbarVisible, setNavbarVisibility } = this.props;
         setNavbarVisibility(!isNavbarVisible);
     }
     componentDidMount() {
         this.props.setNavbarVisibility(false);
+        this.toggleBodyScroll();
         this.inputRef = React.createRef();
     }
+    componentDidUpdate(prevProps) {
+        if (this.props.isNavbarVisible === prevProps.isNavbarVisible) return;
+        this.toggleBodyScroll();
+    }
+
+
     render() {
         const url = 'https://f002.backblazeb2.com/file/theWaveFiles/Valentine-eb8ec682bebe38c31381b8a78b08a9e569a14a191a142d6a478adc5b104d94337e604011e432fea0e857760b7fb6b12914e52182eae27e91b87ba232e6b87fb1';
         return (
