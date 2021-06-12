@@ -6,12 +6,8 @@ import './Navbar.scss';
 import logo from '../../img/navlogo.png';
 import LanguageSelector from "../reusable/UIKit/LanguageSelector";
 import withTranslation from '../reusable/withTranslation/index';
-import Button from '../reusable/UIKit/Forms/Button';
 
 const Navbar = ({ isNavbarVisible, setNavbarVisibility, user, logout, translation }) => {
- const toggleNavbar = () => {
-     setNavbarVisibility();
- }
  const onLogout = () => logout();
     return (
         <nav>
