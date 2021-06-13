@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import './ChatWindow.scss';
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
-import Card from '../reusable/UIKit/Cards/Card/Card';
 import withTranslation from '../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import sendMessage from '../../assets/sendMessage.svg';
 import Button from "../reusable/UIKit/Forms/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse } from '@fortawesome/free-solid-svg-icons';
+import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse, faShare } from '@fortawesome/free-solid-svg-icons';
 class ChatWindow extends Component {
     sendMessage = () => {
         this.setState({
@@ -40,11 +39,9 @@ class ChatWindow extends Component {
         return (
             <div className='ChatWindow'>
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
-                    <section className='CompanionAvatar'>
-                        <Card>
+                    <span className='CompanionAvatar'>
                             <img src={url} alt={'companion\'s avatar'}  />
-                        </Card>
-                    </section>
+                    </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>Valentine</Heading>
                         <span>Last seen 5 min ago....</span>
@@ -67,10 +64,10 @@ class ChatWindow extends Component {
                     }
                 </div>
                 <section id={'inputRef'}  className='SendMessagePanel'>
+                <div className='RichArea'>
                 <textarea onChange={this.typeMessage} placeholder='Write your message here' />
-                <Button clickHandler={this.sendMessage}>
-                    <img src={sendMessage} alt='Send Message Button' />
-                </Button>
+                <FontAwesomeIcon className='SendButton' icon={faShare} />
+                </div>
                 </section>
             </div>
         );
