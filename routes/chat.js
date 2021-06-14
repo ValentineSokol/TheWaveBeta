@@ -29,10 +29,7 @@ module.exports = (server) => {
            const messageTimeThreshold = lastViewedMessageDate.setDate(lastViewedMessageDate.getDate() - 3);
            const messages = await directMessages.findAll({
                where: {
-                   [Op.or]: [{ from: req.user.id, to: companion }, { from: companion, to: req.user.id }],
-                   createdAt: {
-                       [Op.gte]: messageTimeThreshold
-                   }
+                   [Op.or]: [{ from: req.user.id, to: companion }, { from: companion, to: req.user.id }]
                }
            });
            res.json(messages);
