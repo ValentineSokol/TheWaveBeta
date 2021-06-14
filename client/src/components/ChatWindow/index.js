@@ -39,7 +39,7 @@ class ChatWindow extends Component {
             );
         }
         catch (err) {
-            alert(err);
+            console.error(err);
         }
     };
     constructor(props) {
