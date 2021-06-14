@@ -16,7 +16,7 @@
     }
     .NavbarToggle {
       cursor: pointer;
-      align-self: flex-start;
+      margin-bottom: 50px;
     }
     .OverlayInfo {
       display: flex;
@@ -26,8 +26,8 @@
   }
   .CompanionAvatar {
     img {
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
     }
   }
@@ -39,7 +39,7 @@
     vertical-align: middle;
   }
   .MessageBox {
-    padding-top: 1%;
+    padding: 1%;
     overflow-y: auto;
     margin-bottom: 120px;
     margin-top: 120px;
@@ -48,9 +48,10 @@
     display: flex;
     align-items: center;
     margin-bottom: 1%;
+    font-size: 1.2em;
     img, .Card {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
     }
   }
@@ -73,10 +74,19 @@
     height: 80px;
     box-sizing: border-box;
     padding: 1%;
+    background: colors.$white;
+    textarea {
+      resize: none;
+    }
   }
   .SendButton {
+    cursor: pointer;
     color: colors.$important-element;
     font-size: 2em;
+    transition: color 200ms ease-in-out;
+    &:hover {
+      color: colors.$hover-blue;
+    }
   }
   .RichArea {
     display: flex;

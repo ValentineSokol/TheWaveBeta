@@ -11,7 +11,7 @@ button {
   cursor: pointer;
   transition: background 200ms;
   &:hover {
-    background: #27A8E1;
+    background: colors.$hover-blue;
   }
 }
 .ButtonContainer {

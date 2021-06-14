@@ -3,15 +3,44 @@ import './ChatWindow.scss';
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import withTranslation from '../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
-import sendMessage from '../../assets/sendMessage.svg';
-import Button from "../reusable/UIKit/Forms/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse, faShare } from '@fortawesome/free-solid-svg-icons';
+import Message from "./Message";
+import fetcher from "../../utils/fetcher";
 class ChatWindow extends Component {
-    sendMessage = () => {
+    async componentDidMount() {
+        this.props.setNavbarVisibility(false);
+        const promises = [
+            fetcher(`/user/profile/${this.props.match.params.id}`),
+            fetcher(`/chat/getDirectMessages/${this.props.match.params.id}`)
+        ];
+        const [{ user }, messages] = await Promise.all(promises);
+        this.setState({ messages, companion: user });
+    }
+    sendMessage = async () => {
+        const messageObj = {
+            text: this.state.message.trim(),
+            sender: {
+                avatarUrl: this.url,
+                username: 'Valentine'
+            }
+        }
+        const isMessageEmpty = !this.state.message.trim();
         this.setState({
-            messages: [...this.state.messages, this.state.message]
+            messages: isMessageEmpty ? this.state.messages : [...this.state.messages, messageObj],
+            message: ''
         });
+        if (isMessageEmpty) return;
+        try {
+            await fetcher(
+                `/chat/sendDirectMessage/${this.props.match.params.id}`,
+                 'PUT',
+                { text: this.state.message.trim() }
+            );
+        }
+        catch (err) {
+            alert(err);
+        }
     };
     constructor(props) {
         super(props);
@@ -24,26 +53,31 @@ class ChatWindow extends Component {
     typeMessage = e => {
         this.setState({ message: e.target.value });
    }
+   onEnterPress = e => {
+        if (e.key === 'Shift') this.shiftPressed = true;
+        if (e.key === 'Enter' && !this.shiftPressed) {
+            e.preventDefault();
+            this.sendMessage();
+        }
+   }
+   onKeyUp = e => {
+        if (e.key === 'Shift') this.shiftPressed = false;
+   }
 
     toggleNavbar = () => {
         const { isNavbarVisible, setNavbarVisibility } = this.props;
         setNavbarVisibility(!isNavbarVisible);
     }
-    componentDidMount() {
-        this.props.setNavbarVisibility(false);
-        this.inputRef = React.createRef();
-    }
     render() {
         const { isNavbarVisible } = this.props;
-        const url = 'https://f002.backblazeb2.com/file/theWaveFiles/Valentine-eb8ec682bebe38c31381b8a78b08a9e569a14a191a142d6a478adc5b104d94337e604011e432fea0e857760b7fb6b12914e52182eae27e91b87ba232e6b87fb1';
         return (
             <div className='ChatWindow'>
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
                     <span className='CompanionAvatar'>
-                            <img src={url} alt={'companion\'s avatar'}  />
+                            <img src={this.state.companion?.avatarUrl} alt={'companion\'s avatar'}  />
                     </span>
                     <section className='OverlayInfo'>
-                        <Heading size='1'>Valentine</Heading>
+                        <Heading size='1'>{this.state.companion?.username}</Heading>
                         <span>Last seen 5 min ago....</span>
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
@@ -54,19 +88,13 @@ class ChatWindow extends Component {
                 </section>
                 <div className='MessageBox' >
                     {
-                        this.state.messages.map(message => (
-                            <span className='MessageContainer'>
-                    <img src={url} alt={'companion\'s avatar'}  />
-                    <p className='right-arrow' />
-                    <span className='OutcomingMessage'>{message}</span>
-                </span>
-                        ))
+                        this.state.messages.map(message => <Message message={message} companionAvatar={this.state.companion.avatarUrl} key={message.id} />)
                     }
                 </div>
                 <section id={'inputRef'}  className='SendMessagePanel'>
                 <div className='RichArea'>
-                <textarea onChange={this.typeMessage} placeholder='Write your message here' />
-                <FontAwesomeIcon className='SendButton' icon={faShare} />
+                <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
+                { this.state.message.trim() && <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} /> }
                 </div>
                 </section>
             </div>

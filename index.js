@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const chatRouter = require('./routes/chat');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,4 +41,5 @@ server.emailer = nodemailer.createTransport({
 });
 app.use('/auth', authRouter(server));
 app.use('/user', userRouter(server));
+app.use('/chat', chatRouter(server));
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
