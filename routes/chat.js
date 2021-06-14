@@ -14,6 +14,7 @@ module.exports = (server) => {
                 to: addressee,
                 text
             });
+            res.sendStatus(200);
         }
         catch(err) {
             console.error(err);
