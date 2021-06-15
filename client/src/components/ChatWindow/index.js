@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse, faShare } from '@fortawesome/free-solid-svg-icons';
 import Message from "./Message";
 import fetcher from "../../utils/fetcher";
+import Avatar from "../reusable/Avatar";
 class ChatWindow extends Component {
     async componentDidMount() {
         this.props.setNavbarVisibility(false);
@@ -17,6 +18,10 @@ class ChatWindow extends Component {
         const [{ user }, messages] = await Promise.all(promises);
         this.setState({ messages, companion: user });
     }
+    componentWillUnmount() {
+        this.props.setNavbarVisibility(true);
+    }
+
     sendMessage = async () => {
         const messageObj = {
             text: this.state.message.trim(),
@@ -74,7 +79,7 @@ class ChatWindow extends Component {
             <div className='ChatWindow'>
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
                     <span className='CompanionAvatar'>
-                            <img src={this.state.companion?.avatarUrl} alt={'companion\'s avatar'}  />
+                        <Avatar url={this.state.companion?.avatarUrl} />
                     </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>

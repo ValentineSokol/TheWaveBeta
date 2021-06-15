@@ -6,8 +6,8 @@ import { loadProfile } from '../../redux/actions/api';
 import './Profile.scss';
 import Card from "../reusable/UIKit/Cards/Card/Card";
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
-import defaultAvatar from '../../assets/defaultAvatar.webp';
 import Button from "../reusable/UIKit/Forms/Button";
+import Avatar from "../reusable/Avatar";
 
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
@@ -28,7 +28,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
            <section>
            <Card>
             <div className='ProfileAvatar'>
-             <img src={user.avatarUrl || defaultAvatar} alt='profile' />
+                <Avatar url={user.avatarUrl} />
             </div>
            </Card>
             <div className='ProfileUserActions'>
