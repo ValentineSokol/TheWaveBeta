@@ -10,6 +10,9 @@ const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
 
 const app = express();
+
+require('express-ws')(app);
+
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/client/build`));
 

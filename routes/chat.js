@@ -1,10 +1,41 @@
 const { Router } = require('express');
-const { Users, directMessages } = require('../models');
+const { directMessages } = require('../models');
 const auth = require('../middlewares/auth');
 const {Op} = require('sequelize');
 
+
 module.exports = (server) => {
     const router = Router();
+    server.websocketConnections = {};
+    router.ws('/chat/user/connect', auth, (ws, req) => {
+        server.websocketConnections[req.user.id] = { ws, isOnline: true, subscribers: [] };
+        ws.on('message', json => {
+            const message = JSON.parse(json);
+
+            if (message.type === 'watch-user') {
+                const userId = message.payload;
+                server.websocketConnections[userId].subscribers.push(ws);
+            }
+
+        })
+        ws.on('close', (ws, req) => {
+           setInterval(() => {
+               const user = server.websocketConnections[req.user.id];
+               user.ws = null;
+               user.lastSeen = Date.now;
+               user.isOnline = false;
+
+               user.subscribers.forEach(subscriber => {
+                   const message = {
+                       user: req.user.id,
+                       lastSeen: user.lastSeen
+                   };
+                   subscriber.send(JSON.stringify(message));
+               });
+           }, 3000);
+        });
+
+    });
     router.put('/sendDirectMessage/:addressee', auth, async (req, res) => {
         const { addressee } = req.params;
         const { text } = req.body;
