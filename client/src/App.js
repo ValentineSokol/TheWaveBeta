@@ -7,8 +7,7 @@ import Footer from "./components/Footer/Footer";
 import { actions as preferencesAPI, loadTranslations } from './redux/PreferencesSlice';
 import getBrowserLanguage from './utils/getBrowserLanguage';
 import Routes from './components/Routes';
-
-
+import WebSocketController from './services/webSocketController';
 
 const App = class App extends  React.Component {
     constructor(props) {
@@ -27,6 +26,7 @@ const App = class App extends  React.Component {
     async componentDidMount() {
         this.setStartLanguage();
         this.props.checkLogin();
+        WebSocketController.connect();
     }
 
     render() {

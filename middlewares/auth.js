@@ -1,10 +1,11 @@
 const { Users } = require('../models');
+const getUserFromSession = require('../utils/getUserFromSession');
 module.exports = async (req, res, next) => {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
+    const userPromise = getUserFromSession(req);
+    if (!userPromise) {
         res.sendStatus(401);
         return;
     }
-    const userId = req.session.passport.user;
-    req.user = await Users.findByPk(userId);
+    req.user = await userPromise;
     next();
 }
