@@ -8,6 +8,10 @@ import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollaps
 import Message from "./Message";
 import fetcher from "../../utils/fetcher";
 import Avatar from "../reusable/Avatar";
+
+import WebSocketController from '../../services/webSocketController';
+import RelativeTime from "../reusable/UIKit/RelativeTime";
+
 class ChatWindow extends Component {
     async componentDidMount() {
         this.props.setNavbarVisibility(false);
@@ -16,10 +20,15 @@ class ChatWindow extends Component {
             fetcher(`/chat/getDirectMessages/${this.props.match.params.id}`)
         ];
         const [{ user }, messages] = await Promise.all(promises);
+        WebSocketController.watchUserStatus(user.id);
+        WebSocketController.subscribe('user-status', this.onCompanionStatusChange);
         this.setState({ messages, companion: user });
     }
     componentWillUnmount() {
         this.props.setNavbarVisibility(true);
+    }
+    onCompanionStatusChange = (message) => {
+      this.setState({ companionOnline: message.online, lastSeen: message.lastSeen || null });
     }
 
     sendMessage = async () => {
@@ -83,7 +92,7 @@ class ChatWindow extends Component {
                     </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>
-                        <span>Last seen 5 min ago....</span>
+                        <span>{ this.state.companionOnline? 'Online' : <RelativeTime text='Last seen' timestamp={this.state.lastSeen} /> }</span>
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon

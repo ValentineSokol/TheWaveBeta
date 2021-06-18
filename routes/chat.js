@@ -8,6 +8,8 @@ const {Op} = require('sequelize');
 module.exports = (server) => {
     const router = Router();
     server.websocketConnections = {};
+    server.userStatusSubscriptions = new Map();
+
     router.ws('/user/connect', async (ws, req, res, next) => {
         const userPromise = getUserFromSession(req);
         if (!userPromise) {
@@ -23,40 +25,64 @@ module.exports = (server) => {
         }
         const userConnection = server.websocketConnections[user.id];
         if (!userConnection) {
-            server.websocketConnections[user.id] = {ws, isOnline: true, subscribers: []};
+            server.websocketConnections[user.id] = ws;
         }
         else {
             userConnection.ws = ws;
         }
         console.info(`User ${user.username} has connected!`);
+        const statusSubscribers = server.userStatusSubscriptions.get(user.id);
+        if (statusSubscribers) {
+            statusSubscribers.forEach(subscriber => {
+               if (subscriber.readyState !== 1) {
+                   statusSubscribers.delete(subscriber);
+                   return;
+               }
+               const message = { type: 'user-status', payload:  { online: true } };
+               subscriber.send(JSON.stringify(message));
+
+            });
+        }
         ws.on('message', json => {
             const message = JSON.parse(json);
             if (message.type === 'watch-user-status') {
-                const userId = message.payload;
-                server.websocketConnections[userId].subscribers.push(ws);
+                const targetUserId = message.payload;
+                const allSubscriptionsForUser = server.userStatusSubscriptions.get(targetUserId);
+                if (allSubscriptionsForUser) {
+                    allSubscriptionsForUser.add(ws);
+                }
+                else  {
+                    server.userStatusSubscriptions.set(targetUserId, new Set([ ws ]));
+                }
+                if (server.websocketConnections[targetUserId]) {
+                    ws.send(JSON.stringify({type: 'user-status', payload: {online: true}}));
+                }
             }
             if (message.type === 'ping') {
-               const addressee = server.websocketConnections[req.user.id];
+               const addressee = server.websocketConnections[user.id];
                if (addressee.readyState !== 1) return;
                addressee.send(JSON.stringify({ type: 'pong' }));
             }
         })
         ws.on('close', (ws, req) => {
-          const userConnection = server.websocketConnections[req.user.id];
-          userConnection.offlineInterval = setInterval(() => {
-               userConnection.ws = null;
-               userConnection.lastSeen = Date.now;
-               userConnection.isOnline = false;
-
-               userConnection.subscribers.forEach(subscriber => {
+              server.websocketConnections[user.id] = null;
+              const allSubscriptionsForUser = server.userStatusSubscriptions.get(user.id);
+              if (!allSubscriptionsForUser) return;
+              allSubscriptionsForUser.forEach(subscriber => {
                    const message = {
-                       userConnection: req.userConnection.id,
-                       lastSeen: user.lastSeen
+                       type: 'user-status',
+                       payload: {
+                           user: user.id,
+                           online: false,
+                           lastSeen: Date.now()
+                       }
                    };
-                   if (subscriber.readyState !== 1) return;
+                   if (subscriber.readyState !== 1) {
+                       allSubscriptionsForUser.delete(subscriber);
+                       return;
+                   }
                    subscriber.send(JSON.stringify(message));
                });
-           }, 3000);
         });
 
     });
@@ -71,7 +97,7 @@ module.exports = (server) => {
             });
             const userConnection = server.websocketConnections[addressee];
             if (userConnection &&  userConnection.ws && userConnection.ws.readyState === 1) {
-                const message = { type: 'message', from: req.user.id, text };
+                const message = { type: 'message', payload: { from: req.user.id, text } };
                 userConnection.ws.send(JSON.stringify(message));
             }
             res.json({ success: true });

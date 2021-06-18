@@ -1,4 +1,5 @@
 export default {
+  subscribers: [],
   ws: null,
   pingInterval: null,
   connect: function () {
@@ -7,9 +8,13 @@ export default {
           this.ws = null;
           console.error(`WS Error ${err.message}`);
       }
-      this.ws.onmessage = (json) => {
-          const message = JSON.parse(json);
+      this.ws.onmessage = (e) => {
+          const message = JSON.parse(e.data);
+          console.info({ message })
           console.info(`Message of type ${message.type} recieved!`);
+          const callbacksToCall = this.subscribers.filter(sub => sub.messageType === message.type );
+          console.info({ callbacksToCall });
+          callbacksToCall.forEach(({ cb }) => cb(message.payload));
       }
       this.ws.onopen = (e) => {
           console.info('WebSocket opened.');
@@ -22,5 +27,17 @@ export default {
           this.pingInterval = null;
           console.info(`WebSocket closed ${e.code}.`);
       }
+  },
+  watchUserStatus: function (id) {
+      const { ws } = this;
+      if (ws.readyState !== 1) return;
+      const message = {
+          type: 'watch-user-status',
+          payload: id
+      };
+      ws.send(JSON.stringify(message));
+  },
+  subscribe: function (messageType, cb) {
+      this.subscribers.push({ messageType, cb });
   }
 };
