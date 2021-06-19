@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { directMessages } = require('../models');
+const { Users, directMessages } = require('../models');
 const auth = require('../middlewares/auth');
 const getUserFromSession = require('../utils/getUserFromSession');
 const {Op} = require('sequelize');
@@ -43,7 +43,7 @@ module.exports = (server) => {
 
             });
         }
-        ws.on('message', json => {
+        ws.on('message', async json => {
             const message = JSON.parse(json);
             if (message.type === 'watch-user-status') {
                 const targetUserId = message.payload;
@@ -57,6 +57,17 @@ module.exports = (server) => {
                 if (server.websocketConnections[targetUserId]) {
                     ws.send(JSON.stringify({type: 'user-status', payload: {online: true}}));
                 }
+                else {
+                    const userRecord = await Users.findByPk(targetUserId);
+                    ws.send(JSON.stringify({
+                        type: 'user-status',
+                        payload: {
+                            user: targetUserId,
+                            online: false,
+                            lastSeen: userRecord.lastSeen
+                        }
+                    }));
+                }
             }
             if (message.type === 'ping') {
                const addressee = server.websocketConnections[user.id];
@@ -64,8 +75,16 @@ module.exports = (server) => {
                addressee.send(JSON.stringify({ type: 'pong' }));
             }
         })
-        ws.on('close', (ws, req) => {
+        ws.on('close', async (ws, req) => {
+            console.info('WS CLOSED')
               server.websocketConnections[user.id] = null;
+              const lastSeen = Date.now();
+              try {
+                  await user.update({lastSeen});
+              }
+              catch (err) {
+                  console.error(`Error when updating user's lastSeen: ${err}`);
+              }
               const allSubscriptionsForUser = server.userStatusSubscriptions.get(user.id);
               if (!allSubscriptionsForUser) return;
               allSubscriptionsForUser.forEach(subscriber => {
@@ -74,7 +93,7 @@ module.exports = (server) => {
                        payload: {
                            user: user.id,
                            online: false,
-                           lastSeen: Date.now()
+                           lastSeen
                        }
                    };
                    if (subscriber.readyState !== 1) {
@@ -96,9 +115,9 @@ module.exports = (server) => {
                 text
             });
             const userConnection = server.websocketConnections[addressee];
-            if (userConnection &&  userConnection.ws && userConnection.ws.readyState === 1) {
+            if (userConnection && userConnection.readyState === 1) {
                 const message = { type: 'message', payload: { from: req.user.id, text } };
-                userConnection.ws.send(JSON.stringify(message));
+                userConnection.send(JSON.stringify(message));
             }
             res.json({ success: true });
         }

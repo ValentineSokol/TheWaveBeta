@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     static findByUsername(username = '') {
       return this.findOne({ where: { username } });
     }
-  };
+  }
   Users.init({
     username: DataTypes.STRING,
     email: DataTypes.STRING,
@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     facebookId: DataTypes.STRING,
     birthday: DataTypes.DATE,
     recoveryEmail: DataTypes.STRING,
-    avatarUrl: DataTypes.STRING
+    avatarUrl: DataTypes.STRING,
+    lastSeen: DataTypes.BIGINT
   }, {
     sequelize,
     modelName: 'Users',

@@ -10,16 +10,18 @@ export default {
       }
       this.ws.onmessage = (e) => {
           const message = JSON.parse(e.data);
-          console.info({ message })
+          if (!message?.type) return;
           console.info(`Message of type ${message.type} recieved!`);
-          const callbacksToCall = this.subscribers.filter(sub => sub.messageType === message.type );
-          console.info({ callbacksToCall });
+          const callbacksToCall = this.subscribers.filter(sub => sub?.messageType === message.type );
+          console.info(callbacksToCall);
           callbacksToCall.forEach(({ cb }) => cb(message.payload));
       }
       this.ws.onopen = (e) => {
           console.info('WebSocket opened.');
+          const callbacksToCall = this.subscribers.filter(s => s.eventType === 'open');
+          callbacksToCall.forEach(({cb}) => cb());
           this.pingInterval = setInterval(() => {
-             // this.ws.send(JSON.stringify({ type: 'ping' }))
+              //this.ws.send(JSON.stringify({ type: 'ping' }))
           }, 1000);
       }
       this.ws.onclose = (e) => {
@@ -37,7 +39,12 @@ export default {
       };
       ws.send(JSON.stringify(message));
   },
-  subscribe: function (messageType, cb) {
-      this.subscribers.push({ messageType, cb });
-  }
+  subscribe: function (eventType, cb, messageType = null) {
+      const subscription = { eventType, cb };
+      if (eventType === 'message' && messageType) {
+          subscription.messageType = messageType;
+      }
+      this.subscribers.push(subscription);
+  },
+  isWsOpen: function () { return this.ws?.readyState === 1}
 };

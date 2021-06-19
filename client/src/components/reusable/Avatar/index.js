@@ -8,7 +8,7 @@ const Avatar = ({ url, alt = 'Avatar image' }) => {
     },
     [url]
     );
-    return <img onError={ _ => setSrc(defaultAvatar) } src={src} alt={alt} />;
+    return <img onError={ _ => setSrc(defaultAvatar) } src={src || defaultAvatar} alt={alt} />;
 }
 
 export default Avatar;

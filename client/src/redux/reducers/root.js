@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";
 import {preferencesReducer} from "../PreferencesSlice";
+import WebSocketController from "../../services/webSocketController";
 
 export default combineReducers({
     global: createReducer({
@@ -15,6 +16,10 @@ export default combineReducers({
             state.user = action.payload;
             state.loading = false;
             state.loginChecked = true;
+            const { isLoggedIn } = action.payload;
+            if (isLoggedIn) {
+                WebSocketController.connect();
+            }
         },
         [checkLogin.rejected]: (state, action) => {
             state.loading = false;

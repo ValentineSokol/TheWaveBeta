@@ -13,16 +13,32 @@ import WebSocketController from '../../services/webSocketController';
 import RelativeTime from "../reusable/UIKit/RelativeTime";
 
 class ChatWindow extends Component {
+    onMessageRecieved = message => {
+        if (message.from !== this.state.companion.id) return;
+        const { messages } = this.state;
+        this.setState({ messages: [...messages, message]});
+    }
+    onWsOpen = companion => {
+        console.info('Opened!');
+        WebSocketController.watchUserStatus(companion.id);
+        WebSocketController.subscribe('message',this.onCompanionStatusChange, 'user-status');
+        WebSocketController.subscribe('message', this.onMessageRecieved, 'message');
+        this.setState({ loading: false });
+    }
     async componentDidMount() {
         this.props.setNavbarVisibility(false);
         const promises = [
             fetcher(`/user/profile/${this.props.match.params.id}`),
             fetcher(`/chat/getDirectMessages/${this.props.match.params.id}`)
         ];
-        const [{ user }, messages] = await Promise.all(promises);
-        WebSocketController.watchUserStatus(user.id);
-        WebSocketController.subscribe('user-status', this.onCompanionStatusChange);
-        this.setState({ messages, companion: user });
+        const [{ user: companion }, messages] = await Promise.all(promises);
+        if (WebSocketController.isWsOpen()) {
+            this.onWsOpen(companion);
+        }
+        else {
+            WebSocketController.subscribe('open', () => this.onWsOpen(companion));
+        }
+        this.setState({ messages, companion, lastSeen: companion.lastSeen });
     }
     componentWillUnmount() {
         this.props.setNavbarVisibility(true);
@@ -34,10 +50,8 @@ class ChatWindow extends Component {
     sendMessage = async () => {
         const messageObj = {
             text: this.state.message.trim(),
-            sender: {
-                avatarUrl: this.url,
-                username: 'Valentine'
-            }
+            from: this.props.user.id,
+            to: this.state.companion.id
         }
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
@@ -60,7 +74,8 @@ class ChatWindow extends Component {
         super(props);
         this.state = {
             messages: [],
-            message: ''
+            message: '',
+            loading: true
         };
     }
 
@@ -83,6 +98,7 @@ class ChatWindow extends Component {
         setNavbarVisibility(!isNavbarVisible);
     }
     render() {
+        if (this.state.loading) return 'Establishing connection...';
         const { isNavbarVisible } = this.props;
         return (
             <div className='ChatWindow'>
@@ -102,7 +118,7 @@ class ChatWindow extends Component {
                 </section>
                 <div className='MessageBox' >
                     {
-                        this.state.messages.map(message => <Message message={message} companionAvatar={this.state.companion.avatarUrl} key={message.id} />)
+                        this.state.messages.map(message => <Message user={this.props.user} companion={this.state.companion} message={message} companionAvatar={this.state.companion.avatarUrl} key={message.id} />)
                     }
                 </div>
                 <section id={'inputRef'}  className='SendMessagePanel'>
@@ -116,4 +132,4 @@ class ChatWindow extends Component {
     }
 }
 
-export default  withTranslation(ChatWindow, 'chat', state => ({ isNavbarVisible: state.preferences.isNavbarVisible }), { setNavbarVisibility: preferencesAPI.setNavbarVisibility }, true)
+export default  withTranslation(ChatWindow, 'chat', state => ({ isNavbarVisible: state.preferences.isNavbarVisible, user: state.global.user }), { setNavbarVisibility: preferencesAPI.setNavbarVisibility }, true)
