@@ -31,12 +31,27 @@
       border-radius: 50%;
     }
   }
-  .OutcomingMessage {
-    background: colors.$light-blue;
-    padding: 5%;
+  .Message {
+    width: 100px;
+    word-wrap: break-word;
+    padding: 1%;
     border-radius: 5px;
     text-align: center;
     vertical-align: middle;
+  }
+  .MessageAndArrow {
+    display: flex;
+  }
+  .OutgoingMessageBody {
+    @extend .MessageTextContainer;
+    background: colors.$light-blue;
+  }
+  .IncomingMessageBody {
+    @extend .MessageTextContainer;
+    background: colors.$card-background;
+    .right-arrow {
+      border-right: 8px solid colors.$card-background;
+    }
   }
   .MessageBox {
     padding: 1%;
@@ -44,9 +59,14 @@
     margin-bottom: 120px;
     margin-top: 120px;
   }
-  .MessageContainer {
+  .MessageContainer, .JointMessageContainer {
+    h6 {
+      margin-bottom: .5%;
+      padding: 0;
+      text-align: left;
+    }
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 1%;
     font-size: 1.2em;
     img, .Card {
@@ -55,6 +75,10 @@
       border-radius: 50%;
     }
   }
+  .JointMessageContainer {
+    margin-bottom: .1%;
+      margin-left: 70px;
+  }
   .MessageBody {
     display: flex;
     h6 {
@@ -62,9 +86,16 @@
       padding: 0;
       text-align: left;
     }
+    .right-arrow, .Avatar {
+      align-self: flex-end;
+    }
+  }
+  .MessageTextContainer {
+    display: flex;
   }
   .MessageText {
-    display: flex;
+    margin: 0;
+    padding: 0;
   }
   .right-arrow {
     width: 0;
@@ -76,16 +107,18 @@
   footer {
     display: none;
   }
-  .SendMessagePanel  {
-    display: flex;
-    justify-content: center;
+  .BottomSection {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 80px;
+    height: 100px;
+    background: colors.$white;
+  }
+  .SendMessagePanel  {
+    display: flex;
+    justify-content: center;
     box-sizing: border-box;
     padding: 1%;
-    background: colors.$white;
     textarea {
       resize: none;
     }
@@ -113,7 +146,12 @@
       outline: none;
     }
   }
-  pre {
-    margin: 0;
-  }
 
+  .right-arrow-outgoing {
+    @extend .right-arrow;
+    border-right: 8px solid colors.$light-blue;
+  }
+  .right-arrow-incoming {
+    @extend .right-arrow;
+    border-right: 8px solid colors.$card-background;
+  }

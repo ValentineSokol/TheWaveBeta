@@ -13,16 +13,58 @@ import WebSocketController from '../../services/webSocketController';
 import RelativeTime from "../reusable/UIKit/RelativeTime";
 
 class ChatWindow extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            messages: [],
+            typers: [],
+            message: '',
+            loading: true
+        };
+    }
+    isDirectChat = () => this.props.match.params.chatType === 'direct'
     onMessageRecieved = message => {
-        if (message.from !== this.state.companion.id) return;
+        if (message.from !== this.state.companion.id || message.from === this.props.user?.id) return;
         const { messages } = this.state;
         this.setState({ messages: [...messages, message]});
     }
+    onCompanionTypingChange = ({ username, isDirect, chatId}) => {
+        if (chatId !== this.props.match.params.id) return;
+        if (this.isDirectChat() !== isDirect) return;
+        let typers = [...this.state.typers];
+        if (typers.includes(username)) {
+            typers = typers.filter(typer => typer !== username);
+        }
+        else {
+            typers.push(username);
+        }
+        this.setState({ typers });
+    }
+    renderTypingMessage = () => {
+        const wrapInHtml = message => <div className='TypingMessage'>{message}</div>;
+        const { typers } = this.state;
+        if (!typers.length) return null;
+        if (typers.length === 1) {
+            return wrapInHtml(`${typers[0]} is typing`);
+        }
+            let result = '';
+            for (let i = 0; i <= 5; i += 1) {
+                if (i >= typers.length) break;
+                const typer = typers[i];
+                result += i < 4? `${typer},` : typer;
+            }
+            if (typers.size > 5) {
+                result += ' and others ';
+            }
+            result += 'are typing';
+            return  wrapInHtml(result);
+    }
     onWsOpen = companion => {
-        console.info('Opened!');
         WebSocketController.watchUserStatus(companion.id);
         WebSocketController.subscribe('message',this.onCompanionStatusChange, 'user-status');
         WebSocketController.subscribe('message', this.onMessageRecieved, 'message');
+        WebSocketController.subscribe('message', this.onCompanionTypingChange, 'is-typing');
+        WebSocketController.subscribe('message', this.onCompanionTypingChange, 'stopped-typing');
         this.setState({ loading: false });
     }
     async componentDidMount() {
@@ -40,8 +82,66 @@ class ChatWindow extends Component {
         }
         this.setState({ messages, companion, lastSeen: companion.lastSeen });
     }
+    renderMessages = () => {
+        const {messages} = this.state;
+        const result = [];
+        const renderNewMessage = (message, isJoint, displayUsername) => {
+            result.push(
+                <Message
+                    key={message.id}
+                    message={message}
+                    user={this.props.user}
+                    companion={this.state.companion}
+                    isJoint={isJoint}
+                    displayUsername={displayUsername}
+                />
+            );
+        };
+        for (let i = 0; i < messages.length; i += 1) {
+            const message = messages[i];
+            if (i + 1 < messages.length) {
+                const nextMessage = messages[i + 1];
+                if (message.from === nextMessage.from) {
+                    let displayUsername = false;
+                    if (i === 0) {
+                        displayUsername = true
+                    } else {
+                        const prevMessage = messages[i - 1];
+                        displayUsername = prevMessage.from !== message.from;
+                    }
+                    renderNewMessage(message, true, displayUsername);
+                } else {
+                    renderNewMessage(message, false, false);
+                }
+            } else {
+                renderNewMessage(message, false, false);
+            }
+        }
+        return result;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!prevState.isTyping && this.state.isTyping) {
+            WebSocketController.sendTypingMessage(
+                true,
+                this.props.user.username,
+                true,
+                this.props.match.params.id
+            );
+        }
+        if (prevState.isTyping && !this.state.isTyping) {
+            WebSocketController.sendTypingMessage(
+                false,
+                this.props.user.username,
+                true,
+                this.props.match.params.id
+            );
+        }
+    }
+
     componentWillUnmount() {
         this.props.setNavbarVisibility(true);
+        if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
     }
     onCompanionStatusChange = (message) => {
       this.setState({ companionOnline: message.online, lastSeen: message.lastSeen || null });
@@ -70,17 +170,17 @@ class ChatWindow extends Component {
             console.error(err);
         }
     };
-    constructor(props) {
-        super(props);
-        this.state = {
-            messages: [],
-            message: '',
-            loading: true
-        };
-    }
-
     typeMessage = e => {
-        this.setState({ message: e.target.value });
+        this.setState({ message: e.target.value, isTyping: true });
+        if (this.stopTypingTimeout) {
+            clearTimeout(this.stopTypingTimeout);
+        }
+        this.setStopTypingTimeout();
+   }
+   setStopTypingTimeout = () => {
+        this.stopTypingTimeout = setTimeout(() => {
+            this.setState({ isTyping: false });
+        }, 5000);
    }
    onEnterPress = e => {
         if (e.key === 'Shift') this.shiftPressed = true;
@@ -98,6 +198,7 @@ class ChatWindow extends Component {
         setNavbarVisibility(!isNavbarVisible);
     }
     render() {
+        const NO_CHAT_HISTORY_MESSAGE = ` This is the very beginning of your chat with ${this.state?.companion?.username}`;
         if (this.state.loading) return 'Establishing connection...';
         const { isNavbarVisible } = this.props;
         return (
@@ -117,15 +218,17 @@ class ChatWindow extends Component {
                     </span>
                 </section>
                 <div className='MessageBox' >
-                    {
-                        this.state.messages.map(message => <Message user={this.props.user} companion={this.state.companion} message={message} companionAvatar={this.state.companion.avatarUrl} key={message.id} />)
-                    }
+                    {this.renderMessages()}
+                    { !this.state.messages.length && <p>{NO_CHAT_HISTORY_MESSAGE}</p> }
                 </div>
-                <section id={'inputRef'}  className='SendMessagePanel'>
+                <section className='BottomSection'>
+                {this.renderTypingMessage()}
+                <section className='SendMessagePanel'>
                 <div className='RichArea'>
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
                 { this.state.message.trim() && <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} /> }
                 </div>
+                </section>
                 </section>
             </div>
         );

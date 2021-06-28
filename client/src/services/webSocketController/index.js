@@ -2,8 +2,13 @@ export default {
   subscribers: [],
   ws: null,
   pingInterval: null,
+  getWsURL: function () {
+      const protocol = window.protocol === 'https:' ? 'wss' : 'ws';
+      const host = window.location.hostname === 'localhost'? 'localhost:4000' : window.location.hostname;
+      return `${protocol}://${host}/chat/user/connect`;
+  },
   connect: function () {
-      this.ws = new WebSocket('ws://localhost:4000/chat/user/connect');
+      this.ws = new WebSocket(this.getWsURL());
       this.ws.onerror = (err) => {
           this.ws = null;
           console.error(`WS Error ${err.message}`);
@@ -12,7 +17,7 @@ export default {
           const message = JSON.parse(e.data);
           if (!message?.type) return;
           console.info(`Message of type ${message.type} recieved!`);
-          const callbacksToCall = this.subscribers.filter(sub => sub?.messageType === message.type );
+          const callbacksToCall = this.subscribers.filter(sub => sub?.messageType === message.type);
           console.info(callbacksToCall);
           callbacksToCall.forEach(({ cb }) => cb(message.payload));
       }
@@ -38,6 +43,18 @@ export default {
           payload: id
       };
       ws.send(JSON.stringify(message));
+  },
+  sendTypingMessage: function (isTyping, username,isDirect, chatId) {
+      if (this.ws.readyState !== 1) return;
+      const message = {
+          type: isTyping? 'is-typing' : 'stopped-typing',
+          payload: {
+              username,
+              isDirect,
+              chatId
+          }
+      };
+      this.ws.send(JSON.stringify(message));
   },
   subscribe: function (eventType, cb, messageType = null) {
       const subscription = { eventType, cb };

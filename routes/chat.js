@@ -40,7 +40,6 @@ module.exports = (server) => {
                }
                const message = { type: 'user-status', payload:  { online: true } };
                subscriber.send(JSON.stringify(message));
-
             });
         }
         ws.on('message', async json => {
@@ -74,9 +73,16 @@ module.exports = (server) => {
                if (addressee.readyState !== 1) return;
                addressee.send(JSON.stringify({ type: 'pong' }));
             }
+            if (message.type === 'is-typing' || message.type === 'stopped-typing') {
+                const { chatId, isDirect } = message.payload;
+                if (isDirect) {
+                    const addressee = server.websocketConnections[chatId];
+                    if (addressee.readyState !== 1) return;
+                    addressee.send(JSON.stringify(message));
+                }
+            }
         })
         ws.on('close', async (ws, req) => {
-            console.info('WS CLOSED')
               server.websocketConnections[user.id] = null;
               const lastSeen = Date.now();
               try {
