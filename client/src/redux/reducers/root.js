@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";
 import {preferencesReducer} from "../PreferencesSlice";
+import {WebSocketReducer} from "../WebSocketSlice";
 import WebSocketController from "../../services/webSocketController";
 
 export default combineReducers({
@@ -53,4 +54,5 @@ export default combineReducers({
     }),
     notifications: notificationReducer,
     preferences: preferencesReducer,
+    WebSocket: WebSocketReducer
 });
