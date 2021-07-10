@@ -8,6 +8,9 @@ const WebSocketSlice = createSlice( {
         statusChange: (state, action) => {
             state.isWsOpen = action.payload;
         },
+        reconnect: (state, action) => {
+            state.isWsReconnecting = action.payload;
+        },
         message: (state, { payload: message }) => {
             state.messages[message.type] = message.payload;
         }

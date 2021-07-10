@@ -9,6 +9,7 @@ import getBrowserLanguage from './utils/getBrowserLanguage';
 import Routes from './components/Routes';
 
 
+
 const App = class App extends  React.Component {
     constructor(props) {
         super(props);

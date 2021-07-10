@@ -1,9 +1,8 @@
 import React from 'react';
-import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux'
-import rootReducer from './redux/reducers/root';
 import ReactDOM from 'react-dom';
 import './index.css';
+import store from './redux/reducers/store';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import dynamicImportPolyfill from 'dynamic-import-polyfill';
@@ -12,9 +11,6 @@ import dynamicImportPolyfill from 'dynamic-import-polyfill';
 dynamicImportPolyfill.initialize({
     modulePath: '/public', // Defaults to '.'
     importFunctionName: '$$import' // Defaults to '__import__'
-});
-const store = configureStore({
-   reducer: rootReducer,
 });
 ReactDOM.render(
   <React.StrictMode>
