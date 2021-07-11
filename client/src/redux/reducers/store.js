@@ -4,9 +4,10 @@ import WebSocketBridge from '../WebSocketSlice/WebSocketBridge';
 import getWebSocketUrl from '../../utils/WebSocket/getUrl';
 import {checkLogin} from '../actions/api';
 
+const shouldWSConnect = ({ type, payload }) => type === checkLogin.fulfilled.toString() && payload.isLoggedIn;
 const webSocketBridge = WebSocketBridge({
         url: getWebSocketUrl(),
-        openOnActionType: checkLogin.fulfilled
+        connectionCondition: shouldWSConnect
    });
    const store = configureStore({
         reducer: root,

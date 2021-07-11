@@ -3,7 +3,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const WebSocketSlice = createSlice( {
     name: 'WebSocketSlice',
-    initialState: { isWsOpen: false, messages: {}  },
+    initialState: { isWsOpen: false, message: null  },
     reducers: {
         statusChange: (state, action) => {
             state.isWsOpen = action.payload;
@@ -11,11 +11,15 @@ const WebSocketSlice = createSlice( {
         reconnect: (state, action) => {
             state.isWsReconnecting = action.payload;
         },
-        message: (state, { payload: message }) => {
-            state.messages[message.type] = message.payload;
+        messageReceived: (state, { payload: message }) => {
+            state.message = message;
+        },
+        messageSent: (state, action) => {
+            state.lastSentMessage = action.payload;
         }
     },
 });
 
 export const WebSocketReducer = WebSocketSlice.reducer;
 export const actions = WebSocketSlice.actions;
+export const sendWsMessage = actions.messageSent;

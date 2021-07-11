@@ -38,7 +38,7 @@ module.exports = (server) => {
                    statusSubscribers.delete(subscriber);
                    return;
                }
-               const message = { type: 'user-status', payload:  { online: true } };
+               const message = { type: `user-status-${user.id}`, payload:  { online: true } };
                subscriber.send(JSON.stringify(message));
             });
         }
@@ -54,14 +54,13 @@ module.exports = (server) => {
                     server.userStatusSubscriptions.set(targetUserId, new Set([ ws ]));
                 }
                 if (server.websocketConnections[targetUserId]) {
-                    ws.send(JSON.stringify({type: 'user-status', payload: {online: true}}));
+                    ws.send(JSON.stringify({type: `user-status-${user.id}`, payload: {online: true}}));
                 }
                 else {
                     const userRecord = await Users.findByPk(targetUserId);
                     ws.send(JSON.stringify({
-                        type: 'user-status',
+                        type: `user-status-${targetUserId}`,
                         payload: {
-                            user: targetUserId,
                             online: false,
                             lastSeen: userRecord.lastSeen
                         }
@@ -95,9 +94,8 @@ module.exports = (server) => {
               if (!allSubscriptionsForUser) return;
               allSubscriptionsForUser.forEach(subscriber => {
                    const message = {
-                       type: 'user-status',
+                       type: `user-status-${user.id}`,
                        payload: {
-                           user: user.id,
                            online: false,
                            lastSeen
                        }

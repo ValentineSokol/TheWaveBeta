@@ -1,14 +1,10 @@
 import {actions} from '../WebSocketSlice/index';
 
-const getActionTypeString = (actionType) => {
-    return typeof actionType === 'function'? actionType.toString() : actionType;
-};
-
-export default ({ url, openOnActionType, reconnectCooldown = 3000 }) => {
+export default ({ url, connectionCondition, reconnectCooldown = 3000 }) => {
   let ws;
   let reconnectTimeout;
 
-  return ({dispatch}) => next => action => {
+  return ({dispatch, getState}) => next => action => {
       const connect = () => {
          ws = new WebSocket(url);
 
@@ -24,14 +20,18 @@ export default ({ url, openOnActionType, reconnectCooldown = 3000 }) => {
               dispatch(actions.statusChange(false));
               reconnectTimeout = setTimeout(connect, reconnectCooldown);
           }
+          ws.onmessage = (e) => {
+              const message = JSON.parse(e.data);
+              dispatch(actions.messageReceived(message));
+          }
       };
+      if (!connectionCondition) connect();
 
-      if (!openOnActionType) {
+      else if (connectionCondition(action, getState())) {
           connect();
       }
-
-      if (openOnActionType && action.type === getActionTypeString(openOnActionType)) {
-          connect();
+      if (action.type === actions.messageSent.toString() && ws.readyState === 1) {
+          ws.send(JSON.stringify(action.payload));
       }
 
       return next(action);

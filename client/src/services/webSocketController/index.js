@@ -44,18 +44,6 @@ export default {
       };
       ws.send(JSON.stringify(message));
   },
-  sendTypingMessage: function (isTyping, username,isDirect, chatId) {
-      if (this.ws.readyState !== 1) return;
-      const message = {
-          type: isTyping? 'is-typing' : 'stopped-typing',
-          payload: {
-              username,
-              isDirect,
-              chatId
-          }
-      };
-      this.ws.send(JSON.stringify(message));
-  },
   subscribe: function (eventType, cb, messageType = null) {
       const subscription = { eventType, cb };
       if (eventType === 'message' && messageType) {

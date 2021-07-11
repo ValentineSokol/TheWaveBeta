@@ -8,9 +8,9 @@ import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollaps
 import Message from "./Message";
 import fetcher from "../../utils/fetcher";
 import Avatar from "../reusable/Avatar";
-
-import WebSocketController from '../../services/webSocketController';
 import RelativeTime from "../reusable/UIKit/RelativeTime";
+
+import {sendWsMessage} from '../../redux/WebSocketSlice';
 
 class ChatWindow extends Component {
     constructor(props) {
@@ -23,7 +23,7 @@ class ChatWindow extends Component {
         };
     }
     isDirectChat = () => this.props.match.params.chatType === 'direct'
-    onMessageRecieved = message => {
+    onMessageReceived = message => {
         if (message.from !== this.state.companion.id || message.from === this.props.user?.id) return;
         const { messages } = this.state;
         this.setState({ messages: [...messages, message]});
@@ -51,7 +51,7 @@ class ChatWindow extends Component {
             for (let i = 0; i <= 5; i += 1) {
                 if (i >= typers.length) break;
                 const typer = typers[i];
-                result += i < 4? `${typer},` : typer;
+                result += i < 4 ? `${typer},` : typer;
             }
             if (typers.size > 5) {
                 result += ' and others ';
@@ -59,12 +59,8 @@ class ChatWindow extends Component {
             result += 'are typing';
             return  wrapInHtml(result);
     }
-    onWsOpen = companion => {
-        WebSocketController.watchUserStatus(companion.id);
-        WebSocketController.subscribe('message',this.onCompanionStatusChange, 'user-status');
-        WebSocketController.subscribe('message', this.onMessageRecieved, 'message');
-        WebSocketController.subscribe('message', this.onCompanionTypingChange, 'is-typing');
-        WebSocketController.subscribe('message', this.onCompanionTypingChange, 'stopped-typing');
+    onWsOpen = () => {
+        this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.match.params.id });
         this.setState({ loading: false });
     }
     async componentDidMount() {
@@ -74,11 +70,8 @@ class ChatWindow extends Component {
             fetcher(`/chat/getDirectMessages/${this.props.match.params.id}`)
         ];
         const [{ user: companion }, messages] = await Promise.all(promises);
-        if (WebSocketController.isWsOpen()) {
-            this.onWsOpen(companion);
-        }
-        else {
-            WebSocketController.subscribe('open', () => this.onWsOpen(companion));
+        if (this.props.isWsOpen) {
+            this.onWsOpen();
         }
         this.setState({ messages, companion, lastSeen: companion.lastSeen });
     }
@@ -120,28 +113,48 @@ class ChatWindow extends Component {
         return result;
     }
 
+    sendTypingMessage() {
+        const message = {
+            type: this.state.isTyping ? 'is-typing' : 'stopped-typing',
+            payload: {
+                username: this.props.user.username,
+                isDirect: this.isDirectChat(),
+                chatId: this.props.match.params.id
+            }
+        };
+        this.props.sendWsMessage(message);
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!prevProps.isWsOpen && this.props.isWsOpen) {
+            this.onWsOpen();
+        }
+        if (prevProps.wsMessage !== this.props.wsMessage) {
+            this.onWsMessage(this.props.wsMessage);
+        }
         if (!prevState.isTyping && this.state.isTyping) {
-            WebSocketController.sendTypingMessage(
-                true,
-                this.props.user.username,
-                true,
-                this.props.match.params.id
-            );
+            this.sendTypingMessage();
         }
         if (prevState.isTyping && !this.state.isTyping) {
-            WebSocketController.sendTypingMessage(
-                false,
-                this.props.user.username,
-                true,
-                this.props.match.params.id
-            );
+            this.sendTypingMessage();
         }
     }
 
     componentWillUnmount() {
         this.props.setNavbarVisibility(true);
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
+    }
+    onWsMessage(message) {
+        if (message.type === `user-status-${this.props.match.params.id}`) {
+            this.onCompanionStatusChange(message.payload);
+        }
+        if (message.type === 'stopped-typing' || message.type === 'is-typing') {
+            this.onCompanionTypingChange(message.payload);
+        }
+
+        if (message.type === 'message') {
+            this.onMessageReceived(message.payload);
+        }
     }
     onCompanionStatusChange = (message) => {
       this.setState({ companionOnline: message.online, lastSeen: message.lastSeen || null });
@@ -199,7 +212,6 @@ class ChatWindow extends Component {
     }
     render() {
         const NO_CHAT_HISTORY_MESSAGE = ` This is the very beginning of your chat with ${this.state?.companion?.username}`;
-        if (this.state.loading) return 'Establishing connection...';
         const { isNavbarVisible } = this.props;
         return (
             <div className='ChatWindow'>
@@ -209,7 +221,7 @@ class ChatWindow extends Component {
                     </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>
-                        <span>{ this.state.companionOnline? 'Online' : <RelativeTime text='Last seen' timestamp={this.state.lastSeen} /> }</span>
+                        <span>{ this.state.isLoading ? 'Waiting for network...' : this.state.companionOnline? 'Online' : <RelativeTime text='Last seen' timestamp={this.state.lastSeen} /> }</span>
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
@@ -235,4 +247,17 @@ class ChatWindow extends Component {
     }
 }
 
-export default  withTranslation(ChatWindow, 'chat', state => ({ isNavbarVisible: state.preferences.isNavbarVisible, user: state.global.user }), { setNavbarVisibility: preferencesAPI.setNavbarVisibility }, true)
+export default  withTranslation(
+    ChatWindow,
+    'chat',
+        state => ({
+            isNavbarVisible: state.preferences.isNavbarVisible,
+            user: state.global.user,
+            isWsOpen: state.WebSocket.isWsOpen,
+            wsMessage: state.WebSocket.message
+        }),
+    {
+        setNavbarVisibility: preferencesAPI.setNavbarVisibility,
+        sendWsMessage
+    },
+    true);
