@@ -8,7 +8,7 @@ const {Op} = require('sequelize');
 module.exports = (server) => {
     const router = Router();
     server.websocketConnections = {};
-    server.userStatusSubscriptions = new Map();
+    server.userStatusSubscriptions = {};
 
     router.ws('/user/connect', async (ws, req, res, next) => {
         const userPromise = getUserFromSession(req);
@@ -31,7 +31,7 @@ module.exports = (server) => {
             userConnection.ws = ws;
         }
         console.info(`User ${user.username} has connected!`);
-        const statusSubscribers = server.userStatusSubscriptions.get(user.id);
+        const statusSubscribers = server.userStatusSubscriptions[user.id];
         if (statusSubscribers) {
             statusSubscribers.forEach(subscriber => {
                if (subscriber.readyState !== 1) {
@@ -46,15 +46,14 @@ module.exports = (server) => {
             const message = JSON.parse(json);
             if (message.type === 'watch-user-status') {
                 const targetUserId = message.payload;
-                const allSubscriptionsForUser = server.userStatusSubscriptions.get(targetUserId);
+                const allSubscriptionsForUser = server.userStatusSubscriptions[targetUserId];
                 if (allSubscriptionsForUser) {
                     allSubscriptionsForUser.add(ws);
-                }
-                else  {
-                    server.userStatusSubscriptions.set(targetUserId, new Set([ ws ]));
+                } else  {
+                    server.userStatusSubscriptions[targetUserId] = new Set([ ws ]);
                 }
                 if (server.websocketConnections[targetUserId]) {
-                    ws.send(JSON.stringify({type: `user-status-${user.id}`, payload: {online: true}}));
+                    ws.send(JSON.stringify({type: `user-status-${targetUserId}`, payload: {online: true}}));
                 }
                 else {
                     const userRecord = await Users.findByPk(targetUserId);
@@ -66,11 +65,6 @@ module.exports = (server) => {
                         }
                     }));
                 }
-            }
-            if (message.type === 'ping') {
-               const addressee = server.websocketConnections[user.id];
-               if (addressee.readyState !== 1) return;
-               addressee.send(JSON.stringify({ type: 'pong' }));
             }
             if (message.type === 'is-typing' || message.type === 'stopped-typing') {
                 const { chatId, isDirect } = message.payload;
@@ -90,7 +84,7 @@ module.exports = (server) => {
               catch (err) {
                   console.error(`Error when updating user's lastSeen: ${err}`);
               }
-              const allSubscriptionsForUser = server.userStatusSubscriptions.get(user.id);
+              const allSubscriptionsForUser = server.userStatusSubscriptions[user.id];
               if (!allSubscriptionsForUser) return;
               allSubscriptionsForUser.forEach(subscriber => {
                    const message = {

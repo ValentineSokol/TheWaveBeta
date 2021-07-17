@@ -11,6 +11,8 @@ import Avatar from "../reusable/Avatar";
 import RelativeTime from "../reusable/UIKit/RelativeTime";
 
 import {sendWsMessage} from '../../redux/WebSocketSlice';
+import {createNotification} from '../../redux/NotificationSlice';
+import {Redirect} from 'react-router';
 
 class ChatWindow extends Component {
     constructor(props) {
@@ -19,7 +21,8 @@ class ChatWindow extends Component {
             messages: [],
             typers: [],
             message: '',
-            loading: true
+            loading: true,
+            redirect: false
         };
     }
     isDirectChat = () => this.props.match.params.chatType === 'direct'
@@ -72,6 +75,11 @@ class ChatWindow extends Component {
         const [{ user: companion }, messages] = await Promise.all(promises);
         if (this.props.isWsOpen) {
             this.onWsOpen();
+        }
+        if (!companion) {
+            this.setState({ redirect: true });
+            this.props.createNotification('There is no such user.', 'warning');
+            return;
         }
         this.setState({ messages, companion, lastSeen: companion.lastSeen });
     }
@@ -213,6 +221,9 @@ class ChatWindow extends Component {
     render() {
         const NO_CHAT_HISTORY_MESSAGE = ` This is the very beginning of your chat with ${this.state?.companion?.username}`;
         const { isNavbarVisible } = this.props;
+        if (this.state.redirect) {
+            return <Redirect to='/' />
+        }
         return (
             <div className='ChatWindow'>
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
@@ -258,6 +269,7 @@ export default  withTranslation(
         }),
     {
         setNavbarVisibility: preferencesAPI.setNavbarVisibility,
-        sendWsMessage
+        sendWsMessage,
+        createNotification
     },
     true);
