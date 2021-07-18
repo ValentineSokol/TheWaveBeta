@@ -32,7 +32,7 @@ class ChatWindow extends Component {
         this.setState({ messages: [...messages, message]});
     }
     onCompanionTypingChange = ({ username, isDirect, chatId}) => {
-        if (chatId !== this.props.match.params.id) return;
+        if (Number(chatId) !==this.props.user.id) return;
         if (this.isDirectChat() !== isDirect) return;
         let typers = [...this.state.typers];
         if (typers.includes(username)) {
@@ -102,20 +102,21 @@ class ChatWindow extends Component {
             const message = messages[i];
             if (i + 1 < messages.length) {
                 const nextMessage = messages[i + 1];
+                let displayUsername = false;
+                if (i === 0) displayUsername = true;
+                else {
+                    const prevMessage = messages[i - 1];
+                    displayUsername = prevMessage.from !== message.from;
+                }
                 if (message.from === nextMessage.from) {
-                    let displayUsername = false;
-                    if (i === 0) {
-                        displayUsername = true
-                    } else {
-                        const prevMessage = messages[i - 1];
-                        displayUsername = prevMessage.from !== message.from;
-                    }
                     renderNewMessage(message, true, displayUsername);
                 } else {
-                    renderNewMessage(message, false, false);
+                    renderNewMessage(message, false, displayUsername);
                 }
             } else {
-                renderNewMessage(message, false, false);
+                const prevMessage = messages[i - 1];
+                const displayUsername = prevMessage.from !== message.from;
+                renderNewMessage(message, false, displayUsername);
             }
         }
         return result;
@@ -177,7 +178,8 @@ class ChatWindow extends Component {
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
             messages: isMessageEmpty ? this.state.messages : [...this.state.messages, messageObj],
-            message: ''
+            message: '',
+            isTyping: false
         });
         if (isMessageEmpty) return;
         try {
@@ -219,7 +221,7 @@ class ChatWindow extends Component {
         setNavbarVisibility(!isNavbarVisible);
     }
     render() {
-        const NO_CHAT_HISTORY_MESSAGE = ` This is the very beginning of your chat with ${this.state?.companion?.username}`;
+        const NO_CHAT_HISTORY_MESSAGE = `This is the very beginning of your chat with ${this.state?.companion?.username}`;
         const { isNavbarVisible } = this.props;
         if (this.state.redirect) {
             return <Redirect to='/' />

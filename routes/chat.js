@@ -114,7 +114,7 @@ module.exports = (server) => {
             });
             const userConnection = server.websocketConnections[addressee];
             if (userConnection && userConnection.readyState === 1) {
-                const message = { type: 'message', payload: { from: req.user.id, text } };
+                const message = { type: 'message', payload: { from: req.user.id, username: req.user.username, text } };
                 userConnection.send(JSON.stringify(message));
             }
             res.json({ success: true });

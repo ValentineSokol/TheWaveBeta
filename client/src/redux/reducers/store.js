@@ -7,7 +7,7 @@ import {checkLogin} from '../actions/api';
 const shouldWSConnect = ({ type, payload }) => type === checkLogin.fulfilled.toString() && payload.isLoggedIn;
 const webSocketBridge = WebSocketBridge({
         url: getWebSocketUrl(),
-        connectionCondition: shouldWSConnect
+        connectionCondition: shouldWSConnect,
    });
    const store = configureStore({
         reducer: root,

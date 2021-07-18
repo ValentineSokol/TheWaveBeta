@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 import { actions as preferencesAPI, loadTranslations } from './redux/PreferencesSlice';
 import getBrowserLanguage from './utils/getBrowserLanguage';
 import Routes from './components/Routes';
+import {createNotification} from "./redux/NotificationSlice";
 
 
 
@@ -29,6 +30,14 @@ const App = class App extends  React.Component {
         this.setStartLanguage();
         this.props.checkLogin();
     }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {wsMessage} = this.props;
+        if (prevProps.wsMessage === wsMessage) return;
+        if (wsMessage.type === 'message') {
+            const message = `${wsMessage.payload.username} sent you a new message!`;
+            this.props.createNotification(message, 'mail');
+        }
+    }
 
     render() {
         return (
@@ -40,6 +49,6 @@ const App = class App extends  React.Component {
         )
     }
 }
-const mapStateToProps = (state) => ({ loading: state.global.loading,  language: state.preferences.language });
-export default connect(mapStateToProps, { checkLogin, loadTranslations, setStartLanguage: preferencesAPI.setStartLanguage })(App);
+const mapStateToProps = (state) => ({ loading: state.global.loading,  language: state.preferences.language, wsMessage: state.WebSocket.message });
+export default connect(mapStateToProps, { checkLogin, createNotification, loadTranslations, setStartLanguage: preferencesAPI.setStartLanguage })(App);
 

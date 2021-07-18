@@ -1,3 +1,5 @@
+@use '../../../scss/common/colors';
+
 ._notification {
   color: white;
   width: 200px;
@@ -23,4 +25,8 @@
 .warning-notification {
   @extend ._notification;
   background: #DBA800;
+}
+.mail-notification {
+  @extend ._notification;
+  background: colors.$important-element;
 }

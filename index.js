@@ -31,9 +31,6 @@ cookie: {
     sameSite: 'strict'
 }
 }));
-setInterval(() => {
-    
-})
 sessionStore.sync();
 server.emailer = nodemailer.createTransport({
     service: "gmail", // no need to set host or port etc.
