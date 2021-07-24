@@ -115,7 +115,7 @@ class ChatWindow extends Component {
                 }
             } else {
                 const prevMessage = messages[i - 1];
-                const displayUsername = prevMessage.from !== message.from;
+                const displayUsername = prevMessage?.from !== message.from;
                 renderNewMessage(message, false, displayUsername);
             }
         }
