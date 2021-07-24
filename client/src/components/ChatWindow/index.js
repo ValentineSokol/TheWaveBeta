@@ -83,6 +83,12 @@ class ChatWindow extends Component {
         }
         this.setState({ messages, companion, lastSeen: companion.lastSeen });
     }
+    componentDidUpdate(prevState, prevProps) {
+        if (this.state.messages === prevState.messages) return;
+
+        const messageContainer = document.querySelector('.MessageBox');
+        window.scrollTo(0, messageContainer.scrollHeight);
+    }
     renderMessages = () => {
         const {messages} = this.state;
         const result = [];

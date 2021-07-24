@@ -10,7 +10,6 @@ nav {
         width: 100%;
         border-radius: 0;
         border-bottom: 2px solid colors.$light-blue;
-
     }
 }
 .Navbar {
@@ -26,7 +25,7 @@ nav {
 }
 
 .NavbarItems li  {
-    margin: 10%;
+    margin: 6%;
 }
 .NavbarItems li a {
     text-decoration: none;
@@ -38,6 +37,10 @@ nav {
 .NavbarItems li {
    cursor: pointer;
 }
+.SettingsIcon {
+        width: 50px;
+        height: 50px;
+}
 @media only screen and (max-width: 784px) {
     .NavbarLogo {
         display: none;
@@ -48,7 +51,7 @@ nav {
         flex-direction: column;
         align-items: flex-start;
     }
-    .LanguageSelectorLi {
+    .NavbarButtonPanelLi {
         align-self: center;
     }
 }

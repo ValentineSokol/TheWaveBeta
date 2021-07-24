@@ -1,4 +1,4 @@
-.LanguageSelector {
+.NavbarButtonPanel {
   align-self: flex-end;
   display: flex;
   img {
@@ -8,6 +8,10 @@
     &:hover {
      transform: scale(1.2);
     }
+  }
+
+  .SettingsIcon {
+    margin: .5%;
   }
 
 }

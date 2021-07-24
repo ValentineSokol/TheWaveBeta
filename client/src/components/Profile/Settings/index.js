@@ -1,5 +1,6 @@
 import React from 'react';
-import { actions } from '../../../redux/PreferencesSlice/index'
+import { actions } from '../../../redux/PreferencesSlice/index';
+import { createNotification } from '../../../redux/NotificationSlice';
 import withTranslation from '../../reusable/withTranslation';
 import Heading from '../../reusable/UIKit/Headings/Heading/Heading';
 
@@ -8,9 +9,10 @@ import './Settings.scss';
 class Settings extends React.Component {
 
     applySettings = (e) => {
-        const { settings, applySettings } = this.props;
+        const { translation, settings, applySettings, createNotification } = this.props;
         const newSettingValue = e.target.type !== 'checkbox' ? e.target.value : e.target.checked;
         applySettings({ ...settings, [e.target.name]: newSettingValue });
+        createNotification(translation.successNotification, 'success');
     }
     render() {
         const { translation } = this.props;
@@ -28,5 +30,5 @@ class Settings extends React.Component {
 }
 
 const mapState = state => ({ settings: state.preferences });
-const mapDispatch = { applySettings: actions.applySettings };
+const mapDispatch = { applySettings: actions.applySettings, createNotification };
 export default withTranslation(Settings, 'settings', mapState, mapDispatch);

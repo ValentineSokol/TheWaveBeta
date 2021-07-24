@@ -34,7 +34,7 @@ const App = class App extends  React.Component {
         const {wsMessage} = this.props;
         if (prevProps.wsMessage === wsMessage) return;
         if (wsMessage.type === 'message') {
-            const message = `${wsMessage.payload.username} sent you a new message!`;
+            const message = `${wsMessage.payload.username} sent you a message.`;
             this.props.createNotification(message, 'mail');
         }
     }
