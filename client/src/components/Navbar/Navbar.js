@@ -6,8 +6,9 @@ import './Navbar.scss';
 import logo from '../../img/navlogo.png';
 import LanguageSelector from "../reusable/UIKit/LanguageSelector";
 import withTranslation from '../reusable/withTranslation/index';
+import settingsIcon from '../../assets/settings.svg';
 
-const Navbar = ({ isNavbarVisible, setNavbarVisibility, user, logout, translation }) => {
+const Navbar = ({ isNavbarVisible, user, logout, translation }) => {
  const onLogout = () => logout();
     return (
         <nav>
@@ -18,6 +19,9 @@ const Navbar = ({ isNavbarVisible, setNavbarVisibility, user, logout, translatio
                         <ul className="NavbarItems">
                             <li className='LanguageSelectorLi'>
                                 <LanguageSelector />
+                            </li>
+                            <li className='SettingsLi'>
+                               <img src={settingsIcon} alt='settingsIcon' />
                             </li>
                             <li><NavigationLink to='/'>{translation?.home}</NavigationLink></li>
                             {

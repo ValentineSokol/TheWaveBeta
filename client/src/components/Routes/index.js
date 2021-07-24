@@ -7,6 +7,7 @@ import PasswordRecoveryForm from '../PasswordRecoveryForm';
 import Profile from '../Profile/Profile';
 import PostStory from'../Story/PostStory/PostStory';
 import ChatWindow from '../ChatWindow';
+import Settings from '../Profile/Settings';
 
 
 const Routes = () => (
@@ -16,6 +17,7 @@ const Routes = () => (
     <Route exact path='/register' component={RegisterForm} />
     <Route path='/password/recover' component={PasswordRecoveryForm} />
     <Route path='/profile/:id' component={Profile} />
+    <Route path='/settings' component={Settings} />
     <Route path='/stories/post' component={PostStory} />
     <Route path='/chat/:chatType/:id' component={ChatWindow} />
 </Router>

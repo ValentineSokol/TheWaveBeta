@@ -29,7 +29,7 @@ export default (ComponentToTranslate, translationKey, mapStateToProps, mapDispat
    const componentProps = {...this.props };
    delete componentProps.loadTranslationForComponent;
    delete componentProps.language;
-   return translation || noLoaders? <ComponentToTranslate {...componentProps} /> : <p>Loading....</p>
+   return translation || noLoaders ? <ComponentToTranslate {...componentProps} /> : <p>Loading....</p>
   }
 
  }

@@ -11,7 +11,7 @@ class NotificationManager extends Component {
         return <div className='NotificationManager'>
             {
                 this.props.notifications.map(notification => (
-                    <Notification key={notification.id} clearNotification={this.props.clearNotification} notification={notification}/>
+                    <Notification key={notification.id} soundEnabled={this.props.soundEnabled} clearNotification={this.props.clearNotification} notification={notification}/>
                )
 
                     )
@@ -19,7 +19,7 @@ class NotificationManager extends Component {
         </div>;
     }
 }
-const mapState = state => ({ notifications: state.notifications });
+const mapState = state => ({ notifications: state.notifications, soundEnabled: state.preferences.notificationSound });
 const mapDispatch = {
     createNotification,
     clearNotification: actions.clearNotification

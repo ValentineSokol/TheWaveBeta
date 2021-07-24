@@ -19,9 +19,10 @@ const sounds = {
     mail: owlSound
 };
 
-const Notification = ({ clearNotification, notification: { id, show, lifespan, text, severity } }) => {
+const Notification = ({ soundEnabled, clearNotification, notification: { id, show, lifespan, text, severity } }) => {
     useEffect(() => {
         try {
+            if (!soundEnabled) return;
             const sound = new Audio(sounds[severity]);
             sound.play();
         }

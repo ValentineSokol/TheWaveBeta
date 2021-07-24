@@ -14,9 +14,12 @@ const loadTranslationForComponentThunk = createAsyncThunk(
         return { translationKey, translation: translationModule.default };
     }
 );
+
+const getSettings = () => JSON.parse(localStorage.getItem('settings'));
+
 const preferencesSlice = createSlice( {
     name: 'preferencesSlice',
-    initialState: { isNavbarVisible: true, language: '', translations: {} },
+    initialState: { isNavbarVisible: true, language: '', ...getSettings(), translations: {} },
     reducers: {
         setStartLanguage: (state, action) => {
             state.language = action.payload;
@@ -28,6 +31,11 @@ const preferencesSlice = createSlice( {
             if (state.isNavbarVisible) {
                 window.scrollTo(0, 0);
             }
+        },
+        applySettings: (state, { payload: newSettings }) => {
+            if (!newSettings) return;
+            localStorage.setItem('settings', JSON.stringify(newSettings));
+            return {...state, ...newSettings};
         }
     },
     extraReducers: {
