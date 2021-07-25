@@ -1,5 +1,6 @@
 @use '../../scss/common/colors';
 nav {
+    background: colors.$card-background;
     width: 100%;
     height: 10%;
     cursor: pointer;

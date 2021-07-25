@@ -14,6 +14,9 @@ import {sendWsMessage} from '../../redux/WebSocketSlice';
 import {createNotification} from '../../redux/NotificationSlice';
 import {Redirect} from 'react-router';
 
+import downArrow from '../../assets/downArrow.svg';
+import ContextMenu from "./Message/ContextMenu";
+
 class ChatWindow extends Component {
     constructor(props) {
         super(props);
@@ -24,13 +27,17 @@ class ChatWindow extends Component {
             loading: true,
             redirect: false,
             userScrolled: false,
-            lastScrollPosition: null
+            lastScrollPosition: null,
+            showMessageContextMenu: false,
+            messageContextMenuX: null,
+            messageContextMenuY: null,
+
         };
     }
     hasUserScrolledToTheBottom = () => {
         const scrollPosFloat = document.scrollingElement.scrollTop + document.scrollingElement.clientHeight;
         const scrollPosInt = Math.round(scrollPosFloat);
-        return document.scrollingElement.scrollHeight === scrollPosInt;
+        return document.scrollingElement.scrollHeight - scrollPosInt < 1;
 
         /*
             Here I determine if scrolled pixels from the top + visible pixels === max scroll height of the element
@@ -49,7 +56,6 @@ class ChatWindow extends Component {
         this.setState({lastScrollPosition: bodyRect.top });
     }
     scrollToBottom = () => {
-        if (this.state.userScrolled) return;
         window.focus();
         window.scrollTo(0, document.scrollingElement.scrollHeight, { behavior: 'smooth' });
     }
@@ -94,7 +100,11 @@ class ChatWindow extends Component {
         this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.match.params.id });
         this.setState({ loading: false });
     }
+    closeContextMenu = (e) => {
+        this.setState({ showMessageContextMenu: false });
+    }
     async componentDidMount() {
+        window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         this.props.setNavbarVisibility(false);
         const promises = [
@@ -124,6 +134,7 @@ class ChatWindow extends Component {
                     companion={this.state.companion}
                     isJoint={isJoint}
                     displayUsername={displayUsername}
+                    onContextMenu={this.onContextMenu}
                 />
             );
         };
@@ -176,12 +187,13 @@ class ChatWindow extends Component {
         if (prevState.isTyping && !this.state.isTyping) {
             this.sendTypingMessage();
         }
-        if (this.state.messages !== prevState.messages) {
+        if (this.state.messages !== prevState.messages && !this.state.userScrolled) {
             this.scrollToBottom();
         }
     }
 
     componentWillUnmount() {
+        window.removeEventListener('click', this.closeContextMenu);
         window.removeEventListener('scroll', this.handleUserScroll);
         this.props.setNavbarVisibility(true);
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
@@ -203,6 +215,16 @@ class ChatWindow extends Component {
     }
 
     sendMessage = async () => {
+        if (this.state.editingMessage) {
+            if (!this.state.message) return;
+            this.setState({ message: '' });
+            await fetcher(
+                `/chat/editDirectMessage/${this.state.selectedMessage.id}`,
+                'PATCH',
+                { newText: this.state.message }
+            );
+            return;
+        }
         const messageObj = {
             text: this.state.message.trim(),
             from: this.props.user.id,
@@ -253,14 +275,47 @@ class ChatWindow extends Component {
         const { isNavbarVisible, setNavbarVisibility } = this.props;
         setNavbarVisibility(!isNavbarVisible);
     }
+    onContextMenu = (pageX, pageY, target) => {
+        console.log(target);
+        this.setState({
+            selectedMessage: { id: target.dataset.id, text: target.dataset.text },
+            showMessageContextMenu: true,
+            messageContextMenuX: pageX,
+            messageContextMenuY: pageY,
+        });
+    }
+    editMessage = (e) => {
+        const { text, id } = this.state.selectedMessage;
+        this.setState({ message: text, editingMessage: true });
+
+    };
+    deleteMessage = (e) => {
+
+    };
     render() {
         const NO_CHAT_HISTORY_MESSAGE = `This is the very beginning of your chat with ${this.state?.companion?.username}`;
+        const messageContextMenuActions = [
+            {
+                label: 'Edit',
+                handler: this.editMessage
+            },
+            {
+                label: 'Delete',
+                handler: this.deleteMessage
+            }
+        ]
         const { isNavbarVisible } = this.props;
         if (this.state.redirect) {
             return <Redirect to='/' />
         }
         return (
             <div className='ChatWindow'>
+                <ContextMenu
+                    show={this.state.showMessageContextMenu}
+                    left={this.state.messageContextMenuX}
+                    top={this.state.messageContextMenuY}
+                    actions={messageContextMenuActions}
+                />
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
                     <span className='CompanionAvatar'>
                         <Avatar url={this.state.companion?.avatarUrl} />
@@ -286,6 +341,7 @@ class ChatWindow extends Component {
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
                 { this.state.message.trim() && <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} /> }
                 </div>
+                    { this.state.userScrolled && <img onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />}
                 </section>
                 </section>
             </div>

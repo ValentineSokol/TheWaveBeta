@@ -32,15 +32,12 @@
     }
   }
   .Message {
-    width: 150px;
+    min-width: 100px;
     word-wrap: break-word;
-    padding: 3%;
+    padding: .5%;
     border-radius: 5px;
     text-align: center;
     vertical-align: middle;
-    p {
-      padding: 5%;
-    }
   }
   .MessageAndArrow {
     display: flex;
@@ -48,6 +45,7 @@
   .OutgoingMessageBody {
     @extend .MessageTextContainer;
     background: colors.$light-blue;
+    cursor: pointer;
   }
   .IncomingMessageBody {
     @extend .MessageTextContainer;
@@ -162,4 +160,10 @@
   .right-arrow-incoming {
     @extend .right-arrow;
     border-right: 8px solid colors.$card-background;
+  }
+  .ScrollDownIcon {
+    width: 40px;
+    height: 40px;
+    margin: 1%;
+    cursor: pointer;
   }

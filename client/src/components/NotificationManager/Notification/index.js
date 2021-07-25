@@ -23,8 +23,11 @@ const Notification = ({ soundEnabled, clearNotification, notification: { id, sho
     useEffect(() => {
         try {
             if (!soundEnabled) return;
-            const sound = new Audio(sounds[severity]);
-            sound.play();
+            const sound = sounds[severity];
+            if (!sound) return;
+
+            const soundElement = new Audio(sound);
+            soundElement.play();
         }
         catch (err) {
             alert(err.message);

@@ -143,5 +143,26 @@ module.exports = (server) => {
        }
 
     });
+    router.patch('/editDirectMessage/:id', auth, async (req, res) => {
+       const { id } = req.params;
+       const { newText } = req.body;
+       const message =  await directMessages.findByPk(id);
+       if (message.from !== req.user.id) {
+           res.sendStatus(403);
+           return;
+       }
+       await message.update({ text: newText });
+       res.json({ success: true });
+    });
+    router.delete('/deleteDirectMessage/:id', auth, async (req, res) => {
+        const { id } = req.params;
+        const message =  await directMessages.findByPk(id);
+        if (message.from !== req.user.id) {
+            res.sendStatus(403);
+            return;
+        }
+        await message.destroy();
+        res.json({ success: true });
+    });
     return router;
 }
