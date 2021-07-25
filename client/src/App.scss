@@ -1,6 +1,6 @@
 @use './src/scss/common/colors';
-body {
-  margin: 0;
+html {
+  overflow: auto;
   padding: 0;
   background-color:  colors.$dark-background;
   color: colors.$black;
@@ -15,6 +15,16 @@ footer {
 .RoundImage {
   border-radius: 50%;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

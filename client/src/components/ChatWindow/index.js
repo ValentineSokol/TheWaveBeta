@@ -22,8 +22,36 @@ class ChatWindow extends Component {
             typers: [],
             message: '',
             loading: true,
-            redirect: false
+            redirect: false,
+            userScrolled: false,
+            lastScrollPosition: null
         };
+    }
+    hasUserScrolledToTheBottom = () => {
+        const scrollPosFloat = document.scrollingElement.scrollTop + document.scrollingElement.clientHeight;
+        const scrollPosInt = Math.round(scrollPosFloat);
+        return document.scrollingElement.scrollHeight === scrollPosInt;
+
+        /*
+            Here I determine if scrolled pixels from the top + visible pixels === max scroll height of the element
+         */
+    }
+    handleUserScroll = () => {
+        const bodyRect = document.scrollingElement.getBoundingClientRect();
+        const {lastScrollPosition} = this.state;
+        if (lastScrollPosition < bodyRect.top) {
+            this.setState({ userScrolled: true });
+        }
+
+        if (this.hasUserScrolledToTheBottom()) {
+            this.setState({ userScrolled: false });
+        }
+        this.setState({lastScrollPosition: bodyRect.top });
+    }
+    scrollToBottom = () => {
+        if (this.state.userScrolled) return;
+        window.focus();
+        window.scrollTo(0, document.scrollingElement.scrollHeight, { behavior: 'smooth' });
     }
     isDirectChat = () => this.props.match.params.chatType === 'direct'
     onMessageReceived = message => {
@@ -67,6 +95,7 @@ class ChatWindow extends Component {
         this.setState({ loading: false });
     }
     async componentDidMount() {
+        window.addEventListener('scroll', this.handleUserScroll);
         this.props.setNavbarVisibility(false);
         const promises = [
             fetcher(`/user/profile/${this.props.match.params.id}`),
@@ -82,12 +111,6 @@ class ChatWindow extends Component {
             return;
         }
         this.setState({ messages, companion, lastSeen: companion.lastSeen });
-    }
-    componentDidUpdate(prevState, prevProps) {
-        if (this.state.messages === prevState.messages) return;
-
-        const messageContainer = document.querySelector('.MessageBox');
-        window.scrollTo(0, messageContainer.scrollHeight);
     }
     renderMessages = () => {
         const {messages} = this.state;
@@ -153,9 +176,13 @@ class ChatWindow extends Component {
         if (prevState.isTyping && !this.state.isTyping) {
             this.sendTypingMessage();
         }
+        if (this.state.messages !== prevState.messages) {
+            this.scrollToBottom();
+        }
     }
 
     componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleUserScroll);
         this.props.setNavbarVisibility(true);
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
     }
