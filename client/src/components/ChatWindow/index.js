@@ -13,7 +13,7 @@ import RelativeTime from "../reusable/UIKit/RelativeTime";
 import {sendWsMessage} from '../../redux/WebSocketSlice';
 import {createNotification} from '../../redux/NotificationSlice';
 import {Redirect} from 'react-router';
-
+import {CSSTransition} from 'react-transition-group';
 import downArrow from '../../assets/downArrow.svg';
 import ContextMenu from "./Message/ContextMenu";
 
@@ -341,7 +341,15 @@ class ChatWindow extends Component {
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
                 { this.state.message.trim() && <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} /> }
                 </div>
-                    { this.state.userScrolled && <img onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />}
+                        <CSSTransition
+                            in={this.state.userScrolled}
+                            unmountOnExit={true}
+                            appear={true}
+                            timeout={2000}
+                            classNames='scale-fade'
+                        >
+                        <img onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />
+                        </CSSTransition>
                 </section>
                 </section>
             </div>

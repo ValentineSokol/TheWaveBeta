@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Avatar from "../../reusable/Avatar";
+import {CSSTransition} from "react-transition-group";
 
 const isOutgoingMessage = (message, userId) => message.from === userId;
 
@@ -8,10 +9,19 @@ const Message = ({ onContextMenu, message, companion, user, isJoint, displayUser
         e.preventDefault();
         e.stopPropagation();
         onContextMenu(e.pageX, e.pageY, e.target);
-    }
+    };
  if (!user) return null;
+ const messageRef = React.createRef();
 
- return <span className={isJoint ? 'JointMessageContainer' : 'MessageContainer'}>
+
+ return (
+    <CSSTransition
+        in={true}
+        appear={true}
+        timeout={500}
+        classNames='scale-fade'
+    >
+    <span ref={messageRef} className={isJoint ? 'JointMessageContainer' : 'MessageContainer'}>
         {displayUsername && <h6>{isOutgoingMessage(message, user.id) ? user.username : companion.username}</h6>}
         <div className='MessageBody'>
         {
@@ -29,5 +39,7 @@ const Message = ({ onContextMenu, message, companion, user, isJoint, displayUser
         </div>
       </div>
     </span>
+    </CSSTransition>
+);
 };
 export default React.memo(Message);
