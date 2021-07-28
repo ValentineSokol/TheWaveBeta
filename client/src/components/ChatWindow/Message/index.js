@@ -4,7 +4,7 @@ import {CSSTransition} from "react-transition-group";
 
 const isOutgoingMessage = (message, userId) => message.from === userId;
 
-const Message = ({ onContextMenu, message, companion, user, isJoint, displayUsername }) => {
+const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companion, user, isJoint, displayUsername }) => {
     const contextMenuHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -16,7 +16,7 @@ const Message = ({ onContextMenu, message, companion, user, isJoint, displayUser
 
  return (
     <CSSTransition
-        in={true}
+        in={shouldPlayEnterAnimation}
         appear={true}
         timeout={500}
         classNames='scale-fade'

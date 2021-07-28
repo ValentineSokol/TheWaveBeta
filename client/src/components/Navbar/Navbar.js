@@ -6,7 +6,7 @@ import './Navbar.scss';
 import logo from '../../img/navlogo.png';
 import NavbarButtonPanel from "../reusable/UIKit/NavbarButtonPanel";
 import withTranslation from '../reusable/withTranslation/index';
-import settingsIcon from '../../assets/settings.svg';
+
 
 const Navbar = ({ isNavbarVisible, user, logout, translation }) => {
  const onLogout = () => logout();

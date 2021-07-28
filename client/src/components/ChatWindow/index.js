@@ -135,6 +135,7 @@ class ChatWindow extends Component {
                     isJoint={isJoint}
                     displayUsername={displayUsername}
                     onContextMenu={this.onContextMenu}
+                    shouldPlayEnterAnimation={message.shouldPlayEnterAnimation}
                 />
             );
         };
@@ -228,8 +229,9 @@ class ChatWindow extends Component {
         const messageObj = {
             text: this.state.message.trim(),
             from: this.props.user.id,
-            to: this.state.companion.id
-        }
+            to: this.state.companion.id,
+            shouldPlayEnterAnimation: true
+        };
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
             messages: isMessageEmpty ? this.state.messages : [...this.state.messages, messageObj],
