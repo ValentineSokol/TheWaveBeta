@@ -5,6 +5,7 @@ import withTranslation from '../../reusable/withTranslation';
 import Heading from '../../reusable/UIKit/Headings/Heading/Heading';
 
 import './Settings.scss';
+import ChangeAvatarModal from "../ChangeAvatarModal";
 
 class Settings extends React.Component {
 
@@ -24,6 +25,7 @@ class Settings extends React.Component {
                   <label>{translation.sections.notifications.allowSound}</label>
                   <input name='notificationSound' onChange={this.applySettings} type='checkbox' defaultChecked={this.props.settings?.notificationSound}/>
               </section>
+              <ChangeAvatarModal />
           </div>
         );
     }

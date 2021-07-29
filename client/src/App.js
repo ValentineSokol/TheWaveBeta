@@ -34,8 +34,18 @@ const App = class App extends  React.Component {
         const {wsMessage} = this.props;
         if (prevProps.wsMessage === wsMessage) return;
         if (wsMessage.type === 'message') {
-            const message = `${wsMessage.payload.username} sent you a message.`;
-            this.props.createNotification(message, 'mail');
+            const currentHref = window.location.href.split('/').slice(3);
+            const isChat = currentHref[0] === 'chat';
+            const isDirectChat = currentHref[1] === 'direct';
+            const chatId = currentHref[2];
+            
+
+            if (isChat && isDirectChat === wsMessage.payload.isDirect) {
+                if (isDirectChat && Number(chatId) === Number(wsMessage.payload.from)) return;
+                if (Number(chatId) === Number(wsMessage.payload.chatId)) return;
+            }
+                const message = `${wsMessage.payload.username} sent you a message.`;
+                this.props.createNotification(message, 'mail');
         }
     }
 

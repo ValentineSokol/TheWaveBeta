@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import TypedJs from 'typed.js';
 
-const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infinity}) => {
+const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infinity, showCursor = true }) => {
     const typedContainerRef = useRef(null);
     useEffect(
         () => {
@@ -10,7 +10,8 @@ const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infi
                 typeSpeed,
                 backSpeed,
                 loop,
-                loopCount
+                loopCount,
+                showCursor
             });
            return () => typed.destroy();
         },

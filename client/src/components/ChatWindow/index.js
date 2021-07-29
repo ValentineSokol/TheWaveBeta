@@ -17,6 +17,7 @@ import {CSSTransition} from 'react-transition-group';
 import downArrow from '../../assets/downArrow.svg';
 import ContextMenu from "./Message/ContextMenu";
 
+
 class ChatWindow extends Component {
     constructor(props) {
         super(props);
@@ -63,7 +64,8 @@ class ChatWindow extends Component {
     onMessageReceived = message => {
         if (message.from !== this.state.companion.id || message.from === this.props.user?.id) return;
         const { messages } = this.state;
-        this.setState({ messages: [...messages, message]});
+        const messageWithAnimationData = { ...message, shouldPlayEnterAnimation: true };
+        this.setState({ messages: [...messages, messageWithAnimationData ]});
     }
     onCompanionTypingChange = ({ username, isDirect, chatId}) => {
         if (Number(chatId) !==this.props.user.id) return;
@@ -324,7 +326,12 @@ class ChatWindow extends Component {
                     </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>
-                        <span>{ this.state.isLoading ? 'Waiting for network...' : this.state.companionOnline? 'Online' : <RelativeTime text='Last seen' timestamp={this.state.lastSeen} /> }</span>
+                        {
+                            this.state.typers.length ? this.renderTypingMessage()
+                                :
+                            <span>{this.state.companionOnline ? 'Online' :
+                                <RelativeTime text='Last seen' timestamp={this.state.lastSeen}/>}</span>
+                        }
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
@@ -337,7 +344,6 @@ class ChatWindow extends Component {
                     { !this.state.messages.length && <p>{NO_CHAT_HISTORY_MESSAGE}</p> }
                 </div>
                 <section className='BottomSection'>
-                {this.renderTypingMessage()}
                 <section className='SendMessagePanel'>
                 <div className='RichArea'>
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
