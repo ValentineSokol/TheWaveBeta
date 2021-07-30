@@ -2,7 +2,10 @@ import React from 'react';
 import withTranslation from '../../reusable/withTranslation';
 import Heading from "../../reusable/UIKit/Headings/Heading/Heading";
 import PhotoCropper from "../../reusable/UIKit/PhotoCropper";
-import {uploadFiles} from '../../../redux/actions/api';
+import {uploadFiles, updateUser} from '../../../redux/actions/api';
+import {createNotification} from "../../../redux/NotificationSlice";
+import Modal from "../../reusable/UIKit/Modal";
+import './ChangeAvatarModal.scss';
 
 class ChangeAvatarModal extends React.Component {
 
@@ -13,6 +16,10 @@ class ChangeAvatarModal extends React.Component {
         };
         this.fileInputRef = React.createRef();
     }
+    onClose = () => {
+        this.setState({ fileSrc: '' });
+        this.props.onClose();
+    }
 
     onFileSelected = (e) => {
         const [file] = e.target.files;
@@ -20,31 +27,45 @@ class ChangeAvatarModal extends React.Component {
             fileSrc: window.URL.createObjectURL(file)
         })
     };
-    onSubmit = (croppedCanvas) => {
-        console.log(croppedCanvas)
-        croppedCanvas.toBlob(blob => {
-            this.props.uploadFiles({ files: [blob] });
-        },
-            'image/webp', 1);
+    onSubmit = (croppedImageBlob) => {
+        this.props.createNotification('Uploading your file', 'process');
+        this.props.uploadFiles(croppedImageBlob);
+        this.onClose();
+    }
+    onAvatarUploaded = url => this.props.updateUser({ avatarUrl: url});
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.avatarUrl !== this.props.avatarUrl) {
+            this.onAvatarUploaded(this.props.avatarUrl);
+        }
+        if (!prevProps.userUpdated && this.props.userUpdated) {
+            this.props.createNotification('Your avatar has been updated!', 'success');
+        }
+
     }
 
     render() {
+      if (!this.props.isOpen) return null;
       return(
-       <>
-        <Heading>Change your Avatar: </Heading>
-        <input onChange={this.onFileSelected} ref={this.fileInputRef} type='file'/>
+       <Modal onClose={this.onClose} isOpen={this.props.isOpen} blockInteraction>
+       <div className='ChangeAvatarModal'>
+        <Heading size={2}>Change your Avatar: </Heading>
+           {
+               !this.state.fileSrc &&
+               <input accept="image/*" onChange={this.onFileSelected} ref={this.fileInputRef} type='file'/>
+           }
         <PhotoCropper onSubmit={this.onSubmit} src={this.state.fileSrc} />
-       </>
+       </div>
+       </Modal>
       );
 
     }
 }
 
-const mapDispatch = { uploadFiles }
+const mapDispatch = { uploadFiles, updateUser, createNotification };
 export default withTranslation(
     ChangeAvatarModal,
     'changeAvatarModal',
-    null,
+    state => ({ avatarUrl: state.global?.uploadedFiles[0], userUpdated: state.global.userUpdated }),
     mapDispatch,
     true
 );

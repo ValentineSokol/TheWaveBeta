@@ -4,42 +4,44 @@ import "cropperjs/dist/cropper.css";
 import Button from "../Forms/Button";
 
 export default class PhotoCropper extends React.Component {
-    cropperRef = React.createRef();
-
-    onSubmit = () => {
-        const { cropper } = this.cropperRef.current;
-        this.props.onSubmit(cropper.getCroppedCanvas());
+    constructor(props) {
+        super(props);
+        this.state = {
+            buttonDisabled: false
+        }
     }
+    getCroppedImageBlob = _ => new Promise((resolve, reject) => {
+           const { cropper } = this.state;
+           cropper.getCroppedCanvas({ width: 360, height: 360}).toBlob(blob => resolve(blob));
+    })
+    onSubmit = async () => {
+        this.setState({ buttonDisabled: true });
+        const croppedImageBlob = await this.getCroppedImageBlob();
+        this.props.onSubmit(croppedImageBlob);
+    }
+    onCropperInit = cropper => this.setState({ cropper })
     render() {
        const { src } = this.props;
        return (
-           <div className='PhotoCropper' style={{
-               margin: '0 auto',
-               width: '50%'
-           }}>
+           <div className='PhotoCropper'>
                {
                    src &&
                    <ReactCropper
+                       onInitialized={this.onCropperInit}
                        viewMode={2}
                        src={src}
-                       ref={this.cropperRef}
-                       initialAspectRatio={16 / 9}
+                       aspectRatio={1}
                        guides={false}
                        background={false}
                        modal={false}
-                       cropBoxResizable={false}
-                       dragMode='move'
-                       toggleDragModeOnDblclick={false}
+                       responsive={true}
                        data={{
-                           x: 80,
-                           y: 50,
                            width: 360,
                            height: 360
-                       }
-                       }
+                       }}
                    />
                }
-               <Button clickHandler={this.props.onSubmit}>Upload</Button>
+               <Button disabled={!this.props.src || this.state.buttonDisabled} clickHandler={this.onSubmit}>Upload</Button>
         </div>
        );
     }

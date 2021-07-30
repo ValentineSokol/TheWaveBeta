@@ -30,7 +30,7 @@ export const loadProfile = createAsyncThunk(
 )
 export const uploadFiles = createAsyncThunk(
     'uploadFiles',
-    (body) => fetcher('/user/files/upload', 'PUT', body, { isFormData: true } )
+    (...files) => fetcher('/user/files/upload', 'PUT', { files }, { isFormData: true } )
 )
 export const updateUser = createAsyncThunk(
     'updateUser',

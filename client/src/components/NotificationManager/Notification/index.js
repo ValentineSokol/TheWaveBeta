@@ -3,6 +3,8 @@ import successIcon from '../../../assets/success.svg';
 import warningIcon from '../../../assets/warning.svg';
 import errorIcon from '../../../assets/error.svg';
 import mailIcon from '../../../assets/mail.svg';
+import processIcon from '../../../assets/process.svg';
+
 import owlSound from '../../../assets/soundEffects/Notifications/real_owl_hoot.mp3';
 
 import './Notification.scss';
@@ -12,6 +14,7 @@ const icons = {
     success: successIcon,
     error: errorIcon,
     warning: warningIcon,
+    process: processIcon,
     mail: mailIcon
 };
 

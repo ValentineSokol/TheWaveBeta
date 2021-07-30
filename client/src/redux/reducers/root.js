@@ -1,13 +1,22 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { checkLogin, logout, loadProfile, uploadFiles, sendPasswordRecoveryCode, submitRegister  } from '../actions/api';
+import {
+    checkLogin,
+    logout,
+    loadProfile,
+    uploadFiles,
+    sendPasswordRecoveryCode,
+    submitRegister,
+    updateUser
+} from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";
 import {preferencesReducer} from "../PreferencesSlice";
 import {WebSocketReducer} from "../WebSocketSlice";
 
 export default combineReducers({
     global: createReducer({
-        loginChecked: false
+        loginChecked: false,
+        uploadedFiles: []
     }, {
         [checkLogin.pending]: (state, action) => {
             state.loading = true;
@@ -44,7 +53,8 @@ export default combineReducers({
         [sendPasswordRecoveryCode.fulfilled]: (state, action) => {
             state.recoveryCodeSent = true;
         },
-        [submitRegister.fulfilled]: (state, action) => {
+        [updateUser.fulfilled]: (state) => {
+            state.userUpdated = true;
         }
     }),
     notifications: notificationReducer,

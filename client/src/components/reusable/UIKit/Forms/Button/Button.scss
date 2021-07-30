@@ -17,3 +17,9 @@ button {
 .ButtonContainer {
   padding: 1%;
 }
+button:disabled {
+  opacity: 50%;
+  &:hover {
+    background: colors.$important-element;
+  }
+}

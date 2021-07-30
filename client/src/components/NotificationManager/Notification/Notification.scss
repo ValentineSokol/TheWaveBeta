@@ -31,3 +31,7 @@
   background: colors.$important-element;
   width: 300px;
 }
+.process-notification {
+  @extend ._notification;
+  background: colors.$important-element;
+}

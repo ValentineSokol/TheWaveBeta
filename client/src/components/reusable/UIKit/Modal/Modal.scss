@@ -6,8 +6,8 @@
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
-  width: 40%;
-  height: 40%;
+  min-width: 40%;
+  min-height: 40%;
   background: colors.$card-background;
   justify-content: flex-start;
 }

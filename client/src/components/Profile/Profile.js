@@ -8,9 +8,11 @@ import Card from "../reusable/UIKit/Cards/Card/Card";
 import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import Button from "../reusable/UIKit/Forms/Button";
 import Avatar from "../reusable/Avatar";
+import ChangeAvatarModal from "./ChangeAvatarModal";
 
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
+    const [isChangingAvatar, setIsChangingAvatar] = useState(false);
     const { id } = useParams();
     const history = useHistory();
     useEffect(
@@ -25,10 +27,11 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
          !user? null
          :
         <div className='ProfileContainer'>
+           <ChangeAvatarModal onClose={_ => setIsChangingAvatar(false)} isOpen={isChangingAvatar} />
            <section>
-           <Card>
+           <Card classNames='AvatarCard'>
             <div className='ProfileAvatar'>
-                <Avatar url={user.avatarUrl} />
+                <Avatar clickHandler={() => setIsChangingAvatar(true)} url={user.avatarUrl} />
             </div>
            </Card>
             <div className='ProfileUserActions'>
