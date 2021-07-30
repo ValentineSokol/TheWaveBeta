@@ -16,6 +16,7 @@ import {Redirect} from 'react-router';
 import {CSSTransition} from 'react-transition-group';
 import downArrow from '../../assets/downArrow.svg';
 import ContextMenu from "./Message/ContextMenu";
+import Typed from "../reusable/Typed";
 
 
 class ChatWindow extends Component {
@@ -80,7 +81,7 @@ class ChatWindow extends Component {
         this.setState({ typers });
     }
     renderTypingMessage = () => {
-        const wrapInHtml = message => <div className='TypingMessage'>{message}</div>;
+        const wrapInHtml = message => <div className='TypingMessage'>{message}<Typed strings='...' showCursor={false} /></div>;
         const { typers } = this.state;
         if (!typers.length) return null;
         if (typers.length === 1) {
@@ -327,7 +328,8 @@ class ChatWindow extends Component {
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>
                         {
-                            this.state.typers.length ? this.renderTypingMessage()
+                            this.state.typers.length ?
+                            <span>{this.renderTypingMessage()}</span>
                                 :
                             <span>{this.state.companionOnline ? 'Online' :
                                 <RelativeTime text='Last seen' timestamp={this.state.lastSeen}/>}</span>

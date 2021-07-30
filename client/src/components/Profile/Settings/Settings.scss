@@ -1,5 +1,8 @@
 @use '../../../scss/common/colors';
 
+.SettingsContainer {
+  margin-bottom: 10%;
+}
 .SettingsSection {
   margin-top: 1%;
   border-top: .5px solid colors.$black;

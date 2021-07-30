@@ -1,8 +1,10 @@
 import React from 'react';
+import withTranslation from '../../reusable/withTranslation';
 import Heading from "../../reusable/UIKit/Headings/Heading/Heading";
 import PhotoCropper from "../../reusable/UIKit/PhotoCropper";
+import {uploadFiles} from '../../../redux/actions/api';
 
-export default class ChangeAvatarModal extends React.Component {
+class ChangeAvatarModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -18,17 +20,31 @@ export default class ChangeAvatarModal extends React.Component {
             fileSrc: window.URL.createObjectURL(file)
         })
     };
+    onSubmit = (croppedCanvas) => {
+        console.log(croppedCanvas)
+        croppedCanvas.toBlob(blob => {
+            this.props.uploadFiles({ files: [blob] });
+        },
+            'image/webp', 1);
+    }
 
     render() {
       return(
        <>
         <Heading>Change your Avatar: </Heading>
         <input onChange={this.onFileSelected} ref={this.fileInputRef} type='file'/>
-           { this.state.fileSrc &&
-             <PhotoCropper />
-           }
+        <PhotoCropper onSubmit={this.onSubmit} src={this.state.fileSrc} />
        </>
       );
 
     }
 }
+
+const mapDispatch = { uploadFiles }
+export default withTranslation(
+    ChangeAvatarModal,
+    'changeAvatarModal',
+    null,
+    mapDispatch,
+    true
+);

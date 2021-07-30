@@ -6,7 +6,7 @@ const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infi
     useEffect(
         () => {
             const typed = new TypedJs(typedContainerRef.current, {
-                strings,
+                strings: Array.isArray(strings) ? strings : [strings],
                 typeSpeed,
                 backSpeed,
                 loop,
@@ -20,4 +20,4 @@ const Typed = ({ strings, typeSpeed = 70, backSpeed = 70, loop, loopCount = Infi
         return <span ref={typedContainerRef} className="TypedContainer" />;
 }
 
-export default Typed;
+export default React.memo(Typed);
