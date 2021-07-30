@@ -3,7 +3,7 @@ import './Modal.scss';
 import Card from "../Cards/Card/Card";
 class Modal extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
-        alert('lll');
+
     }
 
     render() {

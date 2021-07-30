@@ -33,7 +33,6 @@ const Notification = ({ soundEnabled, clearNotification, notification: { id, sho
             soundElement.play();
         }
         catch (err) {
-            alert(err.message);
         }
     }, []);
     return (

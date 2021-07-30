@@ -33,6 +33,7 @@
   }
   .Message {
     min-width: 100px;
+    max-width: 1000px;
     word-wrap: break-word;
     padding: .5%;
     border-radius: 5px;
@@ -166,4 +167,10 @@
     height: 40px;
     margin: 1%;
     cursor: pointer;
+  }
+
+  @media only screen and (max-width: 784px) {
+    .Message {
+        max-width: 250px;
+    }
   }
