@@ -40,6 +40,9 @@ module.exports = {
       avatarUrl: {
         type: Sequelize.STRING
       },
+      lastSeen: {
+        type: Sequelize.BIGINT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

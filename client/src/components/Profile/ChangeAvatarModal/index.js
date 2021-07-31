@@ -44,7 +44,6 @@ class ChangeAvatarModal extends React.Component {
     }
 
     render() {
-      if (!this.props.isOpen) return null;
       return(
        <Modal onClose={this.onClose} isOpen={this.props.isOpen} blockInteraction>
        <div className='ChangeAvatarModal'>

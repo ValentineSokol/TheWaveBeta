@@ -26,6 +26,7 @@ const Navbar = ({ isNavbarVisible, user, logout, translation }) => {
                                     <>
                                         <li><NavigationLink  to={`/profile/${user.id}`}>{translation?.profile}</NavigationLink></li>
                                         <li><NavigationLink to='/stories/post'>{translation?.post}</NavigationLink></li>
+                                        <li><NavigationLink to='/chat'>{translation?.chat}</NavigationLink></li>
                                         <li onClick={onLogout} className='NavbarLogout'>{translation?.logout}</li>
                                     </>
                                     :

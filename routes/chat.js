@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Users, directMessages } = require('../models');
+const { Users, chatrooms, messages } = require('../models');
 const auth = require('../middlewares/auth');
 const getUserFromSession = require('../utils/getUserFromSession');
 const {Op} = require('sequelize');
@@ -107,9 +107,24 @@ module.exports = (server) => {
         const { addressee } = req.params;
         const { text } = req.body;
         try {
-            await directMessages.create({
+            const chatroomPayload = {
+                [Op.or]: [{ name: `${req.user.id}t${addressee}`}, { name: `${addressee}t${req.user.id}`}],
+                isDirect: true,
+                maxMembers: req.user.id === Number(addressee) ? 1 : 2,
+            }
+            let chatroom = await chatrooms.findOne({
+                where: { chatroomPayload }
+            });
+            if (!chatroom) {
+                chatroom = await chatrooms.create({
+                    name: `${req.user.id}t${addressee}`,
+                    isDirect: true,
+                    maxMembers: chatroomPayload.maxMembers
+                });
+            }
+            await messages.create({
+                chatroom: chatroom.id,
                 from: req.user.id,
-                to: addressee,
                 text
             });
             const userConnection = server.websocketConnections[addressee];
@@ -163,6 +178,9 @@ module.exports = (server) => {
         }
         await message.destroy();
         res.json({ success: true });
+    });
+    router.get('/chats', auth, async (req, res) => {
+       const chats = await directMessages.findAll({ where: {  } })
     });
     return router;
 }

@@ -3,8 +3,8 @@ const { Router } = require('express');
 const { Users } = require('../models');
 const B2 = require('backblaze-b2');
 const multer = require('multer');
+const sharp = require('sharp');
 const auth = require('../middlewares/auth');
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -18,6 +18,18 @@ module.exports = (server) => {
       await b2.authorize();
       const uploads = [];
       for (const file of req.files) {
+        let [fileType, fileFormat] = file.mimetype.split('/');
+        if (fileType === 'image') {
+           try {
+               file.buffer = await sharp(file.buffer).webp({quality: 100, lossless: true}).toFormat('webp').toBuffer();
+               file.mimetype = 'image/webp'
+               fileFormat = 'webp';
+           }
+           catch (e) {
+               console.error(e);
+               return;
+           }
+        }
         const uploadUrlRes = await b2.getUploadUrl({
           bucketId: process.env.BACKBLAZE_BUCKET_ID
         });
@@ -25,8 +37,8 @@ module.exports = (server) => {
        const fileUploadPromise = b2.uploadFile({
           uploadUrl: uploadUrlRes.data.uploadUrl,
           uploadAuthToken: uploadUrlRes.data.authorizationToken,
-          fileName: `${req.user.username}-${hashHex}`,
-          mime: file.mimeType,
+          fileName: `${req.user.username}-${hashHex}.${fileFormat}`,
+          mime: file.mimetype,
           data: file.buffer, 
        });
        uploads.push(fileUploadPromise);

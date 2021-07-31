@@ -1,20 +1,26 @@
 import React from 'react';
 import './Modal.scss';
 import Card from "../Cards/Card/Card";
+import {CSSTransition} from "react-transition-group";
 class Modal extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
-
     }
 
     render() {
         const { isOpen, children, blockInteraction, onClose } = this.props;
-        if (!isOpen) return null;
         return (
             <>
                 {
-                    blockInteraction &&
+                   isOpen && blockInteraction &&
                         <span className='BlockInteraction' />
                 }
+                <CSSTransition
+                    in={isOpen}
+                    unmountOnExit
+                    appear={true}
+                    timeout={800}
+                    classNames='scale-fade'
+                >
               <Card classNames='ModalContainer'>
                       <div className='ModalHeader'>
                           <span className='CloseIcon' onClick={onClose}>✖</span>
@@ -23,6 +29,7 @@ class Modal extends React.Component {
                       {children}
                   </div>
               </Card>
+               </CSSTransition>
             </>
         );
 

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Users.belongsToMany(models.chatrooms, { through: models.chatroomMembers, as: 'members' });
     }
     static findByUsername(username = '') {
       return this.findOne({ where: { username } });

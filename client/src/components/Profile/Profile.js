@@ -18,7 +18,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     useEffect(
         () => {
             dispatch(loadProfile(id));
-            if (loggedInUser && loggedInUser.id === id) setisOwner(true);
+            if (loggedInUser && Number(loggedInUser.id) === Number(id)) setisOwner(true);
         },
         [id, dispatch, loggedInUser]
     );
@@ -31,7 +31,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
            <section>
            <Card classNames='AvatarCard'>
             <div className='ProfileAvatar'>
-                <Avatar clickHandler={() => setIsChangingAvatar(true)} url={user.avatarUrl} />
+                <Avatar clickHandler={() => isOwner && setIsChangingAvatar(true)} url={user.avatarUrl} />
             </div>
            </Card>
             <div className='ProfileUserActions'>

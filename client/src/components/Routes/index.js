@@ -8,6 +8,7 @@ import Profile from '../Profile/Profile';
 import PostStory from'../Story/PostStory/PostStory';
 import ChatWindow from '../ChatWindow';
 import Settings from '../Profile/Settings';
+import ChatSelector from '../ChatSelector';
 
 
 const Routes = () => (
@@ -20,6 +21,7 @@ const Routes = () => (
     <Route path='/settings' component={Settings} />
     <Route path='/stories/post' component={PostStory} />
     <Route path='/chat/:chatType/:id' component={ChatWindow} />
+    <Route exact path='/chat' component={ChatSelector}  />
 </Router>
 );
 

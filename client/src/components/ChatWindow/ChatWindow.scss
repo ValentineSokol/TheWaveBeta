@@ -34,7 +34,6 @@
   .Message {
     min-width: 100px;
     max-width: 1000px;
-    word-wrap: break-word;
     padding: .5%;
     border-radius: 5px;
     text-align: center;
@@ -54,6 +53,10 @@
     .right-arrow {
       border-right: 8px solid colors.$card-background;
     }
+  }
+  .MessageText {
+    width: 100%;
+    word-break: break-all;
   }
   .MessageBox {
     padding: 1%;

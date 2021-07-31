@@ -3,5 +3,6 @@ export default {
     register: 'Регистрация',
     profile: 'Профиль',
     post: 'Опубликовать',
+    chat: 'Чат',
     logout: 'Выйти'
 };

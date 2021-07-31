@@ -178,7 +178,11 @@ class ChatWindow extends Component {
         this.props.sendWsMessage(message);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+  async  componentDidUpdate(prevProps, prevState, snapshot) {
+        if (!prevProps.user && this.props.user) {
+        const image = await fetcher(this.props.user.avatarUrl);
+        this.setState({ image })
+        }
         if (!prevProps.isWsOpen && this.props.isWsOpen) {
             this.onWsOpen();
         }
@@ -237,7 +241,6 @@ class ChatWindow extends Component {
         };
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
-            messages: isMessageEmpty ? this.state.messages : [...this.state.messages, messageObj],
             message: '',
             isTyping: false
         });
@@ -327,13 +330,8 @@ class ChatWindow extends Component {
                     </span>
                     <section className='OverlayInfo'>
                         <Heading size='1'>{this.state.companion?.username}</Heading>
-                        {
-                            this.state.typers.length ?
-                            <span>{this.renderTypingMessage()}</span>
-                                :
                             <span>{this.state.companionOnline ? 'Online' :
                                 <RelativeTime text='Last seen' timestamp={this.state.lastSeen}/>}</span>
-                        }
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
@@ -344,12 +342,21 @@ class ChatWindow extends Component {
                 <div className='MessageBox' >
                     {this.renderMessages()}
                     { !this.state.messages.length && <p>{NO_CHAT_HISTORY_MESSAGE}</p> }
+                    {this.renderTypingMessage()}
                 </div>
                 <section className='BottomSection'>
                 <section className='SendMessagePanel'>
                 <div className='RichArea'>
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
-                { this.state.message.trim() && <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} /> }
+                <CSSTransition
+                    in={this.state.message.trim()}
+                    unmountOnExit
+                    appear={true}
+                    timeout={800}
+                    classNames='scale-fade'
+                >
+                <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} />
+                </CSSTransition>
                 </div>
                         <CSSTransition
                             in={this.state.userScrolled}

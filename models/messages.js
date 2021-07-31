@@ -3,24 +3,23 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class directMessages extends Model {
+  class messages extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      directMessages.belongsTo(models.Users, { as: 'sender', foreignKey: 'from' });
-      directMessages.belongsTo(models.Users, { as: 'addressee', foreignKey: 'to' });
+      messages.belongsTo(models.chatrooms);
     }
-  }
-  directMessages.init({
+  };
+  messages.init({
+    text: DataTypes.TEXT,
     from: DataTypes.INTEGER,
-    to: DataTypes.INTEGER,
-    text: DataTypes.TEXT
+    chatroomId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'directMessages',
+    modelName: 'messages',
   });
-  return directMessages;
+  return messages;
 };
