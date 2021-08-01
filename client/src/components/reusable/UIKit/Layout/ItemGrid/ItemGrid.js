@@ -8,9 +8,7 @@ const ItemGrid = ({ children, layout, itemsPerRow, rowClassName }) => {
     const itemsToDisplay = itemRows.map(
         (el, i) => <div key={i} className={layout}>{el}</div>
     );
-    return (
-        <div className={`ItemGrid-${layout}`}>{itemsToDisplay}</div>
-    );
+    return itemsToDisplay;
 };
 ItemGrid.defaultProps = {
     itemsPerRow: 2,
