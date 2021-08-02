@@ -42,7 +42,7 @@ class ChatSelector extends React.Component {
                           url = `/chat/direct/${companion?.id}`;
                       }
                       const [lastMessage] = room.Messages;
-                      const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage.from);
+                      const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage?.from);
                      return <div className='ChatPane'>
                          <Link to={url}>
                           <Avatar url={avatar}  />
