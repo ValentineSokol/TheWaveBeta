@@ -1,0 +1,34 @@
+@use '../../scss/common/colors';
+
+.ChatPane {
+ margin-right: 1%;
+ background: colors.$card-background;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  border-radius: 10px;
+  cursor: pointer;
+  a {
+    width: 100%;
+    text-decoration: none;
+    color: colors.$black;
+  }
+  transition: background-color .5s ease-in-out;
+  &:hover {
+    background: colors.$important-element;
+    a {
+      color: colors.$card-background;
+    }
+  }
+  .Avatar {
+    margin: 1%;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+  }
+}
+.ChatName {
+  font-weight: bold;
+  font-size: 1.3em;
+}

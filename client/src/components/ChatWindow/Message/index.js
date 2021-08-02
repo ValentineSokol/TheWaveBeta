@@ -4,7 +4,7 @@ import {CSSTransition} from "react-transition-group";
 
 const isOutgoingMessage = (message, userId) => message.from === userId;
 
-const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companion, user, isJoint, displayUsername }) => {
+const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions, user, isJoint, displayUsername }) => {
     const contextMenuHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -12,7 +12,7 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companion, 
     };
  if (!user) return null;
  const messageRef = React.createRef();
-
+ const messageAuthor = companions && companions.find(companion => companion.id === message.from);
 
  return (
     <CSSTransition
@@ -22,11 +22,11 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companion, 
         classNames='scale-fade'
     >
     <span ref={messageRef} className={isJoint ? 'JointMessageContainer' : 'MessageContainer'}>
-        {displayUsername && <h6>{isOutgoingMessage(message, user.id) ? user.username : companion.username}</h6>}
+        {displayUsername && <h6>{messageAuthor?.username}</h6>}
         <div className='MessageBody'>
         {
             !isJoint &&
-            <Avatar url={isOutgoingMessage(message, user.id) ? user.avatarUrl : companion.avatarUrl}/>
+            <Avatar url={messageAuthor?.avatarUrl}/>
         }
             <div className='MessageAndArrow'>
         {!isJoint &&

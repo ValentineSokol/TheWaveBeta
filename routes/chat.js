@@ -1,7 +1,9 @@
 const { Router } = require('express');
-const { Users, chatrooms, messages } = require('../models');
+const { Users, chatrooms, messages, directMessages } = require('../models');
 const auth = require('../middlewares/auth');
 const getUserFromSession = require('../utils/getUserFromSession');
+const {Sequelize, UniqueConstraintError} = require("sequelize");
+const { sequelize } = require('../models/index');
 const {Op} = require('sequelize');
 
 
@@ -103,54 +105,101 @@ module.exports = (server) => {
         });
 
     });
-    router.put('/sendDirectMessage/:addressee', auth, async (req, res) => {
-        const { addressee } = req.params;
-        const { text } = req.body;
+    router.get('/chatrooms', auth, async (req, res) => {
+      const user = await Users.findByPk(
+          req.user.id,
+          {
+              include: [{
+                  model: chatrooms,
+                  order: [messages, 'createdAt', 'ASC'],
+                  include: [
+                      {
+                          model: Users
+                      },
+                      {
+                          model: messages,
+                          required: false,
+                          limit: 1,
+                          separate: true,
+                          order: [ ['createdAt', 'DESC'] ]
+                      }
+                  ]
+              }
+              ]
+          });
+      res.json(user?.chatrooms);
+    });
+    router.put('/findDirectChatroom/:companion', auth, async (req, res) => {
+        const transaction = await sequelize.transaction();
+        const { companion } = req.params;
+        const getHash = () => {
+            const ids = [req.user.id, Number(companion)];
+            ids.sort((a, b) => b - a);
+            return ids.join('#');
+        };
+        const chatroomPayload = { directChatroomHash: getHash() };
         try {
-            const chatroomPayload = {
-                [Op.or]: [{ name: `${req.user.id}t${addressee}`}, { name: `${addressee}t${req.user.id}`}],
-                isDirect: true,
-                maxMembers: req.user.id === Number(addressee) ? 1 : 2,
-            }
-            let chatroom = await chatrooms.findOne({
-                where: { chatroomPayload }
+            const [chatroom] = await chatrooms.findOrCreate({
+                where: chatroomPayload,
+                defaults: {
+                    ...chatroomPayload,
+                },
+                transaction
             });
-            if (!chatroom) {
-                chatroom = await chatrooms.create({
-                    name: `${req.user.id}t${addressee}`,
-                    isDirect: true,
-                    maxMembers: chatroomPayload.maxMembers
-                });
+            await chatroom.addUsers(req.user.id, {transaction});
+            if (req.user.id !== Number(companion)) {
+                await chatroom.addUsers(Number(companion),{transaction});
             }
-            await messages.create({
-                chatroom: chatroom.id,
-                from: req.user.id,
-                text
-            });
-            const userConnection = server.websocketConnections[addressee];
-            if (userConnection && userConnection.readyState === 1) {
-                const message = { type: 'message', payload: { from: req.user.id, username: req.user.username, text, isDirect: true } };
-                userConnection.send(JSON.stringify(message));
-            }
-            res.json({ success: true });
+            await transaction.commit();
+            res.json(chatroom.id);
         }
-        catch(err) {
+        catch (err) {
+            await transaction.rollback();
             console.error(err);
-            return res.status(500).json({ error: 'Failed to send message!'});
         }
     });
-    router.get('/getDirectMessages/:companion', auth, async (req, res) => {
-       const { companion } = req.params;
-       const { datePeriod } = req.body;
+    router.put('/sendMessage/:chatroomId', auth, async (req, res) => {
+        const { chatroomId } = req.params;
+        const { text } = req.body;
+        const chatroom = await chatrooms.findByPk(
+            chatroomId,
+            {
+                include: [{
+                    model: Users,
+                    required: false
+                }]
+            }
+        );
+        const isMember = chatroom.Users.find(u => u.id === req.user.id);
+        if (!chatroom || !isMember) return res.sendStatus(404);
+        await messages.create({
+            chatroom: chatroomId,
+            from: req.user.id,
+            text: req.body.text
+        });
+        chatroom.Users.forEach(user => {
+           const wsConnection = server.websocketConnections[user.id];
+           if (wsConnection?.readyState !== 1) return;
+            const message = { type: 'message', payload: { chatId: chatroom.id, from: req.user.id, username: req.user.username, text } };
+            wsConnection.send(JSON.stringify(message));
+        });
+        res.json({ success: true });
+    });
+    router.get('/getChatroom/:id', auth, async (req, res) => {
+       const { id } = req.params;
        try {
-           const lastViewedMessageDate = new Date(datePeriod);
-           const messageTimeThreshold = lastViewedMessageDate.setDate(lastViewedMessageDate.getDate() - 3);
-           const messages = await directMessages.findAll({
-               where: {
-                   [Op.or]: [{ from: req.user.id, to: companion }, { from: companion, to: req.user.id }]
+           const chatroom = await chatrooms.findByPk(
+               id,
+               {
+                   include: [
+                       {model: Users},
+                       {model: messages}
+                   ]
                }
-           });
-           res.json(messages);
+               );
+           const isMember = chatroom.Users.find(u => u.id === req.user.id);
+           if (!isMember) return res.sendStatus(404);
+           res.json(chatroom);
        }
        catch(err) {
            console.error(err);
@@ -178,9 +227,6 @@ module.exports = (server) => {
         }
         await message.destroy();
         res.json({ success: true });
-    });
-    router.get('/chats', auth, async (req, res) => {
-       const chats = await directMessages.findAll({ where: {  } })
     });
     return router;
 }

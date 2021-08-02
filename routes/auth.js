@@ -1,6 +1,8 @@
 const { Router } = require('express');
+const Sequelize = require('sequelize');
+const {Op} = Sequelize;
 const passport = require('passport');
-const { Users, RecoveryCodes } = require('../models');
+const { Users, RecoveryCodes, chatrooms } = require('../models');
 const { hashPassword, verifyPassword } = require('../utils/auth');
 const crypto = require('crypto');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -90,7 +92,10 @@ module.exports = (server) => {
             return;
         }
         const userId = req.session.passport.user;
-        const user = await Users.findByPk(userId, { attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] } });
+        const user = await Users.findByPk(userId, {
+                attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] },
+                include: [{ model: chatrooms, include: [{ model: Users, required: false, where:  { id: {[Op.ne]: req.user.id } }  }] }]
+        });
         if (!user) {
             res.status(400).json({ reason: 'There is no user for given id!' });
             return;

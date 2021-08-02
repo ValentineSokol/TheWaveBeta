@@ -8,7 +8,7 @@ const Avatar = ({ clickHandler, url, alt = 'Avatar image' }) => {
     },
     [url]
     );
-    return <img className='Avatar' style={{ cursor: clickHandler ? 'pointer' : 'auto'}} onClick={clickHandler} className='Avatar' onError={ _ => setSrc(defaultAvatar) } src={src || defaultAvatar} alt={alt} />;
+    return <img className='Avatar' style={{ cursor: clickHandler ? 'pointer' : 'inherit'}} onClick={clickHandler} className='Avatar' onError={ _ => setSrc(defaultAvatar) } src={src || defaultAvatar} alt={alt} />;
 }
 
 export default Avatar;

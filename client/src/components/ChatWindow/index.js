@@ -23,6 +23,7 @@ class ChatWindow extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            companions: [],
             messages: [],
             typers: [],
             message: '',
@@ -63,13 +64,13 @@ class ChatWindow extends Component {
     }
     isDirectChat = () => this.props.match.params.chatType === 'direct'
     onMessageReceived = message => {
-        if (message.from !== this.state.companion.id || message.from === this.props.user?.id) return;
+        if (this.state.chatroom.id !== message.chatId) return;
         const { messages } = this.state;
         const messageWithAnimationData = { ...message, shouldPlayEnterAnimation: true };
         this.setState({ messages: [...messages, messageWithAnimationData ]});
     }
     onCompanionTypingChange = ({ username, isDirect, chatId}) => {
-        if (Number(chatId) !==this.props.user.id) return;
+        if (Number(chatId) !==this.props.user?.id) return;
         if (this.isDirectChat() !== isDirect) return;
         let typers = [...this.state.typers];
         if (typers.includes(username)) {
@@ -110,23 +111,20 @@ class ChatWindow extends Component {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         this.props.setNavbarVisibility(false);
-        const promises = [
-            fetcher(`/user/profile/${this.props.match.params.id}`),
-            fetcher(`/chat/getDirectMessages/${this.props.match.params.id}`)
-        ];
-        const [{ user: companion }, messages] = await Promise.all(promises);
+            const chatroomId = this.isDirectChat() ?
+                await fetcher(`/chat/findDirectChatroom/${this.props.match.params.id}`,'PUT')
+                :
+                this.props.match.params.id;
+            const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
+            const companions = chatroom?.Users ?? [];
         if (this.props.isWsOpen) {
             this.onWsOpen();
         }
-        if (!companion) {
-            this.setState({ redirect: true });
-            this.props.createNotification('There is no such user.', 'warning');
-            return;
-        }
-        this.setState({ messages, companion, lastSeen: companion.lastSeen });
+        this.setState({ companions, chatroom, messages: chatroom ? chatroom.messages : [] });
     }
     renderMessages = () => {
         const {messages} = this.state;
+        if (!messages) return [];
         const result = [];
         const renderNewMessage = (message, isJoint, displayUsername) => {
             result.push(
@@ -134,7 +132,7 @@ class ChatWindow extends Component {
                     key={message.id}
                     message={message}
                     user={this.props.user}
-                    companion={this.state.companion}
+                    companions={this.state.companions}
                     isJoint={isJoint}
                     displayUsername={displayUsername}
                     onContextMenu={this.onContextMenu}
@@ -180,8 +178,6 @@ class ChatWindow extends Component {
 
   async  componentDidUpdate(prevProps, prevState, snapshot) {
         if (!prevProps.user && this.props.user) {
-        const image = await fetcher(this.props.user.avatarUrl);
-        this.setState({ image })
         }
         if (!prevProps.isWsOpen && this.props.isWsOpen) {
             this.onWsOpen();
@@ -236,18 +232,18 @@ class ChatWindow extends Component {
         const messageObj = {
             text: this.state.message.trim(),
             from: this.props.user.id,
-            to: this.state.companion.id,
             shouldPlayEnterAnimation: true
         };
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
+           // messages: [...this.state.messages, messageObj],
             message: '',
             isTyping: false
         });
         if (isMessageEmpty) return;
         try {
             await fetcher(
-                `/chat/sendDirectMessage/${this.props.match.params.id}`,
+                `/chat/sendMessage/${this.state.chatroom.id}`,
                  'PUT',
                 { text: this.state.message.trim() }
             );
@@ -316,6 +312,17 @@ class ChatWindow extends Component {
         if (this.state.redirect) {
             return <Redirect to='/' />
         }
+        let topBadgeUrl, chatName;
+        if (this.isDirectChat()) {
+            const companion = this.state.companions?.find(c => Number(c.id) === Number(this.props.match.params.id));
+            chatName = companion?.username;
+            topBadgeUrl = companion?.avatarUrl;
+        }
+        else {
+            chatName = this.state?.chatroom.name;
+            topBadgeUrl = this.state?.chatroom.avatarUrl;
+        }
+
         return (
             <div className='ChatWindow'>
                 <ContextMenu
@@ -326,12 +333,16 @@ class ChatWindow extends Component {
                 />
                 <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
                     <span className='CompanionAvatar'>
-                        <Avatar url={this.state.companion?.avatarUrl} />
+                        <Avatar url={topBadgeUrl} />
                     </span>
                     <section className='OverlayInfo'>
-                        <Heading size='1'>{this.state.companion?.username}</Heading>
+                        <Heading size='1'>{chatName}</Heading>
+                        {
+                            this.isDirectChat() &&
                             <span>{this.state.companionOnline ? 'Online' :
-                                <RelativeTime text='Last seen' timestamp={this.state.lastSeen}/>}</span>
+                                <RelativeTime text='Last seen' timestamp={this.state.companions[0]?.lastSeen}/>}
+                            </span>
+                        }
                     </section>
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
@@ -341,7 +352,6 @@ class ChatWindow extends Component {
                 </section>
                 <div className='MessageBox' >
                     {this.renderMessages()}
-                    { !this.state.messages.length && <p>{NO_CHAT_HISTORY_MESSAGE}</p> }
                     {this.renderTypingMessage()}
                 </div>
                 <section className='BottomSection'>
