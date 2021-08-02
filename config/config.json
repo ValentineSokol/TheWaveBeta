@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "pass",
+    "password": "1",
     "database": "thewavebeta",
     "host": "127.0.0.1",
     "dialect": "mysql",
