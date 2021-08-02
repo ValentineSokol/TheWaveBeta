@@ -8,6 +8,10 @@
     "start": "node index",
     "heroku-postbuild": "npx sequelize-cli db:migrate && cd client && npm i && npm run build"
   },
+  "engines": {
+    "node": "14.17.4",
+    "npm": "6.14,14"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
