@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     memberId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'chatroomMembers',
+    modelName: 'ChatroomMembers',
   });
   return chatroomMembers;
 };

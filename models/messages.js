@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     chatroom: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'messages',
+    modelName: 'Messages',
   });
   return messages;
 };
