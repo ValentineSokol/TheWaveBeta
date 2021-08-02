@@ -25,7 +25,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         references: {
-          model: 'chatrooms',
+          model: 'Chatrooms',
           key: 'id',
         }
       },
