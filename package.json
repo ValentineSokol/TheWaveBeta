@@ -43,5 +43,8 @@
     "streamifier": "^0.1.1",
     "webp-converter": "^2.3.3",
     "ws": "^7.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

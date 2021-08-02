@@ -62,7 +62,7 @@ class ChatWindow extends Component {
         window.focus();
         window.scrollTo(0, document.scrollingElement.scrollHeight, { behavior: 'smooth' });
     }
-    isDirectChat = () => this.props.match.params.chatType === 'direct'
+    isDirectChat = () => this.props.match.params.chatType === 'direct';
     onMessageReceived = message => {
         if (this.state.chatroom.id !== message.chatId) return;
         const { messages } = this.state;
@@ -120,7 +120,7 @@ class ChatWindow extends Component {
         if (this.props.isWsOpen) {
             this.onWsOpen();
         }
-        this.setState({ companions, chatroom, messages: chatroom ? chatroom.messages : [] });
+        this.setState({ companions, chatroom, messages: chatroom ? chatroom.Messages : [] });
     }
     renderMessages = () => {
         const {messages} = this.state;
@@ -236,7 +236,7 @@ class ChatWindow extends Component {
         };
         const isMessageEmpty = !this.state.message.trim();
         this.setState({
-           // messages: [...this.state.messages, messageObj],
+            messages: [...this.state.messages, messageObj],
             message: '',
             isTyping: false
         });

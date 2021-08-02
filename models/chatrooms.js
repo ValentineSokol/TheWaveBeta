@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      chatrooms.userAssociation = chatrooms.belongsToMany(models.Users, { through: models.chatroomMembers, foreignKey: 'chatroomId', otherKey: 'memberId' });
-      chatrooms.messagesAssociation = chatrooms.hasMany(models.messages, { foreignKey: 'chatroom'})
+      chatrooms.userAssociation = chatrooms.belongsToMany(models.Users, { through: models.ChatroomMembers, foreignKey: 'chatroomId', otherKey: 'memberId' });
+      chatrooms.messagesAssociation = chatrooms.hasMany(models.Messages, { foreignKey: 'chatroom'})
     }
   };
   chatrooms.init({

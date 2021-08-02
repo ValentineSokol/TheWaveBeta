@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Users, chatrooms, messages, directMessages } = require('../models');
+const { Users, Chatrooms, Messages  } = require('../models');
 const auth = require('../middlewares/auth');
 const getUserFromSession = require('../utils/getUserFromSession');
 const {Sequelize, UniqueConstraintError} = require("sequelize");
@@ -110,14 +110,14 @@ module.exports = (server) => {
           req.user.id,
           {
               include: [{
-                  model: chatrooms,
-                  order: [messages, 'createdAt', 'ASC'],
+                  model: Chatrooms,
+                  order: [Messages, 'createdAt', 'ASC'],
                   include: [
                       {
                           model: Users
                       },
                       {
-                          model: messages,
+                          model: Messages,
                           required: false,
                           limit: 1,
                           separate: true,
@@ -127,7 +127,7 @@ module.exports = (server) => {
               }
               ]
           });
-      res.json(user?.chatrooms);
+      res.json(user?.Chatrooms);
     });
     router.put('/findDirectChatroom/:companion', auth, async (req, res) => {
         const transaction = await sequelize.transaction();
@@ -139,7 +139,7 @@ module.exports = (server) => {
         };
         const chatroomPayload = { directChatroomHash: getHash() };
         try {
-            const [chatroom] = await chatrooms.findOrCreate({
+            const [chatroom] = await Chatrooms.findOrCreate({
                 where: chatroomPayload,
                 defaults: {
                     ...chatroomPayload,
@@ -161,7 +161,7 @@ module.exports = (server) => {
     router.put('/sendMessage/:chatroomId', auth, async (req, res) => {
         const { chatroomId } = req.params;
         const { text } = req.body;
-        const chatroom = await chatrooms.findByPk(
+        const chatroom = await Chatrooms.findByPk(
             chatroomId,
             {
                 include: [{
@@ -172,12 +172,13 @@ module.exports = (server) => {
         );
         const isMember = chatroom.Users.find(u => u.id === req.user.id);
         if (!chatroom || !isMember) return res.sendStatus(404);
-        await messages.create({
+        await Messages.create({
             chatroom: chatroomId,
             from: req.user.id,
             text: req.body.text
         });
         chatroom.Users.forEach(user => {
+           if (user.id === req.user.id) return;
            const wsConnection = server.websocketConnections[user.id];
            if (wsConnection?.readyState !== 1) return;
             const message = { type: 'message', payload: { chatId: chatroom.id, from: req.user.id, username: req.user.username, text } };
@@ -188,12 +189,12 @@ module.exports = (server) => {
     router.get('/getChatroom/:id', auth, async (req, res) => {
        const { id } = req.params;
        try {
-           const chatroom = await chatrooms.findByPk(
+           const chatroom = await Chatrooms.findByPk(
                id,
                {
                    include: [
                        {model: Users},
-                       {model: messages}
+                       {model: Messages}
                    ]
                }
                );
@@ -207,26 +208,6 @@ module.exports = (server) => {
        }
 
     });
-    router.patch('/editDirectMessage/:id', auth, async (req, res) => {
-       const { id } = req.params;
-       const { newText } = req.body;
-       const message =  await directMessages.findByPk(id);
-       if (message.from !== req.user.id) {
-           res.sendStatus(403);
-           return;
-       }
-       await message.update({ text: newText });
-       res.json({ success: true });
-    });
-    router.delete('/deleteDirectMessage/:id', auth, async (req, res) => {
-        const { id } = req.params;
-        const message =  await directMessages.findByPk(id);
-        if (message.from !== req.user.id) {
-            res.sendStatus(403);
-            return;
-        }
-        await message.destroy();
-        res.json({ success: true });
-    });
+
     return router;
 }

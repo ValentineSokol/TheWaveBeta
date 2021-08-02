@@ -20,6 +20,7 @@ class ChatSelector extends React.Component {
     }
 
     render() {
+        if (!this.props.user) return null;
         return (
           <div className='ChatSelector'>
               <Heading size={2}>Your chats:</Heading>
@@ -40,12 +41,17 @@ class ChatSelector extends React.Component {
                           avatar = companion?.avatarUrl;
                           url = `/chat/direct/${companion?.id}`;
                       }
+                      const [lastMessage] = room.Messages;
+                      const lastMessageAuthor = room.Users.find(u => u.id === lastMessage.from);
                      return <div className='ChatPane'>
                          <Link to={url}>
                           <Avatar url={avatar}  />
                          <div>
                           <p className='ChatName'>{name}</p>
-                         <p>{room.messages[0]?.text || 'no recent messages.'}</p>
+                         <div className='LastMessageContainer'>
+                            <span className='LastMessageAuthor'>{`${lastMessageAuthor?.username}: `}</span>
+                            <span>{lastMessage?.text || 'no recent messages.'}</span>
+                         </div>
                          </div>
                          </Link>
                       </div>

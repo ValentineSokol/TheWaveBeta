@@ -1,6 +1,12 @@
 @use '../../scss/common/colors';
 
 .ChatPane {
+  .LastMessageAuthor {
+    font-weight: bold;
+  }
+  .LastMessageContainer {
+    margin-bottom: 15%;
+  }
  margin-right: 1%;
  background: colors.$card-background;
   display: flex;
@@ -23,12 +29,19 @@
   }
   .Avatar {
     margin: 1%;
-    width: 130px;
-    height: 130px;
+    max-width: 130px;
+    max-height: 130px;
     border-radius: 50%;
   }
 }
 .ChatName {
   font-weight: bold;
   font-size: 1.3em;
+}
+
+@media only screen and (max-width: 784px) {
+  .Avatar {
+    width: 90px;
+    height: 90px;
+  }
 }

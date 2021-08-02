@@ -2,13 +2,14 @@ const { Router } = require('express');
 const Sequelize = require('sequelize');
 const {Op} = Sequelize;
 const passport = require('passport');
-const { Users, RecoveryCodes, chatrooms } = require('../models');
+const { Users, RecoveryCodes, Chatrooms } = require('../models');
 const { hashPassword, verifyPassword } = require('../utils/auth');
 const crypto = require('crypto');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
+const { sequelize } = require('../models/index');
 
 module.exports = (server) => {
     const router = Router();
@@ -28,11 +29,29 @@ module.exports = (server) => {
         async function(username, password, done) {
             let user = await Users.findOne({ where: { username } });
             if (!user) {
+                const transaction = await sequelize.transaction();
+
                 const passwordHash = hashPassword(password);
-                const [record, created] = await Users.findOrCreate({ where: { username }, defaults: { username, password: passwordHash } });
-                if (!created) done(null, false);
-                else done(null, record);
-                return;
+                try {
+                    const [record, created] = await Users.findOrCreate({
+                        where: {username},
+                        defaults: {username, password: passwordHash},
+                        transaction
+                    });
+                    const privateChatroom = await Chatrooms.create({
+                       directChatroomHash: `${record.id}#${record.id}`
+                    }, { transaction });
+                    await privateChatroom.addUsers(record.id, { transaction });
+                    await transaction.commit();
+                    if (!created) return done(null, false);
+                    return done(null, record);
+                }
+                catch (err) {
+                    console.error(err);
+                    await transaction.rollback();
+                    return done(err, false);
+                }
+
             }
             const passwordVerified = verifyPassword(password, user.password);
             if (!passwordVerified) {
@@ -94,7 +113,7 @@ module.exports = (server) => {
         const userId = req.session.passport.user;
         const user = await Users.findByPk(userId, {
                 attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] },
-                include: [{ model: chatrooms, include: [{ model: Users, required: false, where:  { id: {[Op.ne]: req.user.id } }  }] }]
+                include: [{ model: Chatrooms, include: [{ model: Users, required: false, where:  { id: {[Op.ne]: req.user.id } }  }] }]
         });
         if (!user) {
             res.status(400).json({ reason: 'There is no user for given id!' });
