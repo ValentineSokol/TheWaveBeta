@@ -42,14 +42,14 @@ class ChatSelector extends React.Component {
                           url = `/chat/direct/${companion?.id}`;
                       }
                       const [lastMessage] = room.Messages;
-                      const lastMessageAuthor = room.Users.find(u => u.id === lastMessage.from);
+                      const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage.from);
                      return <div className='ChatPane'>
                          <Link to={url}>
                           <Avatar url={avatar}  />
                          <div>
                           <p className='ChatName'>{name}</p>
                          <div className='LastMessageContainer'>
-                            <span className='LastMessageAuthor'>{`${lastMessageAuthor?.username}: `}</span>
+                             { lastMessageAuthor && <span className='LastMessageAuthor'>{`${lastMessageAuthor?.username}: `}</span> }
                             <span>{lastMessage?.text || 'no recent messages.'}</span>
                          </div>
                          </div>
