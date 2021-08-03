@@ -6,6 +6,7 @@ import fetcher from "../../utils/fetcher";
 import './ChatSelector.scss';
 import Avatar from "../reusable/Avatar";
 import ItemGrid from "../reusable/UIKit/Layout/ItemGrid/ItemGrid";
+import ChatItem from "./ChatItem";
 class ChatSelector extends React.Component {
     constructor(props) {
         super(props);
@@ -21,10 +22,12 @@ class ChatSelector extends React.Component {
 
     render() {
         if (!this.props.user) return null;
+        let className = 'ChatSelector';
+        if (this.props.className) {
+            className += ` ${this.props.className}`;
+        }
         return (
-          <div className='ChatSelector'>
-              <Heading size={2}>Your chats:</Heading>
-              <ItemGrid>
+          <div className={className}>
               {
                   this.state.chatrooms.map(room => {
                       let name = room.name;
@@ -43,21 +46,9 @@ class ChatSelector extends React.Component {
                       }
                       const [lastMessage] = room.Messages;
                       const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage?.from);
-                     return <div className='ChatPane'>
-                         <Link to={url}>
-                          <Avatar url={avatar}  />
-                         <div>
-                          <p className='ChatName'>{name}</p>
-                         <div className='LastMessageContainer'>
-                             { lastMessageAuthor && <span className='LastMessageAuthor'>{`${lastMessageAuthor?.username}: `}</span> }
-                            <span>{lastMessage?.text || 'no recent messages.'}</span>
-                         </div>
-                         </div>
-                         </Link>
-                      </div>
+                      return <ChatItem name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
                   })
               }
-              </ItemGrid>
           </div>
         );
     }

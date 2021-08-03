@@ -1,47 +1,52 @@
 @use '../../scss/common/colors';
 
+.ChatSelector {
+  background: colors.$card-background;
+}
+.ChatPaneContent {
+  display: flex;
+  transition: background-color .5s ease-in-out;
+  border-radius: 30px;
+  &:hover {
+    background: lighten(colors.$input-background, 10%);
+    a {
+      color: colors.$card-background;
+    }
+  }
+}
 .ChatPane {
+  margin: 1%;
+  width: 90%;
   .LastMessageAuthor {
+    margin: 0 .5%;
     font-weight: bold;
   }
-  .LastMessageContainer {
-    margin-bottom: 15%;
-  }
- margin-right: 1%;
  background: colors.$card-background;
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 20%;
-  border-radius: 10px;
+  border-radius: 33px;
   cursor: pointer;
   a {
     width: 100%;
     text-decoration: none;
     color: colors.$black;
   }
-  transition: background-color .5s ease-in-out;
-  &:hover {
-    background: colors.$important-element;
-    a {
-      color: colors.$card-background;
-    }
-  }
   .Avatar {
-    margin: 1%;
-    max-width: 130px;
-    max-height: 130px;
+    max-width: 67px;
+    max-height: 67px;
     border-radius: 50%;
   }
 }
 .ChatName {
+  font-size: larger;
   font-weight: bold;
-  font-size: 1.3em;
 }
-
-@media only screen and (max-width: 784px) {
-  .Avatar {
-    width: 90px;
-    height: 90px;
-  }
+.ChatNameMessage {
+  text-align: left;
+  margin: 2%;
+}
+.LastMessageContainer {
+  overflow: hidden;
+  width: 15%;
+  text-overflow: ellipsis;
 }

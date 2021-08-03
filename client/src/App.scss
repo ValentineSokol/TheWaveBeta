@@ -1,6 +1,5 @@
 @use './src/scss/common/colors';
 html {
-  overflow: auto;
   padding: 0;
   background-color:  colors.$dark-background;
   color: colors.$black;
@@ -14,6 +13,11 @@ footer {
 
 .RoundImage {
   border-radius: 50%;
+}
+
+.noScroll {
+  height: 100%;
+  overflow: hidden;
 }
 
 

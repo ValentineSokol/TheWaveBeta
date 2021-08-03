@@ -17,6 +17,8 @@ import {CSSTransition} from 'react-transition-group';
 import downArrow from '../../assets/downArrow.svg';
 import ContextMenu from "./Message/ContextMenu";
 import Typed from "../reusable/Typed";
+import ChatSelector from "../ChatSelector";
+import toggleBodyScroll from '../../utils/toggleBodyScroll';
 
 
 class ChatWindow extends Component {
@@ -110,6 +112,7 @@ class ChatWindow extends Component {
     async componentDidMount() {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
+        toggleBodyScroll();
         this.props.setNavbarVisibility(false);
             const chatroomId = this.isDirectChat() ?
                 await fetcher(`/chat/findDirectChatroom/${this.props.match.params.id}`,'PUT')
@@ -191,14 +194,12 @@ class ChatWindow extends Component {
         if (prevState.isTyping && !this.state.isTyping) {
             this.sendTypingMessage();
         }
-        if (this.state.messages !== prevState.messages && !this.state.userScrolled) {
-            this.scrollToBottom();
-        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('click', this.closeContextMenu);
         window.removeEventListener('scroll', this.handleUserScroll);
+        toggleBodyScroll();
         this.props.setNavbarVisibility(true);
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
     }
@@ -331,7 +332,7 @@ class ChatWindow extends Component {
                     top={this.state.messageContextMenuY}
                     actions={messageContextMenuActions}
                 />
-                <section style={isNavbarVisible? {} : { position: 'fixed', top: '0' }} className='TopOverlay'>
+                <section className='TopOverlay'>
                     <span className='CompanionAvatar'>
                         <Avatar url={topBadgeUrl} />
                     </span>
@@ -350,6 +351,9 @@ class ChatWindow extends Component {
                         />
                     </span>
                 </section>
+                <div className='ChatContainer'>
+                    <ChatSelector className='ChatSelectorInside' />
+                 <div className='ChatMainSection'>
                 <div className='MessageBox' >
                     {this.renderMessages()}
                     {this.renderTypingMessage()}
@@ -379,6 +383,8 @@ class ChatWindow extends Component {
                         </CSSTransition>
                 </section>
                 </section>
+                 </div>
+            </div>
             </div>
         );
     }
