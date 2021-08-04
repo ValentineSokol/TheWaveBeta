@@ -21,7 +21,7 @@ const Routes = () => (
     <Route path='/settings' component={Settings} />
     <Route path='/stories/post' component={PostStory} />
     <Route path='/chat/:chatType/:id' component={ChatWindow} />
-    <Route exact path='/chat' component={ChatSelector}  />
+    <Route exact path='/chat' render={props => <ChatSelector {...props } className='ChatSelectorMobile' />} />
 </Router>
 );
 

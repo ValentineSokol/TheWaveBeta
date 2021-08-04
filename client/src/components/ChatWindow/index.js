@@ -49,7 +49,7 @@ class ChatWindow extends Component {
          */
     }
     handleUserScroll = () => {
-        const bodyRect = document.scrollingElement.getBoundingClientRect();
+        const bodyRect = document.querySelector('.MessageBox').getBoundingClientRect();
         const {lastScrollPosition} = this.state;
         if (lastScrollPosition < bodyRect.top) {
             this.setState({ userScrolled: true });

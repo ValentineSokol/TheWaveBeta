@@ -11,7 +11,7 @@ export default ({ name, url, avatar, lastMessageAuthor, lastMessageText}) => (
                         <span className='ChatName'>{name}</span>
                         <div className='LastMessageContainer'>
                         <span className='LastMessageAuthor'>{`${lastMessageAuthor}:`}</span>
-                        {lastMessageText}
+                            <p className='LastMessageText'>{lastMessageText}</p>
                         </div>
                 </div>
             </div>

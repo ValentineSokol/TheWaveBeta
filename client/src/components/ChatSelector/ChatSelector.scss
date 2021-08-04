@@ -6,9 +6,11 @@
 .ChatPaneContent {
   display: flex;
   transition: background-color .5s ease-in-out;
-  border-radius: 30px;
+  border-radius: 10px;
+  margin: 1%;
+  padding: 1%;
   &:hover {
-    background: lighten(colors.$input-background, 10%);
+    background: lighten(colors.$shade-blue, 10%);
     a {
       color: colors.$card-background;
     }
@@ -16,14 +18,11 @@
 }
 .ChatPane {
   margin: 1%;
-  width: 90%;
   .LastMessageAuthor {
     margin: 0 .5%;
     font-weight: bold;
   }
  background: colors.$card-background;
-  display: flex;
-  align-items: center;
   border-radius: 33px;
   cursor: pointer;
   a {
@@ -45,8 +44,33 @@
   text-align: left;
   margin: 2%;
 }
-.LastMessageContainer {
+.LastMessageText {
+  margin: 0 2%;
   overflow: hidden;
-  width: 15%;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.LastMessageContainer {
+ display: flex;
+}
+
+.ChatSelectorInside {
+  .LastMessageText {
+    max-width: 8vw;
+  }
+}
+
+.ChatSelectorMobile {
+  margin: 0 auto;
+  margin: 0 auto;
+  width: 60vw;
+  .LastMessageAuthor {
+    margin: 0;
+    font-size: 3vw;
+  }
+  .LastMessageText {
+    margin: 0;
+    width: 30vw;
+    font-size: 2vw;
+  }
 }

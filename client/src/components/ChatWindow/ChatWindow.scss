@@ -1,6 +1,10 @@
   @use '../client/src/scss/common/colors';
+  .ChatWindow {
+    height: 100%;
+  }
   .ChatContainer {
     display: flex;
+    height: 100vh;
   }
   .TopOverlay {
     width: 100%;
@@ -8,13 +12,12 @@
     background: colors.$important-element;
     color: colors.$dark-background;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 3% 0;
     box-sizing: border-box;
     section {
       border: none;
-      margin-left: 2%;
+      margin-left: 1%;
     }
     .NavbarToggle {
       cursor: pointer;
@@ -29,14 +32,15 @@
   }
   .CompanionAvatar {
     img {
+      margin-left: 20vw;
       width: 80px;
       height: 80px;
       border-radius: 50%;
     }
   }
   .Message {
-    min-width: 100px;
-    max-width: 1000px;
+    min-width: 10vw;
+    max-width: 50vw;
     padding: .5%;
     border-radius: 5px;
     text-align: center;
@@ -62,7 +66,8 @@
     word-break: break-word;
   }
   .MessageBox {
-    height: 50%;
+    margin-left: 1%;
+    height: 70vh;
     overflow-y: auto;
   }
   .MessageContainer {
@@ -115,12 +120,9 @@
     border-bottom: 8px solid transparent;
     border-right: 8px solid colors.$light-blue;
   }
-  footer {
-    display: none;
-  }
   .ChatMainSection {
-    width: 100%;
-
+    width: 100vw;
+    height: 100vh;
   }
   .BottomSection {
     position: fixed;
@@ -146,9 +148,10 @@
     }
   }
   .RichArea {
+    height: 5vh;
     display: flex;
     align-items: center;
-    width: 80%;
+    width: 60%;
     word-break: break-all;
     border: 2px solid colors.$important-element;
     padding: 1%;
@@ -176,19 +179,19 @@
     cursor: pointer;
   }
   .ChatSelectorInside {
-    min-width: 30%;
+    min-width: 20vw;
+    height: 100vh;
+    overflow-y: auto;
   }
 
   @media only screen and (max-width: 784px) {
-    .Message {
-        max-width: 250px;
-    }
     .ChatSelectorInside {
       display: none;
     }
-    .MessageBox {
-     height: 40%;
+    .Message {
+      font-size: 60%;
     }
+
     .RichArea {
       width: 100%;
     }
