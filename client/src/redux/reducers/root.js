@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
 import {
+    queryParamsChanged
+} from '../actions/misc';
+import {
     checkLogin,
     logout,
     loadProfile,
@@ -16,8 +19,12 @@ import {WebSocketReducer} from "../WebSocketSlice";
 export default combineReducers({
     global: createReducer({
         loginChecked: false,
-        uploadedFiles: []
+        uploadedFiles: [],
+        queryParams: {}
     }, {
+        [queryParamsChanged]: (state, action) => {
+          state.queryParams = action.payload;
+        },
         [checkLogin.pending]: (state, action) => {
             state.loading = true;
         },

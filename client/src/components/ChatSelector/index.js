@@ -37,19 +37,19 @@ class ChatSelector extends React.Component {
                       if (room.directChatroomHash && room.Users.length === 1) {
                           name = 'You';
                           avatar = this.props.user?.avatarUrl;
-                          url = `/chat/direct/${this.props.user.id}`;
+                          url = `/chat?chatType=direct&id=${this.props.user.id}`;
                           chatroomId = this.props?.user?.id;
                       }
                       else if (room.directChatroomHash && room.Users.length === 2) {
                           const companion = room.Users.find(u => u.id !== this.props.user.id);
                           name = companion?.username;
                           avatar = companion?.avatarUrl;
-                          url = `/chat/direct/${companion?.id}`;
+                          url = `/chat?chatType=direct&id=${companion?.id}`;
                           chatroomId = companion?.id;
                       }
                       const [lastMessage] = room.Messages;
                       const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage?.from);
-                      return <ChatItem chatroomId={chatroomId} name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
+                      return <ChatItem activeChatroom={this.props.activeChatroom} chatroomId={chatroomId} isDirectChatroom={!!room.directChatroomHash} name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
                   })
               }
           </div>

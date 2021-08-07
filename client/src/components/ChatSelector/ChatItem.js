@@ -3,15 +3,16 @@ import Avatar from "../reusable/Avatar";
 import {Link} from "react-router-dom";
 import {useParams} from "react-router";
 
-export default ({ chatroomId, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
+export default ({ activeChatroom, chatroomId, isDirectChatroom, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
 
     const [isActive, setIsActive] = useState(false);
-    const { id } = useParams();
 
     useEffect(() => {
-        if (chatroomId === Number(id)) setIsActive(true);
+        const isActiveChatroomDirect = activeChatroom?.chatType === 'direct';
+
+        if (isDirectChatroom === isActiveChatroomDirect && Number(chatroomId) === Number(activeChatroom.id)) setIsActive(true);
         else setIsActive(false);
-    }, [id])
+    }, [activeChatroom])
 
     const wrapperClassNames =  isActive  ? 'ChatPaneContent  ChatPaneContentActive' : 'ChatPaneContent';
     return (

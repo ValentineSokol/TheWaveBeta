@@ -3,9 +3,20 @@ import Avatar from "../../reusable/Avatar";
 import {CSSTransition} from "react-transition-group";
 import {Link} from "react-router-dom";
 
-const isOutgoingMessage = (message, userId) => message.from === userId;
+const isOutgoingMessage = (message, user) => message.from === user?.id;
 
 const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions, user, displaySenderInfo }) => {
+    const getMessageClass = () => {
+        let className;
+        if (isOutgoingMessage(message, user)) {
+            className = 'OutgoingMessageContainer';
+        } else className = 'IncomingMessageContainer';
+
+        if (displaySenderInfo) {
+            className += ' FirstMessageInGroup';
+        }
+        return className;
+    }
     const contextMenuHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -21,7 +32,7 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions,
         timeout={500}
         classNames='scale-fade'
     >
-            <div className={isOutgoingMessage(message, user?.id) ? 'OutgoingMessageContainer' : 'IncomingMessageContainer' }>
+            <div className={getMessageClass()}>
                 {
                     displaySenderInfo &&
                         <div className='SenderInfo'>

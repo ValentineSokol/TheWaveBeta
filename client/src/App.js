@@ -9,7 +9,7 @@ import { actions as preferencesAPI, loadTranslations } from './redux/Preferences
 import getBrowserLanguage from './utils/getBrowserLanguage';
 import Routes from './components/Routes';
 import {createNotification} from "./redux/NotificationSlice";
-
+import {queryParamsChanged} from './redux/actions/misc';
 
 
 const App = class App extends  React.Component {
@@ -60,5 +60,5 @@ const App = class App extends  React.Component {
     }
 }
 const mapStateToProps = (state) => ({ loading: state.global.loading,  language: state.preferences.language, wsMessage: state.WebSocket.message });
-export default connect(mapStateToProps, { checkLogin, createNotification, loadTranslations, setStartLanguage: preferencesAPI.setStartLanguage })(App);
+export default connect(mapStateToProps, { queryParamsChanged, checkLogin, createNotification, loadTranslations, setStartLanguage: preferencesAPI.setStartLanguage })(App);
 

@@ -41,6 +41,7 @@ class ChatWindow extends Component {
         };
     }
 
+
     hasUserScrolledToTheBottom = () => {
         const scrollPosFloat = document.scrollingElement.scrollTop + document.scrollingElement.clientHeight;
         const scrollPosInt = Math.round(scrollPosFloat);
@@ -66,7 +67,7 @@ class ChatWindow extends Component {
         window.focus();
         window.scrollTo(0, document.scrollingElement.scrollHeight, { behavior: 'smooth' });
     }
-    isDirectChat = () => this.props.match.params.chatType === 'direct';
+    isDirectChat = () => this.props.queryParams.chatType === 'direct';
     onMessageReceived = message => {
         if (this.state.chatroom.id !== message.chatId) return;
         const { messages } = this.state;
@@ -105,17 +106,19 @@ class ChatWindow extends Component {
             return  wrapInHtml(result);
     }
     onWsOpen = () => {
-        this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.match.params.id });
+        this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.queryParams.id });
         this.setState({ loading: false });
     }
     closeContextMenu = (e) => {
         this.setState({ showMessageContextMenu: false });
     }
     async fetchChatroom() {
+        const idFromQuery = this.props.queryParams.id;
+        if (!idFromQuery) return;
         const chatroomId = this.isDirectChat() ?
-            await fetcher(`/chat/findDirectChatroom/${this.props.match.params.id}`,'PUT')
+            await fetcher(`/chat/findDirectChatroom/${idFromQuery}`,'PUT')
             :
-            this.props.match.params.id;
+            idFromQuery;
         const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
         const companions = chatroom?.Users ?? [];
         const messages = chatroom ? chatroom.Messages : [];
@@ -168,14 +171,14 @@ class ChatWindow extends Component {
             payload: {
                 username: this.props.user.username,
                 isDirect: this.isDirectChat(),
-                chatId: this.props.match.params.id
+                chatId: this.props.queryParams.id
             }
         };
         this.props.sendWsMessage(message);
     }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.match.params.id && prevProps.match.params.id !== this.props.match.params.id) {
+        if (prevProps.queryParams !== this.props.queryParams) {
             await this.fetchChatroom();
         }
         if (!prevProps.user && this.props.user) {
@@ -311,17 +314,6 @@ class ChatWindow extends Component {
         if (this.state.redirect) {
             return <Redirect to='/' />
         }
-        let topBadgeUrl, chatName;
-        if (this.isDirectChat()) {
-            const companion = this.state.companions?.find(c => Number(c.id) === Number(this.props.match.params.id));
-            chatName = companion?.username;
-            topBadgeUrl = companion?.avatarUrl;
-        }
-        else {
-            chatName = this.state?.chatroom.name;
-            topBadgeUrl = this.state?.chatroom.avatarUrl;
-        }
-
         return (
             <div className='ChatWindow'>
                 <ContextMenu
@@ -331,18 +323,7 @@ class ChatWindow extends Component {
                     actions={messageContextMenuActions}
                 />
                 <section className='TopOverlay'>
-                    <span className='CompanionAvatar'>
-                        <Avatar url={topBadgeUrl} />
-                    </span>
-                    <section className='OverlayInfo'>
-                        <Heading size='1'>{chatName}</Heading>
-                        {
-                            this.isDirectChat() &&
-                            <span>{this.state.companionOnline ? 'Online' :
-                                <RelativeTime text='Last seen' timestamp={this.state.companions[0]?.lastSeen}/>}
-                            </span>
-                        }
-                    </section>
+                    { this.getTopOverlayContent()}
                     <span className='NavbarToggle' onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
                             icon={isNavbarVisible? navbarToggleCollapse: navbarToggleExpand}
@@ -350,7 +331,7 @@ class ChatWindow extends Component {
                     </span>
                 </section>
                 <div className='ChatContainer'>
-                    <ChatSelector className='ChatSelectorInside' />
+                    <ChatSelector activeChatroom={this.props.queryParams} className='ChatSelectorInside' />
                  <div className='ChatMainSection'>
                 <div className='MessageBox' >
                     {this.renderMessages()}
@@ -387,12 +368,46 @@ class ChatWindow extends Component {
             </div>
         );
     }
+
+    getTopOverlayContent() {
+        const idFromQuery = this.props.queryParams.id;
+        if (!idFromQuery) {
+            return null;
+        }
+        let topBadgeUrl, chatName;
+        if (this.isDirectChat()) {
+            const companion = this.state.companions?.find(c => Number(c.id) === Number(idFromQuery));
+            chatName = companion?.username;
+            topBadgeUrl = companion?.avatarUrl;
+        }
+        else {
+            chatName = this.state?.chatroom?.name;
+            topBadgeUrl = this.state?.chatroom?.avatarUrl;
+        }
+        return (
+        <>
+            <span className='CompanionAvatar'>
+                        <Avatar url={topBadgeUrl} />
+                    </span>
+        <section className='OverlayInfo'>
+            <Heading size='1'>{chatName}</Heading>
+            {
+                this.isDirectChat() &&
+                <span>{this.state.companionOnline ? 'Online' :
+                    <RelativeTime text='Last seen' timestamp={this.state.companions[0]?.lastSeen}/>}
+                            </span>
+            }
+        </section>
+        </>
+        );
+    }
 }
 
 export default  withTranslation(
     ChatWindow,
     'chat',
         state => ({
+            queryParams: state.global.queryParams,
             isNavbarVisible: state.preferences.isNavbarVisible,
             user: state.global.user,
             isWsOpen: state.WebSocket.isWsOpen,

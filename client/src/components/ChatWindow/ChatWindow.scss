@@ -63,6 +63,9 @@
       border-radius: 50%;
     }
   }
+  .FirstMessageInGroup {
+    margin-top: 3%;
+  }
   .OutgoingMessageContainer {
     @extend .MessageContainer;
     background: colors.$message-blue;
@@ -138,7 +141,6 @@
 
   @media only screen and (max-width: 784px) {
     .ChatSelectorInside {
-      display: none;
     }
     .Message {
       font-size: 60%;

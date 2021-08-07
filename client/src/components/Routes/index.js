@@ -8,20 +8,21 @@ import Profile from '../Profile/Profile';
 import PostStory from'../Story/PostStory/PostStory';
 import ChatWindow from '../ChatWindow';
 import Settings from '../Profile/Settings';
-import ChatSelector from '../ChatSelector';
+import QueryParser from '../QueryParser';
+
 
 
 const Routes = () => (
 <Router>
     <Navbar />
+    <Route path='/' component={QueryParser} />
     <Route exact path='/' component={LandingPage} />
     <Route exact path='/register' component={RegisterForm} />
     <Route path='/password/recover' component={PasswordRecoveryForm} />
     <Route path='/profile/:id' component={Profile} />
     <Route path='/settings' component={Settings} />
     <Route path='/stories/post' component={PostStory} />
-    <Route path='/chat/:chatType/:id' component={ChatWindow} />
-    <Route exact path='/chat' render={props => <ChatSelector {...props } className='ChatSelectorMobile' />} />
+    <Route path='/chat' component={ChatWindow} />
 </Router>
 );
 
