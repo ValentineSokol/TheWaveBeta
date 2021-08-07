@@ -135,7 +135,6 @@ class ChatWindow extends Component {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         toggleBodyScroll();
-        this.props.setNavbarVisibility(false);
         await this.fetchChatroom();
         if (this.props.isWsOpen) {
             this.onWsOpen();
@@ -290,11 +289,6 @@ class ChatWindow extends Component {
    onKeyUp = e => {
         if (e.key === 'Shift') this.shiftPressed = false;
    }
-
-    toggleNavbar = () => {
-        const { isNavbarVisible, setNavbarVisibility } = this.props;
-        setNavbarVisibility(!isNavbarVisible);
-    }
     onContextMenu = (pageX, pageY, target) => {
         console.log(target);
         this.setState({
@@ -335,11 +329,6 @@ class ChatWindow extends Component {
                 />
                 <section className='TopOverlay'>
                     <div className='TopOverlayIcons'>
-                    <div onClick={this.toggleNavbar}>
-                        <FontAwesomeIcon
-                            icon={isNavbarVisible? navbarToggleCollapse : navbarToggleExpand}
-                        />
-                    </div>
                     <div className='ChatSelectionIcon'>
                         <Link to='/chat'>
                         <FontAwesomeIcon
@@ -413,11 +402,9 @@ class ChatWindow extends Component {
         }
         return (
         <>
-            <span className='CompanionAvatar'>
-                        <Avatar url={topBadgeUrl} />
-                    </span>
+        <Avatar url={topBadgeUrl} />
         <section className='OverlayInfo'>
-            <Heading size='1'>{chatName}</Heading>
+            <Heading size='3'>{chatName}</Heading>
             {
                 this.isDirectChat() &&
                 <span>{this.state.companionOnline ? 'Online' :

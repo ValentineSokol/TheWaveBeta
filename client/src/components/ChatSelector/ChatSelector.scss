@@ -2,7 +2,12 @@
 
 .ChatSelector {
   padding: 1%;
+  margin-top: 1%;
+  border-radius: 10px;
+  width: 30%;
+  height: 76%;
   background: colors.$card-background;
+  box-sizing: border-box;
 }
 .ChatPaneContent {
   width: 100%;
@@ -59,6 +64,7 @@
 }
 .LastMessageContainer {
  display: flex;
+  font-size: 65%;
 }
 @media only screen and (max-width: 784px) {
   .ChatSelector {

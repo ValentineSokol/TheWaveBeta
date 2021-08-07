@@ -15,7 +15,6 @@ const Navbar = ({ isNavbarVisible, user, logout, translation }) => {
             {
                 isNavbarVisible &&
                     <div className="Navbar">
-                        <img className='NavbarLogo' src={logo} alt="logo"/>
                         <ul className="NavbarItems">
                             <li className='NavbarButtonPanelLi'>
                                 <NavbarButtonPanel />
