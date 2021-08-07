@@ -304,16 +304,13 @@ class ChatWindow extends Component {
             messageContextMenuY: pageY,
         });
     }
-    editMessage = (e) => {
-        const { text, id } = this.state.selectedMessage;
+    editMessage = () => {
+        const { text } = this.state.selectedMessage;
         this.setState({ message: text, editingMessage: true });
 
     };
-    deleteMessage = (e) => {
 
-    };
     render() {
-        const NO_CHAT_HISTORY_MESSAGE = `This is the very beginning of your chat with ${this.state?.companion?.username}`;
         const messageContextMenuActions = [
             {
                 label: 'Edit',
@@ -385,7 +382,7 @@ class ChatWindow extends Component {
                             timeout={2000}
                             classNames='scale-fade'
                         >
-                        <img onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />
+                        <img alt='scroll to the bottom' onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />
                         </CSSTransition>
                 </section>
                 </section>

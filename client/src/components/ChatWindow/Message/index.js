@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Avatar from "../../reusable/Avatar";
 import {CSSTransition} from "react-transition-group";
 import {Link} from "react-router-dom";

@@ -9,7 +9,6 @@ import {
     loadProfile,
     uploadFiles,
     sendPasswordRecoveryCode,
-    submitRegister,
     updateUser
 } from '../actions/api';
 import { notificationReducer } from "../NotificationSlice";

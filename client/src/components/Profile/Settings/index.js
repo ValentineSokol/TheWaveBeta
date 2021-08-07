@@ -5,7 +5,6 @@ import withTranslation from '../../reusable/withTranslation';
 import Heading from '../../reusable/UIKit/Headings/Heading/Heading';
 
 import './Settings.scss';
-import ChangeAvatarModal from "../ChangeAvatarModal";
 
 class Settings extends React.Component {
 

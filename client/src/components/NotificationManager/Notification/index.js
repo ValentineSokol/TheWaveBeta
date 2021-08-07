@@ -34,7 +34,7 @@ const Notification = ({ soundEnabled, clearNotification, notification: { id, sho
         }
         catch (err) {
         }
-    }, []);
+    }, [severity, soundEnabled]);
     return (
         <CSSTransition
             in={show}

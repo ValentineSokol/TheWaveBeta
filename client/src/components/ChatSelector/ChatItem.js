@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Avatar from "../reusable/Avatar";
 import {Link} from "react-router-dom";
-import {useParams} from "react-router";
+
 
 export default ({ activeChatroom, chatroomId, isDirectChatroom, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
 
@@ -12,7 +12,7 @@ export default ({ activeChatroom, chatroomId, isDirectChatroom, name, url, avata
 
         if (isDirectChatroom === isActiveChatroomDirect && Number(chatroomId) === Number(activeChatroom.id)) setIsActive(true);
         else setIsActive(false);
-    }, [activeChatroom])
+    }, [activeChatroom, chatroomId, isDirectChatroom])
 
     const wrapperClassNames =  isActive  ? 'ChatPaneContent  ChatPaneContentActive' : 'ChatPaneContent';
     return (

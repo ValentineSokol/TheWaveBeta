@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import store from './redux/reducers/store';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 import dynamicImportPolyfill from 'dynamic-import-polyfill';
 
 // This needs to be done before any dynamic imports are used.
