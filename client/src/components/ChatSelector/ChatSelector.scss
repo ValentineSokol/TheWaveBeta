@@ -64,12 +64,16 @@
   .ChatSelector {
     display: none;
   }
+  .ChatPaneContent {
+    width: 80%;
+  }
   .ChatSelector.Expanded {
-    overflow: hidden;
+    overflow-y: auto;
+    font-size: 80%;
     display: block;
     width: 100vw;
     .LastMessageText {
-      width: 65vw;
+      width: 25vw;
     }
   }
 }
