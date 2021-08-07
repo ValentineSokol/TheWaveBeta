@@ -65,6 +65,7 @@
     display: none;
   }
   .ChatSelector.Expanded {
+    overflow: hidden;
     display: block;
     width: 100vw;
     .LastMessageText {
