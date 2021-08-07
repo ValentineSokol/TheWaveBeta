@@ -1,12 +1,10 @@
 import React from 'react';
 import withTranslation from '../reusable/withTranslation';
-import {Link} from "react-router-dom";
-import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import fetcher from "../../utils/fetcher";
 import './ChatSelector.scss';
-import Avatar from "../reusable/Avatar";
-import ItemGrid from "../reusable/UIKit/Layout/ItemGrid/ItemGrid";
 import ChatItem from "./ChatItem";
+import classNames from 'classnames';
+
 class ChatSelector extends React.Component {
     constructor(props) {
         super(props);
@@ -22,12 +20,11 @@ class ChatSelector extends React.Component {
 
     render() {
         if (!this.props.user) return null;
-        let className = 'ChatSelector';
-        if (this.props.className) {
-            className += ` ${this.props.className}`;
-        }
         return (
-          <div className={className}>
+          <div className={classNames(
+              'ChatSelector',
+              { 'Expanded': !this.props.activeChatroom?.id }
+          )}>
               {
                   this.state.chatrooms.map(room => {
                       let name = room.name;

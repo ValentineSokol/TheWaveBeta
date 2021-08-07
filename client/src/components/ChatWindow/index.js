@@ -4,7 +4,12 @@ import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import withTranslation from '../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExpandAlt as navbarToggleExpand, faCompressAlt as navbarToggleCollapse, faShare } from '@fortawesome/free-solid-svg-icons';
+import {
+    faExpandAlt as navbarToggleExpand,
+    faCompressAlt as navbarToggleCollapse,
+    faShare,
+    faCommentDots
+} from '@fortawesome/free-solid-svg-icons';
 import Message from "./Message";
 import fetcher from "../../utils/fetcher";
 import Avatar from "../reusable/Avatar";
@@ -20,6 +25,8 @@ import Typed from "../reusable/Typed";
 import ChatSelector from "../ChatSelector";
 import toggleBodyScroll from '../../utils/toggleBodyScroll';
 import EmojiPicker from "./EmojiPicker";
+import classNames from 'classnames';
+import {Link} from "react-router-dom";
 
 
 class ChatWindow extends Component {
@@ -178,8 +185,15 @@ class ChatWindow extends Component {
     }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.queryParams !== this.props.queryParams) {
+        if (prevProps.queryParams.id !== this.props.queryParams.id || prevProps.queryParams.chatType !== this.props.queryParams.chatType) {
             await this.fetchChatroom();
+        }
+        if (prevProps.queryParams.id && !this.props.queryParams.id) {
+            this.setState({
+                typers: [],
+                messages: [],
+                companions: []
+            })
         }
         if (!prevProps.user && this.props.user) {
         }
@@ -323,16 +337,28 @@ class ChatWindow extends Component {
                     actions={messageContextMenuActions}
                 />
                 <section className='TopOverlay'>
-                    { this.getTopOverlayContent()}
-                    <span className='NavbarToggle' onClick={this.toggleNavbar}>
+                    <div className='TopOverlayIcons'>
+                    <div onClick={this.toggleNavbar}>
                         <FontAwesomeIcon
-                            icon={isNavbarVisible? navbarToggleCollapse: navbarToggleExpand}
+                            icon={isNavbarVisible? navbarToggleCollapse : navbarToggleExpand}
                         />
-                    </span>
+                    </div>
+                    <div className='ChatSelectionIcon'>
+                        <Link to='/chat'>
+                        <FontAwesomeIcon
+                            icon={faCommentDots}
+                        />
+                        </Link>
+                    </div>
+                    </div>
+                    { this.getTopOverlayContent()}
                 </section>
                 <div className='ChatContainer'>
-                    <ChatSelector activeChatroom={this.props.queryParams} className='ChatSelectorInside' />
-                 <div className='ChatMainSection'>
+                    <ChatSelector activeChatroom={this.props.queryParams} />
+                 <div className={classNames(
+                     'ChatMainSection',
+                     { 'Empty': !this.props.queryParams.id }
+                 )}>
                 <div className='MessageBox' >
                     {this.renderMessages()}
                     {this.renderTypingMessage()}
@@ -372,7 +398,11 @@ class ChatWindow extends Component {
     getTopOverlayContent() {
         const idFromQuery = this.props.queryParams.id;
         if (!idFromQuery) {
-            return null;
+           return (
+               <div className='ChatSelectionHeading'>
+                   <Heading>Your Chats:</Heading>
+               </div>
+           )
         }
         let topBadgeUrl, chatName;
         if (this.isDirectChat()) {

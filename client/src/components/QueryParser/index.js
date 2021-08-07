@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {queryParamsChanged} from '../../redux/actions/misc';
 
@@ -19,6 +19,10 @@ class QueryParser extends React.PureComponent {
         );
         return result;
     }
+    componentDidMount() {
+        this.props.queryParamsChanged(this.parseQuery());
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.location === this.props.location) return;
         this.props.queryParamsChanged(this.parseQuery());

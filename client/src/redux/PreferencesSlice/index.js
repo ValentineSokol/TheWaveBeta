@@ -27,7 +27,7 @@ const preferencesSlice = createSlice( {
         },
         setNavbarVisibility: (state, action) => {
             const updatedVisibility = action.payload;
-            state.isNavbarVisible = updatedVisibility ?? !state.isNavbarVisible;
+            state.isNavbarVisible = updatedVisibility;
             if (state.isNavbarVisible) {
                 window.scrollTo(0, 0);
             }

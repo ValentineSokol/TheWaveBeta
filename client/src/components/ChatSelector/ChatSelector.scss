@@ -1,9 +1,11 @@
 @use '../../scss/common/colors';
 
 .ChatSelector {
+  padding: 1%;
   background: colors.$card-background;
 }
 .ChatPaneContent {
+  width: 100%;
   display: flex;
   transition: background-color .5s ease-in-out;
   border-radius: 10px;
@@ -49,6 +51,7 @@
   margin: 2%;
 }
 .LastMessageText {
+  width: 10vw;
   margin: 0 2%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,22 +60,16 @@
 .LastMessageContainer {
  display: flex;
 }
-
-.ChatSelectorInside {
-  .LastMessageText {
-  width: 12vw;
+@media only screen and (max-width: 784px) {
+  .ChatSelector {
+    display: none;
   }
-}
-
-.ChatSelectorMobile {
-  margin: 0 auto;
-  width: 60vw;
-  .LastMessageAuthor {
-    margin: 0;
-  }
-  .LastMessageText {
-    margin: 0;
-    width: 30vw;
+  .ChatSelector.Expanded {
+    display: block;
+    width: 100vw;
+    .LastMessageText {
+      width: 65vw;
+    }
   }
 }
 
