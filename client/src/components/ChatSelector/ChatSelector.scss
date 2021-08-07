@@ -7,9 +7,13 @@
   display: flex;
   transition: background-color .5s ease-in-out;
   border-radius: 10px;
-  margin: 1%;
+  margin: 2%;
   padding: 1%;
-  &:hover {
+  &Active {
+    background: colors.$important-element;
+    color: colors.$white;
+  }
+  &:not(&Active):hover {
     background: lighten(colors.$shade-blue, 10%);
     a {
       color: colors.$card-background;
@@ -56,21 +60,19 @@
 
 .ChatSelectorInside {
   .LastMessageText {
-    max-width: 8vw;
+  width: 12vw;
   }
 }
 
 .ChatSelectorMobile {
   margin: 0 auto;
-  margin: 0 auto;
   width: 60vw;
   .LastMessageAuthor {
     margin: 0;
-    font-size: 3vw;
   }
   .LastMessageText {
     margin: 0;
     width: 30vw;
-    font-size: 2vw;
   }
 }
+

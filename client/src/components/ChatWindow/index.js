@@ -19,6 +19,7 @@ import ContextMenu from "./Message/ContextMenu";
 import Typed from "../reusable/Typed";
 import ChatSelector from "../ChatSelector";
 import toggleBodyScroll from '../../utils/toggleBodyScroll';
+import EmojiPicker from "./EmojiPicker";
 
 
 class ChatWindow extends Component {
@@ -39,6 +40,7 @@ class ChatWindow extends Component {
 
         };
     }
+
     hasUserScrolledToTheBottom = () => {
         const scrollPosFloat = document.scrollingElement.scrollTop + document.scrollingElement.clientHeight;
         const scrollPosInt = Math.round(scrollPosFloat);
@@ -109,35 +111,39 @@ class ChatWindow extends Component {
     closeContextMenu = (e) => {
         this.setState({ showMessageContextMenu: false });
     }
+    async fetchChatroom() {
+        const chatroomId = this.isDirectChat() ?
+            await fetcher(`/chat/findDirectChatroom/${this.props.match.params.id}`,'PUT')
+            :
+            this.props.match.params.id;
+        const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
+        const companions = chatroom?.Users ?? [];
+        const messages = chatroom ? chatroom.Messages : [];
+        this.setState({ chatroom, companions, messages });
+    }
     async componentDidMount() {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         toggleBodyScroll();
         this.props.setNavbarVisibility(false);
-            const chatroomId = this.isDirectChat() ?
-                await fetcher(`/chat/findDirectChatroom/${this.props.match.params.id}`,'PUT')
-                :
-                this.props.match.params.id;
-            const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
-            const companions = chatroom?.Users ?? [];
+        await this.fetchChatroom();
         if (this.props.isWsOpen) {
             this.onWsOpen();
         }
-        this.setState({ companions, chatroom, messages: chatroom ? chatroom.Messages : [] });
     }
+
     renderMessages = () => {
         const {messages} = this.state;
         if (!messages) return [];
         const result = [];
-        const renderNewMessage = (message, isJoint, displayUsername) => {
+        const renderNewMessage = (message, displaySenderInfo) => {
             result.push(
                 <Message
                     key={message.id}
                     message={message}
                     user={this.props.user}
                     companions={this.state.companions}
-                    isJoint={isJoint}
-                    displayUsername={displayUsername}
+                    displaySenderInfo={displaySenderInfo}
                     onContextMenu={this.onContextMenu}
                     shouldPlayEnterAnimation={message.shouldPlayEnterAnimation}
                 />
@@ -145,24 +151,13 @@ class ChatWindow extends Component {
         };
         for (let i = 0; i < messages.length; i += 1) {
             const message = messages[i];
-            if (i + 1 < messages.length) {
-                const nextMessage = messages[i + 1];
-                let displayUsername = false;
-                if (i === 0) displayUsername = true;
-                else {
-                    const prevMessage = messages[i - 1];
-                    displayUsername = prevMessage.from !== message.from;
-                }
-                if (message.from === nextMessage.from) {
-                    renderNewMessage(message, true, displayUsername);
-                } else {
-                    renderNewMessage(message, false, displayUsername);
-                }
-            } else {
-                const prevMessage = messages[i - 1];
-                const displayUsername = prevMessage?.from !== message.from;
-                renderNewMessage(message, false, displayUsername);
+            if (i === 0) {
+                renderNewMessage(message, true);
+                continue;
             }
+
+            const prevMessage = messages[i - 1];
+            renderNewMessage(message, prevMessage.from !== message.from);
         }
         return result;
     }
@@ -179,7 +174,10 @@ class ChatWindow extends Component {
         this.props.sendWsMessage(message);
     }
 
-  async  componentDidUpdate(prevProps, prevState, snapshot) {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.match.params.id && prevProps.match.params.id !== this.props.match.params.id) {
+            await this.fetchChatroom();
+        }
         if (!prevProps.user && this.props.user) {
         }
         if (!prevProps.isWsOpen && this.props.isWsOpen) {
@@ -361,6 +359,7 @@ class ChatWindow extends Component {
                 <section className='BottomSection'>
                 <section className='SendMessagePanel'>
                 <div className='RichArea'>
+                <EmojiPicker />
                 <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
                 <CSSTransition
                     in={this.state.message.trim()}

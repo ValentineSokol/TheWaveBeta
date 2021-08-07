@@ -32,21 +32,24 @@ class ChatSelector extends React.Component {
                   this.state.chatrooms.map(room => {
                       let name = room.name;
                       let avatar = room.avatarUrl;
+                      let chatroomId = room.id;
                       let url = `/chat/room/${room.id}`;
                       if (room.directChatroomHash && room.Users.length === 1) {
                           name = 'You';
                           avatar = this.props.user?.avatarUrl;
                           url = `/chat/direct/${this.props.user.id}`;
+                          chatroomId = this.props?.user?.id;
                       }
                       else if (room.directChatroomHash && room.Users.length === 2) {
                           const companion = room.Users.find(u => u.id !== this.props.user.id);
                           name = companion?.username;
                           avatar = companion?.avatarUrl;
                           url = `/chat/direct/${companion?.id}`;
+                          chatroomId = companion?.id;
                       }
                       const [lastMessage] = room.Messages;
                       const lastMessageAuthor = lastMessage && room.Users.find(u => u.id === lastMessage?.from);
-                      return <ChatItem name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
+                      return <ChatItem chatroomId={chatroomId} name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
                   })
               }
           </div>

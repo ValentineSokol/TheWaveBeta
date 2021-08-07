@@ -72,7 +72,7 @@ module.exports = (server) => {
                 const { chatId, isDirect } = message.payload;
                 if (isDirect) {
                     const addressee = server.websocketConnections[chatId];
-                    if (addressee.readyState !== 1) return;
+                    if (addressee?.readyState !== 1) return;
                     addressee.send(JSON.stringify(message));
                 }
             }
