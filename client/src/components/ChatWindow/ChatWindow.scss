@@ -187,9 +187,14 @@
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 900px) {
+    .MessageBox {
+      height: 60vh;
+    }
     .ChatWindow {
       width: 100%;
+      margin: 0;
+      border-radius: 0 !important;
     }
     .TopOverlay {
         font-size: 60%;
@@ -197,6 +202,17 @@
           width: 30%;
           height: auto;
         }
+      .ChatSelectionIcon {
+        opacity: 1;
+        pointer-events: all;
+        font-size: 2em;
+      }
+    }
+    .BottomSection {
+      width: 90%;
+    }
+    .RichArea {
+      height: 60%;
     }
     .MessageAuthorName {
       h5 {
