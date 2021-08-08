@@ -5,10 +5,8 @@ import withTranslation from '../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faExpandAlt as navbarToggleExpand,
-    faCompressAlt as navbarToggleCollapse,
     faShare,
-    faCommentDots
+    faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
 import Message from "./Message";
 import fetcher from "../../utils/fetcher";
@@ -329,13 +327,16 @@ class ChatWindow extends Component {
                 />
                 <section className='TopOverlay'>
                     <div className='TopOverlayIcons'>
-                    <div className='ChatSelectionIcon'>
-                        <Link to='/chat'>
-                        <FontAwesomeIcon
-                            icon={faCommentDots}
-                        />
-                        </Link>
-                    </div>
+                        {
+                            this.props.queryParams.id &&
+                            <div className='ChatSelectionIcon'>
+                                <Link to='/chat'>
+                                    <FontAwesomeIcon
+                                        icon={faArrowLeft}
+                                    />
+                                </Link>
+                            </div>
+                        }
                     </div>
                     { this.getTopOverlayContent()}
                 </section>

@@ -3,47 +3,50 @@ import NavigationLink from "../reusable/UIKit/NavigationLink/NavigationLink";
 import { logout } from '../../redux/actions/api';
 import {actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import './Navbar.scss';
-import logo from '../../img/navlogo.png';
-import NavbarButtonPanel from "../reusable/UIKit/NavbarButtonPanel";
+import { faHouseUser, faCommentDots, faSignOutAlt, faCog, faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import withTranslation from '../reusable/withTranslation/index';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import classNames from 'classnames';
 
-
-const Navbar = ({ isNavbarVisible, user, logout, translation }) => {
- const onLogout = () => logout();
+const Navbar = ({ user, logout, queryParams }) => {
+    const onLogout = () => logout();
     return (
         <nav>
-            {
-                isNavbarVisible &&
-                    <div className="Navbar">
-                        <ul className="NavbarItems">
-                            <li className='NavbarButtonPanelLi'>
-                                <NavbarButtonPanel />
-                            </li>
-                            <li><NavigationLink to='/'>{translation?.home}</NavigationLink></li>
-                            {
-                                user && user.isLoggedIn?
-                                    <>
-                                        <li><NavigationLink  to={`/profile/${user.id}`}>{translation?.profile}</NavigationLink></li>
-                                        <li><NavigationLink to='/stories/post'>{translation?.post}</NavigationLink></li>
-                                        <li><NavigationLink to='/chat'>{translation?.chat}</NavigationLink></li>
-                                        <li onClick={onLogout} className='NavbarLogout'>{translation?.logout}</li>
-                                    </>
-                                    :
-                                    <>
-                                        <li><NavigationLink to='/register'>{translation?.register}</NavigationLink></li>
-                                    </>
-                            }
-                        </ul>
-                    </div>
-            }
-
+            <ul className={classNames(
+                'NavbarItems',
+                {'InChat': !!queryParams.id}
+            )}>
+                {
+                    user && user.isLoggedIn ?
+                        <>
+                            <li><NavigationLink to={`/profile/${user.id}`}>
+                                <FontAwesomeIcon icon={faHouseUser}/>
+                            </NavigationLink></li>
+                            <li><NavigationLink to='/chat'>
+                                <FontAwesomeIcon icon={faCommentDots}/>
+                            </NavigationLink></li>
+                            <li><NavigationLink to={'/settings'}>
+                                <FontAwesomeIcon icon={faCog}/>
+                            </NavigationLink></li>
+                            <li onClick={onLogout} className='NavbarLogout'>{
+                                <FontAwesomeIcon icon={faSignOutAlt}/>
+                            }</li>
+                        </>
+                        :
+                        <>
+                            <li><NavigationLink to='/register'>{
+                                <FontAwesomeIcon icon={faDoorOpen}/>
+                            }</NavigationLink></li>
+                        </>
+                }
+            </ul>
         </nav>
     );
 }
 
 const mapStateToProps = (state) => ({
     user: state.global.user,
-    isNavbarVisible: state.preferences.isNavbarVisible
+    queryParams: state.global.queryParams
 });
 const mapDispatchToProps = { logout, setNavbarVisibility: preferencesAPI.setNavbarVisibility };
 export default withTranslation(Navbar, 'navbar', mapStateToProps, mapDispatchToProps);

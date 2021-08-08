@@ -6,7 +6,7 @@ import './NavbarButtonPanel.scss';
 import ukrainianFlag from '../../../../assets/ukrainianFlag.svg';
 import ukFlag from '../../../../assets/ukFlag.svg';
 import russianFlag from '../../../../assets/russianFlag.svg';
-import settingsIcon from '../../../../assets/settings.svg';
+// import settingsIcon from '../../../../assets/settings.svg';
 import {Link} from 'react-router-dom';
 
 const NavbarButtonPanel = ({ setStartLanguage }) => {
@@ -15,7 +15,6 @@ const NavbarButtonPanel = ({ setStartLanguage }) => {
           <img onClick={() => setStartLanguage('ukr')} className='language-icon' src={ukrainianFlag} alt='ukrainian' />
           <img onClick={() => setStartLanguage('en')} className='language-icon' src={ukFlag} alt='english' />
           <img onClick={() => setStartLanguage('ru')} className='language-icon' src={russianFlag} alt='russian' />
-          <Link to='/settings'><img className='SettingsIcon' src={settingsIcon} alt='settingsIcon' /></Link>
       </div>
   );
 };

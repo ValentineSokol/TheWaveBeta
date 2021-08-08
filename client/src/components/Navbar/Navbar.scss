@@ -1,6 +1,5 @@
 @use '../../scss/common/colors';
 nav {
-    height: 10%;
     cursor: pointer;
     .ButtonContainer {
         padding: 0;
@@ -19,7 +18,7 @@ nav {
     border-radius: 10px;
     list-style: none;
     align-items: center;
-    font-size: 1.5em;
+    font-size: 1.8em;
 }
 
 .NavbarItems li  {
@@ -40,16 +39,20 @@ nav {
         height: 50px;
 }
 @media only screen and (max-width: 784px) {
-    .NavbarLogo {
+    .NavbarItems.InChat {
         display: none;
     }
-    .NavbarItems {
-        margin: 1% auto;
-        padding: 0;
-        flex-direction: column;
-        align-items: flex-start;
+    nav {
+        position: fixed;
+        bottom: 0;
+        margin: 0 auto;
+        width: 100%;
+        background: colors.$white;
     }
-    .NavbarButtonPanelLi {
-        align-self: center;
+    .NavbarItems {
+        display: flex;
+        justify-content: center;
+        width: 60%;
+        margin: 0 auto;
     }
 }
