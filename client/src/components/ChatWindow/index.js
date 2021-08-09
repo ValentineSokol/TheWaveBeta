@@ -305,6 +305,10 @@ class ChatWindow extends Component {
     render() {
         const messageContextMenuActions = [
             {
+                label: 'Tag',
+                handler: () => 1
+            },
+            {
                 label: 'Edit',
                 handler: this.editMessage
             },

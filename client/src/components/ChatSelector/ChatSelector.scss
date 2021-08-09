@@ -42,8 +42,8 @@
     color: colors.$black;
   }
   .Avatar {
-    max-width: 67px;
-    max-height: 67px;
+    max-width: 50px;
+    max-height: 50px;
     border-radius: 50%;
   }
 }
@@ -56,7 +56,7 @@
   margin: 2%;
 }
 .LastMessageText {
-  width: 10vw;
+  width: 9vw;
   margin: 0 2%;
   overflow: hidden;
   text-overflow: ellipsis;

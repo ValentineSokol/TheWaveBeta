@@ -1,5 +1,6 @@
 @use './src/scss/common/colors';
 .ContextMenu {
+    z-index: 10;
     padding: 15px;
     background: colors.$card-background;
     ul {

@@ -35,7 +35,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             </div>
            </Card>
             <div className='ProfileUserActions'>
-                <Button clickHandler={() => history.push(`/chat?chatType=direct&id=${user.id}`) }>Message!</Button>
+                <Button clickHandler={() => history.push(`/chat?chatType=direct&id=q${user.id}`) }>Message!</Button>
             </div>
            </section>
             <div className='ProfileInfo'>
