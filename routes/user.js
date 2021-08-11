@@ -5,6 +5,10 @@ const B2 = require('backblaze-b2');
 const multer = require('multer');
 const sharp = require('sharp');
 const auth = require('../middlewares/auth');
+const tf = require('@tensorflow/tfjs-node');
+const nsfw = require('nsfwjs');
+const jpeg = require('jpeg-js');
+const nsfwThresholds = require('../utils/nswf/nswfDetectionThresholds');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -12,6 +16,28 @@ const b2 = new B2({
     applicationKeyId: process.env.BACKBLAZE_KEY_ID, // or accountId: 'accountId'
     applicationKey: process.env.BACKBLAZE_KEY // or masterApplicationKey
   });
+
+let nsfwImageDetectionModal;
+
+const analyzeImageForNSFW = async (img, res) => {
+    if (!nsfwImageDetectionModal) {
+        nsfwImageDetectionModal = await nsfw.load(`https://thewavefiles.s3.us-west-002.backblazeb2.com/nsfwDetectionModel/`, { size: 299 });
+    }
+    const { data } = await sharp(img).jpeg().toBuffer({ resolveWithObject: true });
+    const image = jpeg.decode(data, { useTArray: true });
+
+    const numChannels = 3
+    const numPixels = image.width * image.height
+    const values = new Int32Array(numPixels * numChannels)
+
+    for (let i = 0; i < numPixels; i++)
+        for (let c = 0; c < numChannels; ++c)
+            values[i * numChannels + c] = image.data[i * 4 + c]
+
+    const imageConvertedForTf = await tf.tensor3d(values, [image.height, image.width, numChannels], 'int32');
+    const predictions = await nsfwImageDetectionModal.classify(imageConvertedForTf);
+    return predictions.find(p => p.className === 'Porn').probability * 100 >= nsfwThresholds.PORN_PERCENTAGE || predictions.find(p => p.className === 'Hentai').probability* 100 >= nsfwThresholds.HENTAI_PERCENTAGE;
+}
 module.exports = (server) => {
     const router = Router();
     router.put('/files/upload', auth, upload.array('files'), async (req, res) => {
@@ -20,6 +46,11 @@ module.exports = (server) => {
       for (const file of req.files) {
         let [fileType, fileFormat] = file.mimetype.split('/');
         if (fileType === 'image') {
+            const busted = await analyzeImageForNSFW(file.buffer, res);
+            if (busted) {
+                return res.status(400).json({ success: false, nsfwContentDetected: true });
+            }
+           return res.sendStatus(200);
            try {
                file.buffer = await sharp(file.buffer).webp({quality: 100, lossless: true}).toFormat('webp').toBuffer();
                file.mimetype = 'image/webp'

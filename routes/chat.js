@@ -134,6 +134,9 @@ module.exports = (server) => {
         const { companion } = req.params;
         const getHash = () => {
             const ids = [req.user.id, Number(companion)];
+            if (ids.some(id => Number.isNaN(id))) {
+                return res.status(400).json({ success: false, message: 'Invalid companion id.' });
+            }
             ids.sort((a, b) => b - a);
             return ids.join('#');
         };

@@ -133,6 +133,7 @@ class ChatWindow extends Component {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         toggleBodyScroll();
+        if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
         await this.fetchChatroom();
         if (this.props.isWsOpen) {
             this.onWsOpen();
@@ -183,6 +184,7 @@ class ChatWindow extends Component {
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.queryParams.id !== this.props.queryParams.id || prevProps.queryParams.chatType !== this.props.queryParams.chatType) {
+            if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
             await this.fetchChatroom();
         }
         if (prevProps.queryParams.id && !this.props.queryParams.id) {
@@ -387,8 +389,8 @@ class ChatWindow extends Component {
     }
 
     getTopOverlayContent() {
-        const idFromQuery = this.props.queryParams.id;
-        if (!idFromQuery) {
+        const idFromQuery = Number(this.props.queryParams.id);
+        if (Number.isNaN(idFromQuery)) {
            return (
                <div className='ChatSelectionHeading'>
                    <Heading>Your Chats:</Heading>
