@@ -218,7 +218,7 @@ class ChatWindow extends Component {
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
     }
     onWsMessage(message) {
-        if (message.type === `user-status-${this.props.match.params.id}`) {
+        if (message.type === `user-status-${this.props.queryParams.id}`) {
             this.onCompanionStatusChange(message.payload);
         }
         if (message.type === 'stopped-typing' || message.type === 'is-typing') {

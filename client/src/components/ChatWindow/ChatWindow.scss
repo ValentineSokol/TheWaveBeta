@@ -199,6 +199,9 @@
     color: yellow;
   }
   @media only screen and (max-width: 900px) {
+    .TopOverlay {
+      border-radius: 0;
+    }
     .MessageBox {
       height: 60vh;
     }

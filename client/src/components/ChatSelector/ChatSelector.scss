@@ -74,6 +74,8 @@
     width: 80%;
   }
   .ChatSelector.Expanded {
+    margin: 0;
+    border-radius: 0;
     overflow-y: auto;
     font-size: 80%;
     display: block;
