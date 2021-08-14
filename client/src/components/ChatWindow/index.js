@@ -110,7 +110,7 @@ class ChatWindow extends Component {
             result += 'are typing';
             return  wrapInHtml(result);
     }
-    onWsOpen = () => {
+    watchCompanionStatuses = () => {
         this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.queryParams.id });
         this.setState({ loading: false });
     }
@@ -136,7 +136,7 @@ class ChatWindow extends Component {
         if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
         await this.fetchChatroom();
         if (this.props.isWsOpen) {
-            this.onWsOpen();
+            this.watchCompanionStatuses();
         }
     }
 
@@ -185,6 +185,9 @@ class ChatWindow extends Component {
   async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.queryParams.id !== this.props.queryParams.id || prevProps.queryParams.chatType !== this.props.queryParams.chatType) {
             if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
+            if (this.props.isWsOpen) {
+                this.watchCompanionStatuses();
+            }
             await this.fetchChatroom();
         }
         if (prevProps.queryParams.id && !this.props.queryParams.id) {
@@ -197,7 +200,7 @@ class ChatWindow extends Component {
         if (!prevProps.user && this.props.user) {
         }
         if (!prevProps.isWsOpen && this.props.isWsOpen) {
-            this.onWsOpen();
+            this.watchCompanionStatuses();
         }
         if (prevProps.wsMessage !== this.props.wsMessage) {
             this.onWsMessage(this.props.wsMessage);
