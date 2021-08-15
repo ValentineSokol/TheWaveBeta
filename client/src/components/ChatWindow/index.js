@@ -25,6 +25,7 @@ import toggleBodyScroll from '../../utils/toggleBodyScroll';
 import EmojiPicker from "./EmojiPicker";
 import classNames from 'classnames';
 import {Link} from "react-router-dom";
+import RichEditor from "../reusable/UIKit/RichEditor";
 
 
 class ChatWindow extends Component {
@@ -247,6 +248,7 @@ class ChatWindow extends Component {
             );
             return;
         }
+        if (!this.state.message) return;
         const messageObj = {
             text: this.state.message.trim(),
             from: this.props.user.id,
@@ -270,8 +272,8 @@ class ChatWindow extends Component {
             console.error(err);
         }
     };
-    typeMessage = e => {
-        this.setState({ message: e.target.value, isTyping: true });
+    typeMessage = message => {
+        this.setState({ message, isTyping: true });
         if (this.stopTypingTimeout) {
             clearTimeout(this.stopTypingTimeout);
         }
@@ -285,7 +287,6 @@ class ChatWindow extends Component {
    onEnterPress = e => {
         if (e.key === 'Shift') this.shiftPressed = true;
         if (e.key === 'Enter' && !this.shiftPressed) {
-            e.preventDefault();
             this.sendMessage();
         }
    }
@@ -359,21 +360,22 @@ class ChatWindow extends Component {
                     {this.renderMessages()}
                     {this.renderTypingMessage()}
                 </div>
-                <section className='BottomSection'>
-                <section className='SendMessagePanel'>
-                <div className='RichArea'>
-                <EmojiPicker />
-                <textarea value={this.state.message} onKeyUp={this.onKeyUp} onKeyDown={this.onEnterPress} onChange={this.typeMessage} placeholder='Write your message here' />
-                <CSSTransition
-                    in={this.state.message.trim()}
-                    unmountOnExit
-                    appear={true}
-                    timeout={800}
-                    classNames='scale-fade'
-                >
-                <FontAwesomeIcon onClick={this.sendMessage} className='SendButton' icon={faShare} />
-                </CSSTransition>
-                </div>
+                     {
+                         this.props.queryParams.id &&
+                         <section className='BottomSection'>
+                             <section className='SendMessagePanel'>
+                                 <div className='RichArea'>
+                                     <RichEditor
+                                         onKeyUp={this.onKeyUp}
+                                         onKeyDown={this.onEnterPress}
+                                         onSubmit={this.sendMessage}
+                                         className='MessageEditor'
+                                         onChange={this.typeMessage} value={this.state.message}
+                                         toolbar={false}
+                                         emoji
+                                     />
+                                 </div>
+                                 {/*
                         <CSSTransition
                             in={this.state.userScrolled}
                             unmountOnExit={true}
@@ -383,8 +385,10 @@ class ChatWindow extends Component {
                         >
                         <img alt='scroll to the bottom' onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />
                         </CSSTransition>
-                </section>
-                </section>
+                        */}
+                             </section>
+                         </section>
+                     }
                  </div>
             </div>
             </div>

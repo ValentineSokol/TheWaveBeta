@@ -47,9 +47,13 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions,
                                 to={`/profile/${messageAuthor?.id}`}><h5>{messageAuthor?.username}</h5></Link></span>
                         </div>
                 }
-                <span data-id={message.id} data-text={message.text} onContextMenu={contextMenuHandler}
-                      className='MessageText'>{message.text}
-                </span>
+                <span
+                    data-id={message.id}
+                    data-text={message.text}
+                    onContextMenu={contextMenuHandler}
+                    className='MessageText'
+                    dangerouslySetInnerHTML={{__html: message.text}}
+                />
                 </div>
     </CSSTransition>
 );

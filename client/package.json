@@ -11,6 +11,7 @@
     "classnames": "^2.3.1",
     "dynamic-import-polyfill": "^0.1.1",
     "npm": "^6.14.7",
+    "quill-emoji": "^0.2.0",
     "react": "^16.13.1",
     "react-cropper": "^2.1.8",
     "react-dom": "^16.13.1",

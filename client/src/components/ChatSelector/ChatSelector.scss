@@ -56,11 +56,16 @@
   margin: 2%;
 }
 .LastMessageText {
+  display: flex;
+  padding: .5%;
   width: 9vw;
   margin: 0 2%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  p {
+    margin: 0 1%;
+  }
 }
 .LastMessageContainer {
  display: flex;

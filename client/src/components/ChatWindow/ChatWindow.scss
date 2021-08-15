@@ -42,11 +42,17 @@
       margin-left: 5%;
     }
   }
+  .MessageEditor {
+    border: none;
+  }
   .MessageText {
     position: relative;
     text-align: left;
     width: 100%;
     word-break: break-word;
+    p {
+      margin: 0;
+    }
   }
   .MessageBox {
     margin-bottom: 1.5%;
@@ -90,6 +96,7 @@
     width: 100%;
   }
   .BottomSection {
+    border: 1px colors.$important-element solid;
     border-radius: 10px;
     margin-left: 2%;
     width: 70%;
@@ -98,34 +105,13 @@
   .SendMessagePanel  {
     box-sizing: border-box;
     padding: 1%;
-    textarea {
-      resize: none;
-    }
-  }
-  .SendButton {
-    align-self: flex-end;
-    cursor: pointer;
-    color: colors.$important-element;
-    font-size: 2em;
-    transition: color 200ms ease-in-out;
-    &:hover {
-      color: colors.$hover-blue;
-    }
   }
   .RichArea {
     height: 5vh;
     display: flex;
     align-items: baseline;
-    overflow: hidden;
     word-break: break-all;
     padding: 1%;
-    textarea {
-      width: 100%;
-      margin: 0 auto;
-      border: none;
-      outline: none;
-      font-size: 1.3em;
-    }
   }
   .ScrollDownIcon {
     width: 40px;

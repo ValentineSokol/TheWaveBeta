@@ -26,7 +26,7 @@ export default ({ activeChatroom, chatroomId, isDirectChatroom, name, url, avata
                         lastMessageAuthor && lastMessageText &&
                         <div className='LastMessageContainer'>
                             <span className='LastMessageAuthor'>{`${lastMessageAuthor}:`}</span>
-                            <p className='LastMessageText'>{lastMessageText}</p>
+                            <p className='LastMessageText' dangerouslySetInnerHTML={{__html: lastMessageText}} />
                         </div>
                     }
                 </div>

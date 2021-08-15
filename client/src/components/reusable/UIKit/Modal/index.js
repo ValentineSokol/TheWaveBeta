@@ -2,8 +2,13 @@ import React from 'react';
 import './Modal.scss';
 import Card from "../Cards/Card/Card";
 import {CSSTransition} from "react-transition-group";
+import toggleBodyScroll from "../../../../utils/toggleBodyScroll";
+
 class Modal extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.isOpen !== this.props.isOpen) {
+            toggleBodyScroll();
+        }
     }
 
     render() {
