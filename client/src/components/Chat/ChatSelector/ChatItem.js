@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Avatar from "../reusable/Avatar";
+import Avatar from "../../reusable/Avatar";
 import {Link} from "react-router-dom";
 
 

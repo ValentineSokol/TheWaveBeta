@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShare} from "@fortawesome/free-solid-svg-icons";
 import './RichEditor.scss';
 import "quill-emoji/dist/quill-emoji.css";
-import EmojiPicker from "../../../ChatWindow/EmojiPicker";
+import EmojiPicker from '../../../chat/ChatWindow/EmojiPicker/index';
 
 
  class RichEditor extends React.Component {

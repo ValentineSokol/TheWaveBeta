@@ -16,14 +16,11 @@ button {
 }
 .Button.Transparent {
   background: transparent;
-  text-align: left;
   &:hover {
     background: transparent;
   }
 }
-.ButtonContainer {
-  padding: 1%;
-}
+
 button:disabled {
   opacity: 50%;
   &:hover {

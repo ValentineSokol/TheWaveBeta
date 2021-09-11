@@ -3,8 +3,15 @@ import './Modal.scss';
 import Card from "../Cards/Card/Card";
 import {CSSTransition} from "react-transition-group";
 import toggleBodyScroll from "../../../../utils/toggleBodyScroll";
+import Button from "../Forms/Button";
+import Heading from "../Headings/Heading/Heading";
+import classNames from "classnames";
 
 class Modal extends React.Component {
+    componentDidMount() {
+        toggleBodyScroll();
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.isOpen !== this.props.isOpen) {
             toggleBodyScroll();
@@ -12,7 +19,7 @@ class Modal extends React.Component {
     }
 
     render() {
-        const { isOpen, children, blockInteraction, onClose } = this.props;
+        const { isOpen, children, blockInteraction, onClose, heading, classes } = this.props;
         return (
             <>
                 {
@@ -26,10 +33,9 @@ class Modal extends React.Component {
                     timeout={800}
                     classNames='scale-fade'
                 >
-              <Card classNames='ModalContainer'>
-                      <div className='ModalHeader'>
-                          <span className='CloseIcon' onClick={onClose}>✖</span>
-                      </div>
+              <Card classes={classNames('ModalContainer', { [classes]: classes } )}>
+                  <Button transparent className='CloseIcon' clickHandler={onClose}>✖</Button>
+                  {heading && <Heading size={3}>{heading}</Heading>}
                   <div className='ModalBody'>
                       {children}
                   </div>

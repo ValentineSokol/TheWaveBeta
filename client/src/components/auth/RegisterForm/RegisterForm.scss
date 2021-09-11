@@ -1,0 +1,81 @@
+@use '../../../scss/common/colors';
+
+.RegisterFormWrapper {
+  width: 100%;
+  height: 100%;
+  input {
+    padding: .5%;
+    border-radius: 1%;
+    border: none;
+    margin-bottom: .5%;
+    width: 50%;
+  }
+}
+.Button.PasswordResetButton {
+  color: colors.$important-element;
+  display: block;
+  margin: 1% auto;
+  width: 100%;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.SocialLoginWrapper {
+    margin-bottom: 2%;
+}
+.SocialLogin {
+  font-size: 2em;
+  margin-right: .5%;
+  width:10%;
+  border: none;
+  padding: .5%;
+  text-decoration: none;
+  &:hover {
+    cursor: pointer;
+  }
+  a {
+    border-radius: 50%;
+  }
+}
+#GoogleLoginButton {
+   color: #DB4437;
+}
+#FacebookLoginButton {
+    color: #4267B2;
+}
+#InstagramLoginButton {
+    color: #C13584;
+}
+#VKLoginButton {
+    color: #4680C2;
+}
+.Button.FormSubmitButton {
+    margin-top: 2%;
+}
+.FormSubmitButton:hover {
+    cursor: pointer;
+}
+.PasswordReset {
+    margin: 1%;
+}
+
+.RegisterPage {
+  margin: 1% auto;
+  width: 70%;
+  height: 100%;
+}
+
+@media screen and (max-width: 784px) {
+    .SocialLoginWrapper {
+       justify-content: center; 
+       flex-direction: column;
+       padding: 2%;
+    }
+    .SocialLogin {
+        width: 99%;
+        margin: .5%;
+    }
+    .RegisterFormWrapper input {
+        width: 99%;
+      }
+  }

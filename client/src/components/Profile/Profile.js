@@ -29,7 +29,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
         <div className='ProfileContainer'>
            <ChangeAvatarModal onClose={_ => setIsChangingAvatar(false)} isOpen={isChangingAvatar} />
            <section>
-           <Card classNames='AvatarCard'>
+           <Card classes='AvatarCard'>
             <div className='ProfileAvatar'>
                 <Avatar clickHandler={() => isOwner && setIsChangingAvatar(true)} url={user.avatarUrl} />
             </div>

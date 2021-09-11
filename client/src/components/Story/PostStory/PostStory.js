@@ -41,7 +41,7 @@ import storyConstants from "../../../consts/Story/storyConstants";
       const formStepTwo =
           <>
               <Heading>Advanced Settings.</Heading>
-              <Card className='AdvancedSettingsCard'>
+              <Card classes='AdvancedSettingsCard'>
                   <ExtendableContent label='Collaborators' tooltip='Manage your cowriters and their permissions.'>
                       <div style={{ padding: '3px'}}>
                        <ExtendableContent label='John Doe'>

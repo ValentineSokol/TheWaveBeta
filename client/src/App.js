@@ -4,7 +4,6 @@ import './scss/common/Animations.css';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';
 import NotificationManager from "./components/NotificationManager";
-import Footer from "./components/Footer/Footer";
 import { actions as preferencesAPI, loadTranslations } from './redux/PreferencesSlice';
 import getBrowserLanguage from './utils/getBrowserLanguage';
 import Routes from './components/Routes';

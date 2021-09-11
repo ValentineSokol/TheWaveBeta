@@ -1,44 +1,43 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { sendPasswordRecoveryCode, changePassword } from '../redux/actions/api';
-import Card from "./reusable/UIKit/Cards/Card/Card";
+import { sendPasswordRecoveryCode, changePassword } from '../../../redux/actions/api';
+import Button from "../../reusable/UIKit/Forms/Button";
 
-  const PasswordRecoveryForm = ({ dispatch }) =>  {
-    const [state, setState] = useState({});
+  const PasswordRecoveryForm = (props) =>  {
+    const [state, setState] = useState('');
 
     const onChange = (e) => setState({ [e.target.name]: e.target.value });
     const sendCode = (e) => {
         e.preventDefault();
-        const { username } = state;
-        if (!username) return;
-        dispatch(sendPasswordRecoveryCode({ username }));
+        const { username } = props;
+        props.sendPasswordRecoveryCode({ username });
     } 
    const onSubmit = (e) => {
         e.preventDefault();
-        const { username, recoveryCode, password } = state;
-        dispatch(changePassword({ username, recoveryCode, password }));
+        const { recoveryCode, password } = state;
+        props.changePassword({ username: props.username, recoveryCode, password });
     }
         return (
-            <Card headingStrings={['Recover your password!']}>
             <div className='RegisterFormWrapper'>
                 <form>
-                    {!this.props.recoveryCodeSent?
+                    {!props.recoveryCodeSent?
                     <> 
-                    <input name='username' onChange={onChange} placeholder='Username' />
-                    <p><button onClick={sendCode}>Send Recovery Code</button></p>
+                    <input name='username' onChange={onChange} value={props.username} placeholder='Username' />
+                    <div>
+                        <Button clickHandler={props.cancelRecovery}>Cancel</Button>
+                        <Button clickHandler={sendCode}>Reset</Button>
+                    </div>
                     </>
                     :
                     <>
                     <input name='recoveryCode' onChange={onChange} placeholder='16-symbol recovery code' />
                     <input name='password' onChange={onChange} type='password' placeholder='New Password' />
                     <input onClick={onSubmit} className='FormSubmitButton' type='submit' />
-                    <input onClick={onSubmit} className='FormSubmitButton' type='submit' />
                     </>
                 }   
                 </form>
             </div>
-            </Card>
         );
 }
 const mapStateToProps = (state) => ({ recoveryCodeSent: state.global.recoveryCodeSent });
-export default connect(mapStateToProps, null)(PasswordRecoveryForm);
+export default connect(mapStateToProps, { sendPasswordRecoveryCode, changePassword })(PasswordRecoveryForm);

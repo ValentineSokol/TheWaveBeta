@@ -1,9 +1,13 @@
 import React from 'react';
-import withTranslation from '../reusable/withTranslation';
-import fetcher from "../../utils/fetcher";
+import withTranslation from '../../reusable/withTranslation';
+import fetcher from "../../../utils/fetcher";
 import './ChatSelector.scss';
 import ChatItem from "./ChatItem";
 import classNames from 'classnames';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCommentMedical} from '@fortawesome/free-solid-svg-icons';
+import Button from "../../reusable/UIKit/Forms/Button";
 
 class ChatSelector extends React.Component {
     constructor(props) {
@@ -49,6 +53,7 @@ class ChatSelector extends React.Component {
                       return <ChatItem activeChatroom={this.props.activeChatroom} chatroomId={chatroomId} isDirectChatroom={!!room.directChatroomHash} name={name} avatar={avatar} url={url} lastMessageText={lastMessage?.text} lastMessageAuthor={lastMessageAuthor?.username}  />;
                   })
               }
+              <Button className='CreateChatroomButton'><FontAwesomeIcon icon={faCommentMedical} /> Create chatroom</Button>
           </div>
         );
     }
