@@ -4,7 +4,7 @@ import Navbar from '../Navbar/Navbar';
 import LandingPage from'../landing/LandingPage';
 import Profile from '../Profile/Profile';
 import PostStory from'../Story/PostStory/PostStory';
-import ChatWindow from '../chat/ChatWindow';
+import ChatWindow from '../chat/ChatWindow/index';
 import Settings from '../Profile/Settings';
 import QueryParser from '../QueryParser';
 import RegisterForm from "../auth/RegisterForm";

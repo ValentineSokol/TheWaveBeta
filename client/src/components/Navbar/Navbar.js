@@ -12,16 +12,19 @@ const Navbar = ({ user, logout, queryParams }) => {
     const onLogout = () => logout();
     return (
         <nav>
-            <ul className={classNames(
+            <p id='mainMenuLabel' className='srOnly'>Main menu</p>
+            <ul aria-labelledby='mainMenuLabel' className={classNames(
                 'NavbarItems',
                 {'InChat': !!queryParams.id}
             )}>
                 {
                     user && user.isLoggedIn ?
                         <>
-                            <li><NavigationLink to={`/profile/${user.id}`}>
+                            <li>
+                                <NavigationLink to={`/profile/${user.id}`}>
                                 <FontAwesomeIcon icon={faHouseUser}/>
-                            </NavigationLink></li>
+                            </NavigationLink>
+                            </li>
                             <li><NavigationLink to='/chat'>
                                 <FontAwesomeIcon icon={faCommentDots}/>
                             </NavigationLink></li>

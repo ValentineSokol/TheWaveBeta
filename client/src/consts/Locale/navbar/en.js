@@ -3,6 +3,6 @@ export default {
     register: 'Register',
     profile: 'Profile',
     post: 'Post',
-    chat: 'Chat',
+    chat: 'chat',
     logout: 'Logout'
 };
