@@ -7,7 +7,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
-const { sequelize } = require('../models/index');
 
 module.exports = (server) => {
     const router = Router();

@@ -13,22 +13,25 @@ module.exports = {
 
         try {
             const [record, created] = await Users.findOrCreate({
-                where: { [findBy]: fields[findBy] },
+                where: {[findBy]: fields[findBy]},
                 defaults: fields,
                 transaction
             });
 
-            const privateChatroom = await Chatrooms.create({
-                directChatroomHash: `${record.id}#${record.id}`
-            }, { transaction });
+            const directChatroomHash = `${record.id}#${record.id}`;
 
-            await privateChatroom.addUsers(record.id, { transaction });
+            const [privateChatroom] = await Chatrooms.findOrCreate({
+                where: { directChatroomHash },
+                defaults: { directChatroomHash },
+                transaction
+            });
+
+            await privateChatroom.addUsers(record.id, {transaction});
 
             await transaction.commit();
 
-            return { record, created };
-        }
-        catch (err) {
+            return {record, created};
+        } catch (err) {
             console.error(err);
             await transaction.rollback();
             throw err;
