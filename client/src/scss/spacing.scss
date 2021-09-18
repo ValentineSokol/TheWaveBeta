@@ -1,0 +1,30 @@
+$base-spacing-unit: 8px;
+
+$spacing-properties: (
+"m": "margin",
+"mt": "margin-top",
+"mb": "margin-bottom",
+"ml": "margin-left",
+"mr": "margin-right",
+"p": "padding",
+"pt": "padding-top",
+"pb": "padding-bottom",
+"pl": "padding-left",
+"pr": "padding-right",
+);
+.m-auto {
+  margin: 0 auto;
+}
+
+$spacing-sizes: 1, 2, 3, 4, 5, 6, 7, 8;
+
+  @each $property-shorthand, $property-name in $spacing-properties {
+    @each $size in $spacing-sizes {
+       .#{$property-shorthand}-#{$size} {
+          #{$property-name}: $base-spacing-unit * $size;
+      }
+    }
+  }
+
+
+

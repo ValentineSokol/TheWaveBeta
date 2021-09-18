@@ -1,19 +1,13 @@
-@use './src/scss/common/colors';
-.LabeledInputContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 1%;
-  input {
-    background: colors.$dark-background;
-    border: 3px solid colors.$important-element;
+@use '../../../../../../scss/common/colors';
+
+.LabeledInput {
+  &__input {
+    display: block;
+    width: 70%;
+    border-radius: 1%;
+    border: none;
     outline: none;
-    &::selection {
-      background: colors.$important-element;
-      color: colors.$dark-background;
-    }
-    &-moz-::selection {
-      background: colors.$important-element;
-      color: colors.$dark-background;
-    }
+    border-bottom: 1px solid colors.$important-element;
+    background: colors.$card-background;
   }
 }

@@ -1,9 +1,7 @@
 const { Router } = require('express');
-const Sequelize = require('sequelize');
-const {Op} = Sequelize;
 const passport = require('passport');
-const { Users, RecoveryCodes, Chatrooms } = require('../models');
-const { hashPassword, verifyPassword } = require('../utils/auth');
+const { Users, RecoveryCodes } = require('../models');
+const { hashPassword, verifyPassword, createUser } = require('../utils/auth');
 const crypto = require('crypto');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
@@ -29,29 +27,7 @@ module.exports = (server) => {
         async function(username, password, done) {
             let user = await Users.findOne({ where: { username } });
             if (!user) {
-                const transaction = await sequelize.transaction();
-
-                const passwordHash = hashPassword(password);
-                try {
-                    const [record, created] = await Users.findOrCreate({
-                        where: {username},
-                        defaults: {username, password: passwordHash},
-                        transaction
-                    });
-                    const privateChatroom = await Chatrooms.create({
-                       directChatroomHash: `${record.id}#${record.id}`
-                    }, { transaction });
-                    await privateChatroom.addUsers(record.id, { transaction });
-                    await transaction.commit();
-                    if (!created) return done(null, false);
-                    return done(null, record);
-                }
-                catch (err) {
-                    console.error(err);
-                    await transaction.rollback();
-                    return done(err, false);
-                }
-
+                return done(null, false);
             }
             const passwordVerified = verifyPassword(password, user.password);
             if (!passwordVerified) {
@@ -59,8 +35,6 @@ module.exports = (server) => {
                 return;
             }
             done(null, user);
-
-
         }
     ));
     passport.use(new GoogleStrategy({
@@ -68,10 +42,14 @@ module.exports = (server) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: `${process.env.DOMAIN}/auth/google/callback`
     },
-    function(accessToken, refreshToken, profile, cb) {
-        Users.findOrCreate({ where: { googleId: profile.id }, defaults: { googleId: profile.id, username: profile.displayName, email: profile.emails[0].value } })
-        .then(([user]) => cb(null, user))
-        .catch(err => cb(err, null));
+    async function(accessToken, refreshToken, profile, cb) {
+        try {
+            const { user } = await createUser({ findBy: 'googleId', fields: { googleId: profile.id } });
+            return cb(null, user);
+        }
+        catch(err) {
+            cb(err, null);
+        }
     })); 
 
     passport.use(new VKontakteStrategy(
@@ -80,10 +58,14 @@ module.exports = (server) => {
         clientSecret: process.env.VK_CLIENT_SECRET,
         callbackURL: `${process.env.DOMAIN}/auth/vk/callback`
     },
-    function myVerifyCallbackFn(accessToken, refreshToken, params, profile, done) {
-        Users.findOrCreate({ where: { vkId: profile.id }, defaults: { vkId: profile.id,  username: profile.displayName, email: profile.emails[0].value } })
-            .then(([user]) =>  done(null, user))
-            .catch(err => done(err, null));
+    async function myVerifyCallbackFn(accessToken, refreshToken, params, profile, cb) {
+        try {
+            const { user } = await createUser({ findBy: 'vkId', fields: { vkId: profile.id } });
+            return cb(null, user);
+        }
+        catch(err) {
+            cb(err, null);
+        }
         }
     ));
     passport.use(new FacebookStrategy({
@@ -92,12 +74,25 @@ module.exports = (server) => {
         callbackURL: `${process.env.DOMAIN}/auth/facebook/callback`,
         profileFields: ['id', 'emails', 'name'] 
     },
-    function(accessToken, refreshToken, profile, done) {
-        Users.findOrCreate({ where: { facebookId: profile.id }, defaults: { facebookId: profile.id,  username: `${profile.name.givenName} ${profile.name.familyName}`, email: profile.emails? profile.emails[0].value : '' } })
-        .then(([user]) =>  done(null, user))
-        .catch(err => done(err, null));
+    async function(accessToken, refreshToken, profile, cb) {
+        try {
+            const { user } = await createUser({ findBy: 'facebookId', fields: { facebookId: profile.id } });
+            return cb(null, user);
+        }
+        catch(err) {
+            cb(err, null);
+        }
     }
     ));
+    router.put('/register', async (req, res) => {
+        const { username, password, email = null } = req.body;
+        const passwordHash = hashPassword(password);
+        const { record, created } = await createUser({ findBy: 'username', fields: { username, password: passwordHash, email } });
+        if (!created) {
+           return res.status(400).json({ code: 'usr_occupied' });
+        }
+        res.json(record);
+    });
     router.post('/local', passport.authenticate('local'), (req, res) => res.json({ success: true }));
     router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => res.json({ success: true }));
     router.get('/google/callback', passport.authenticate('google'));

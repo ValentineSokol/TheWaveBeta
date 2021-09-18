@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import './scss/spacing.scss';
 import './scss/common/Animations.css';
 import { connect } from 'react-redux';
 import { checkLogin } from './redux/actions/api';
