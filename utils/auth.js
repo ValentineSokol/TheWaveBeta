@@ -30,7 +30,7 @@ module.exports = {
 
             await transaction.commit();
 
-            return {record, created};
+            return { user: record, created };
         } catch (err) {
             console.error(err);
             await transaction.rollback();

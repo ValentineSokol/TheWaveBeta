@@ -41,10 +41,10 @@ module.exports = (server) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: `${process.env.DOMAIN}/auth/google/callback`
     },
-    function(accessToken, refreshToken, profile, cb) {
+    async function(accessToken, refreshToken, profile, cb) {
         try {
-             createUser({ findBy: 'googleId', fields: { googleId: profile.id } })
-                 .then(({user}) => cb(null, user))
+            const { user } = await createUser({ findBy: 'googleId', fields: { googleId: profile.id } });
+            return cb(null, user);
         }
         catch(err) {
             cb(err, null);
