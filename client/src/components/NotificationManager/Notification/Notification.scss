@@ -17,7 +17,7 @@
 
 .success-notification {
   @extend  ._notification;
-  background: rgb(77, 175, 124);
+  background: colors.$light-green;
 }
 .error-notification {
   @extend ._notification;

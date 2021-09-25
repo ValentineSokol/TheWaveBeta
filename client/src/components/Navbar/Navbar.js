@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import NavigationLink from "../reusable/UIKit/NavigationLink/NavigationLink";
 import { logout } from '../../redux/actions/api';
 import {actions as preferencesAPI } from '../../redux/PreferencesSlice';
@@ -9,13 +9,25 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import classNames from 'classnames';
 
 const Navbar = ({ user, logout, queryParams }) => {
+    const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener('focus', () => {
+            setKeyboardOpen(true);
+        });
+
+        window.addEventListener('blur', () => {
+            setKeyboardOpen(false);
+        })
+
+    }, [])
     const onLogout = () => logout();
     return (
         <nav>
             <p id='mainMenuLabel' className='srOnly'>Main menu</p>
             <ul aria-labelledby='mainMenuLabel' className={classNames(
                 'NavbarItems',
-                {'InChat': !!queryParams.id}
+                {'InChat': !!queryParams.id, 'keyboardOpen': keyboardOpen }
             )}>
                 {
                     user && user.isLoggedIn ?
@@ -37,7 +49,7 @@ const Navbar = ({ user, logout, queryParams }) => {
                         </>
                         :
                         <>
-                            <li><NavigationLink to='/auth?tab=register'>{
+                            <li><NavigationLink to='/auth'>{
                                 <FontAwesomeIcon icon={faDoorOpen}/>
                             }</NavigationLink></li>
                         </>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { sendPasswordRecoveryCode, changePassword } from '../../../redux/actions/api';
 import Button from "../../reusable/UIKit/Forms/Button";
+import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput";
 
   const PasswordRecoveryForm = (props) =>  {
     const [state, setState] = useState('');
@@ -21,8 +22,8 @@ import Button from "../../reusable/UIKit/Forms/Button";
             <div className='RegisterFormWrapper'>
                 <form>
                     {!props.recoveryCodeSent?
-                    <> 
-                    <input name='username' onChange={onChange} value={props.username} placeholder='Username' />
+                    <>
+                     <LabeledInput inputClassName='m-auto mb-2' id='usernameInput' name='username' onChange={onChange} label='Username' value={state.username} required />
                     <div>
                         <Button clickHandler={props.cancelRecovery}>Cancel</Button>
                         <Button clickHandler={sendCode}>Reset</Button>

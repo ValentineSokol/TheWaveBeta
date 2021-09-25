@@ -6,7 +6,7 @@
   flex-direction: column;
   background-color:	colors.$card-background;
   color: colors.$black;
-  box-shadow: 4px 6px colors.$black;
+  box-shadow: 4px 6px lighten(colors.$black, 20%);
   img {
     height: 100%;
   }

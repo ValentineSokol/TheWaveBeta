@@ -7,9 +7,9 @@ import SocialLogin from "../../reusable/SocialLogin/SocialLogin";
 import PasswordRecoveryForm from "../PasswordRecoveryForm/PasswordRecoveryForm";
 import Button from "../../reusable/UIKit/Forms/Button";
 import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput";
-import LinkButton from "../../reusable/UIKit/Forms/LinkButton";
 
-const  RegisterForm = ({ createNotification,  submitRegister, queryParams: { tab } }) => {
+
+const  RegisterForm = ({ createNotification,  submitRegister }) => {
     const TABS = {
         REGISTER: 'register',
         LOGIN: 'login',
@@ -18,20 +18,23 @@ const  RegisterForm = ({ createNotification,  submitRegister, queryParams: { tab
     const alternativeButtons = {
         [TABS.REGISTER]: {
             text: 'Log In',
-            to: '/auth?tab=login'
+            to: TABS.LOGIN
         },
         [TABS.LOGIN]: {
             text: 'Create a new account',
-            to: '/auth?tab=register'
+            to: TABS.REGISTER
         },
         [TABS.RECOVERY]: {
             text: 'Create a new account',
-            to: '/auth?tab=register'
+            to: TABS.REGISTER
         },
     };
-    const [state, setState] = useState({});
+    const [state, setState] = useState({ tab: TABS.REGISTER });
+    const { tab } = state;
 
     const onChange = (e) => setState({ ...state, [e.target.name]: e.target.value });
+    const setTab = tab => setState({ ...state, tab });
+    const cancelRecovery = () => setTab(TABS.LOGIN);
     const onSubmit = (e) => {
         e.preventDefault();
         if (!state.username) {
@@ -45,39 +48,40 @@ const  RegisterForm = ({ createNotification,  submitRegister, queryParams: { tab
     }
 
     if (tab === TABS.RECOVERY) {
-        return <PasswordRecoveryForm />;
+        return <PasswordRecoveryForm cancelRecovery={cancelRecovery} />;
     }
     return (
             <div className='RegisterFormWrapper'>
                 <form onSubmit={onSubmit}>
                     <SocialLogin classNames='mt-2 mb-2' />
-                    <div className='pl-5'>
+                    { tab === TABS.REGISTER && <LabeledInput inputClassName='m-auto mb-2' id='emailInput' name='email' value={state.email} onChange={onChange} type='email' label='Email'  />}
                     <LabeledInput inputClassName='m-auto mb-2' id='usernameInput' name='username' onChange={onChange} label='Username' value={state.username} required />
                     <LabeledInput inputClassName='m-auto mb-2' id='passwordInput' name='password' onChange={onChange} label='Password' type='password' value={state.password} required />
-                        { tab === TABS.REGISTER && <LabeledInput inputClassName='m-auto' id='emailInput' name='email' value={state.email} onChange={onChange} type='email' label='Email'  />}
-                    </div>
                     {
                         tab === TABS.LOGIN &&
                         <div>
-                            <a
-                                className='RegisterForm__recovery-link mt-1 mb-1'
-                                href='/auth?tab=recovery'
+                            <Button
+                                className='mt-1 mb-1'
+                                size='large'
+                                transparent
+                                hover='underline'
+                                clickHandler={() => setTab(TABS.RECOVERY)}
                             >
                                 Forgot your username or password?
-                            </a>
+                            </Button>
                         </div>
                     }
-                            <Button type='submit' className='mt-2 mb-2'>Submit</Button>
+                            <Button type='submit' className='mt-2 mb-2 p-1'>Submit</Button>
                     { tab &&
                         <>
                             <div style={{ position: 'relative'}}>
                                 <span className='TextOnTheLine'>or</span>
                             </div>
-                            <div className='mt-2'><LinkButton to={alternativeButtons[tab].to}>{alternativeButtons[tab].text}</LinkButton></div>
+                            <div className='mt-2'><Button color='green' size='medium' className='p-1' clickHandler={() => setTab(alternativeButtons[tab].to)}>{alternativeButtons[tab].text}</Button></div>
                         </>
                     }
                         </form>
             </div>
     );
 }
-export default connect(state => ({ queryParams: state.global.queryParams }), { createNotification, submitRegister })(RegisterForm);
+export default connect(null, { createNotification, submitRegister })(RegisterForm);
