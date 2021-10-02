@@ -18,13 +18,13 @@ module.exports = (server) => {
     });
 
     passport.deserializeUser(function(id, done) {
-        Users.findByPk(id)
+        Users.findByPk(id, { paranoid: false })
             .then(function (user) { done(null, user); })
             .catch(done);
     });
     passport.use(new LocalStrategy(
         async function(username, password, done) {
-            let user = await Users.findOne({ where: { username } });
+            let user = await Users.findOne({ where: { username }, paranoid: false });
             if (!user) {
                 return done(null, false);
             }
@@ -43,7 +43,7 @@ module.exports = (server) => {
     },
     async function(accessToken, refreshToken, profile, cb) {
         try {
-            const { user } = await createUser({ findBy: 'googleId', fields: { googleId: profile.id } });
+            const { user } = await createUser({ findBy: 'googleId', fields: { googleId: profile.id }, isSocialLogin: true });
             return cb(null, user);
         }
         catch(err) {
@@ -59,7 +59,7 @@ module.exports = (server) => {
     },
     async function myVerifyCallbackFn(accessToken, refreshToken, params, profile, cb) {
         try {
-            const { user } = await createUser({ findBy: 'vkId', fields: { vkId: profile.id } });
+            const { user } = await createUser({ findBy: 'vkId', fields: { vkId: profile.id }, isSocialLogin: true });
             return cb(null, user);
         }
         catch(err) {
@@ -75,7 +75,7 @@ module.exports = (server) => {
     },
     async function(accessToken, refreshToken, profile, cb) {
         try {
-            const { user } = await createUser({ findBy: 'facebookId', fields: { facebookId: profile.id } });
+            const { user } = await createUser({ findBy: 'facebookId', fields: { facebookId: profile.id }, isSocialLogin: true  });
             return cb(null, user);
         }
         catch(err) {
@@ -83,14 +83,14 @@ module.exports = (server) => {
         }
     }
     ));
-    router.put('/register', async (req, res) => {
+    router.post('/register', async (req, res) => {
         const { username, password, email = null } = req.body;
         const passwordHash = hashPassword(password);
-        const { record, created } = await createUser({ findBy: 'username', fields: { username, password: passwordHash, email } });
+        const { user, created } = await createUser({ findBy: 'username', fields: { username, password: passwordHash, email } });
         if (!created) {
            return res.status(400).json({ code: 'usr_occupied' });
         }
-        res.json(record);
+        res.json({ user: user.id });
     });
     router.post('/local', passport.authenticate('local'), (req, res) => res.json({ success: true }));
     router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => res.json({ success: true }));
@@ -100,13 +100,14 @@ module.exports = (server) => {
     router.get('/facebook/', passport.authenticate('facebook', { scope: ['email', 'user_photos'] }));
     router.get('/facebook/callback', passport.authenticate('facebook'));
     router.get('/isLoggedIn', async (req, res) => {
-        if (!req.session || !req.session.passport) {
+        if (!req.session || !req.session.passport || !req.session.passport.user) {
             res.json({ isLoggedIn: false });
             return;
         }
         const userId = req.session.passport.user;
         const user = await Users.findByPk(userId, {
                 attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] },
+                paranoid: false
         });
         if (!user) {
             res.status(400).json({ reason: 'There is no user for given id!' });

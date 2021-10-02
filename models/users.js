@@ -31,10 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     birthday: DataTypes.DATE,
     recoveryEmail: DataTypes.STRING,
     avatarUrl: DataTypes.STRING,
-    lastSeen: DataTypes.BIGINT
+    lastSeen: DataTypes.BIGINT,
   }, {
     sequelize,
     modelName: 'Users',
+    paranoid: true
   });
   return Users;
 };

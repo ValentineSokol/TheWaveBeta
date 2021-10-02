@@ -1,11 +1,14 @@
-const { Users } = require('../models');
 const getUserFromSession = require('../utils/getUserFromSession');
-module.exports = async (req, res, next) => {
+module.exports = ( mandatory = true) => async (req, res, next) => {
     const userPromise = getUserFromSession(req);
-    if (!userPromise) {
+    if (!userPromise && mandatory) {
         res.sendStatus(401);
         return;
     }
-    req.user = await userPromise;
+    if (userPromise) {
+        const record = await userPromise;
+        req.user = record?.dataValues;
+    } else req.user = null;
+
     next();
 }

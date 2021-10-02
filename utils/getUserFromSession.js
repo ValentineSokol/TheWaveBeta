@@ -5,5 +5,5 @@ module.exports = req => {
         return false;
     }
     const userId = req.session.passport.user;
-    return Users.findByPk(userId);
+    return Users.findByPk(userId, { paranoid: false });
 }

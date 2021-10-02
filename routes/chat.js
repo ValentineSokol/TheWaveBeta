@@ -105,7 +105,7 @@ module.exports = (server) => {
         });
 
     });
-    router.get('/chatrooms', auth, async (req, res) => {
+    router.get('/chatrooms', auth(), async (req, res) => {
       const user = await Users.findByPk(
           req.user.id,
           {
@@ -129,9 +129,14 @@ module.exports = (server) => {
           });
       res.json(user?.Chatrooms);
     });
-    router.put('/findDirectChatroom/:companion', auth, async (req, res) => {
+    router.put('/findDirectChatroom/:companion', auth(), async (req, res) => {
         const transaction = await sequelize.transaction();
         const { companion } = req.params;
+        const companionInfo = await Users.findByPk(Number(companion));
+        if (companionInfo.isFrozen) {
+            res.sendStatus(404);
+            return;
+        }
         const getHash = () => {
             const ids = [req.user.id, Number(companion)];
             if (ids.some(id => Number.isNaN(id))) {
@@ -161,7 +166,7 @@ module.exports = (server) => {
             console.error(err);
         }
     });
-    router.put('/sendMessage/:chatroomId', auth, async (req, res) => {
+    router.put('/sendMessage/:chatroomId', auth(), async (req, res) => {
         const { chatroomId } = req.params;
         const { text } = req.body;
         const chatroom = await Chatrooms.findByPk(
@@ -189,7 +194,7 @@ module.exports = (server) => {
         });
         res.json({ success: true });
     });
-    router.get('/getChatroom/:id', auth, async (req, res) => {
+    router.get('/getChatroom/:id', auth(), async (req, res) => {
        const { id } = req.params;
        try {
            const chatroom = await Chatrooms.findByPk(

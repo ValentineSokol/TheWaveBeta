@@ -9,25 +9,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import classNames from 'classnames';
 
 const Navbar = ({ user, logout, queryParams }) => {
-    const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-    useEffect(() => {
-        window.addEventListener('focus', () => {
-            setKeyboardOpen(true);
-        });
-
-        window.addEventListener('blur', () => {
-            setKeyboardOpen(false);
-        })
-
-    }, [])
     const onLogout = () => logout();
     return (
         <nav>
             <p id='mainMenuLabel' className='srOnly'>Main menu</p>
             <ul aria-labelledby='mainMenuLabel' className={classNames(
                 'NavbarItems',
-                {'InChat': !!queryParams.id, 'keyboardOpen': keyboardOpen }
+                {'NavbarItems--mobile-invisible': queryParams.id || window.location.pathname === '/auth' }
             )}>
                 {
                     user && user.isLoggedIn ?

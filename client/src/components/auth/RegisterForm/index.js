@@ -1,40 +1,55 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {createNotification} from '../../../redux/NotificationSlice';
 import './RegisterForm.scss';
 import { connect } from 'react-redux';
-import { submitRegister } from '../../../redux/actions/api';
+import { register, login } from '../../../redux/actions/api';
 import SocialLogin from "../../reusable/SocialLogin/SocialLogin";
 import PasswordRecoveryForm from "../PasswordRecoveryForm/PasswordRecoveryForm";
 import Button from "../../reusable/UIKit/Forms/Button";
 import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput";
 
 
-const  RegisterForm = ({ createNotification,  submitRegister }) => {
+const RegisterForm = ({ createNotification, register, login, user, history, redirect = true, redirectTo='' }) => {
     const TABS = {
         REGISTER: 'register',
         LOGIN: 'login',
         RECOVERY: 'recovery'
     };
-    const alternativeButtons = {
+    const tabInfo = {
         [TABS.REGISTER]: {
-            text: 'Log In',
-            to: TABS.LOGIN
+            button: {
+                text: 'Log In',
+                to: TABS.LOGIN
+            },
+            handler: register
         },
         [TABS.LOGIN]: {
-            text: 'Create a new account',
-            to: TABS.REGISTER
+            button: {
+                text: 'Create a new account',
+                to: TABS.REGISTER
+            },
+            handler: login
         },
         [TABS.RECOVERY]: {
-            text: 'Create a new account',
-            to: TABS.REGISTER
+            button: {
+                text: 'Create a new account',
+                to: TABS.REGISTER
+            }
         },
     };
     const [state, setState] = useState({ tab: TABS.REGISTER });
+    useEffect(() => {
+        if (!redirect || !user?.id) return;
+        history.push(redirectTo || `/profile/${user.id}`)
+    }, [user]);
     const { tab } = state;
 
     const onChange = (e) => setState({ ...state, [e.target.name]: e.target.value });
+
     const setTab = tab => setState({ ...state, tab });
+
     const cancelRecovery = () => setTab(TABS.LOGIN);
+
     const onSubmit = (e) => {
         e.preventDefault();
         if (!state.username) {
@@ -44,7 +59,7 @@ const  RegisterForm = ({ createNotification,  submitRegister }) => {
             );
             return;
         }
-        submitRegister(state);
+        tabInfo[tab].handler(state);
     }
 
     if (tab === TABS.RECOVERY) {
@@ -77,11 +92,11 @@ const  RegisterForm = ({ createNotification,  submitRegister }) => {
                             <div style={{ position: 'relative'}}>
                                 <span className='TextOnTheLine'>or</span>
                             </div>
-                            <div className='mt-2'><Button color='green' size='medium' className='p-1' clickHandler={() => setTab(alternativeButtons[tab].to)}>{alternativeButtons[tab].text}</Button></div>
+                            <div className='mt-2'><Button color='green' size='medium' className='p-1' clickHandler={() => setTab(tabInfo[tab].button.to)}>{tabInfo[tab].button.text}</Button></div>
                         </>
                     }
                         </form>
             </div>
     );
 }
-export default connect(null, { createNotification, submitRegister })(RegisterForm);
+export default connect(state => ({ user: state.global.user }), { createNotification, register, login })(RegisterForm);

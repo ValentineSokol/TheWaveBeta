@@ -28,6 +28,7 @@ export default combineReducers({
             state.loading = true;
         },
         [checkLogin.fulfilled]: (state, action) => {
+            if (!action.payload.isLoggedIn) return state;
             state.user = action.payload;
             state.loading = false;
             state.loginChecked = true;
