@@ -8,13 +8,14 @@ module.exports = {
     verifyPassword: function(string, hash) {
         return bcrypt.compareSync(string, hash);
     },
-    createUser: async function ({ findBy, fields }) {
+    createUser: async function ({ findBy, fields, isSocialLogin }) {
         const transaction = await sequelize.transaction();
-
+        const defaults = { ...fields,  deletedAt: isSocialLogin ? Date.now() : null };
         try {
             const [record, created] = await Users.findOrCreate({
                 where: {[findBy]: fields[findBy]},
-                defaults: fields,
+                defaults,
+                paranoid: false,
                 transaction
             });
 
@@ -23,6 +24,7 @@ module.exports = {
             const [privateChatroom] = await Chatrooms.findOrCreate({
                 where: { directChatroomHash },
                 defaults: { directChatroomHash },
+                paranoid: false,
                 transaction
             });
 

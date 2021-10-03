@@ -16,14 +16,14 @@ const b2 = new B2({
 
 module.exports = (server) => {
     const router = Router();
-    router.put('/files/upload', auth, upload.array('files'), async (req, res) => {
+    router.put('/files/upload', auth(), upload.array('files'), async (req, res) => {
       await b2.authorize();
       const uploads = [];
       for (const file of req.files) {
         let [fileType, fileFormat] = file.mimetype.split('/');
         if (fileType === 'image') {
            try {
-               file.buffer = await sharp(file.buffer).webp({quality: 100, lossless: true}).toFormat('webp').toBuffer();
+               file.buffer = await sharp(file.buffer).webp({ quality: 100, lossless: true }).toFormat('webp').toBuffer();
                file.mimetype = 'image/webp'
                fileFormat = 'webp';
            }
@@ -60,9 +60,13 @@ module.exports = (server) => {
     });
     res.json({ success: true, urls });
   });
-    router.get('/profile/:id', async (req, res) => {
+    router.get('/profile/:id', auth(false), async (req, res) => {
       const { id } = req.params;
-      const user = await Users.findByPk(id);
+      const requestOptions = {};
+      if (req?.user?.id === Number(id)) {
+          requestOptions.paranoid = false;
+      }
+      const user = await Users.findByPk(id, requestOptions);
       if (!user) {
           res.status(404).json({
               reason: 'No user with that id found!'
@@ -71,12 +75,12 @@ module.exports = (server) => {
       }
       res.json({ user });  
     });
-    router.patch('/update', auth, async (req, res) => {
+    router.patch('/update', auth(), async (req, res) => {
       const { avatarUrl } = req.body;
       const fieldsToUpdate = {};
       if (avatarUrl) fieldsToUpdate.avatarUrl = avatarUrl;
-      const user = await Users.findByPk(req.user.id);
-      await user.update(fieldsToUpdate);
+      const user = await Users.findByPk(req.user.id, { paranoid: false });
+      await user.update(fieldsToUpdate, { paranoid: false });
       res.json({ id: req.user.id }) 
     });
     return router;

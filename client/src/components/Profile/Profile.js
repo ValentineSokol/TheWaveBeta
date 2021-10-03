@@ -17,12 +17,14 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const history = useHistory();
     useEffect(
         () => {
-            dispatch(loadProfile(id));
+            if (!loadedUser) {
+                dispatch(loadProfile(id));
+            }
             if (loggedInUser && Number(loggedInUser.id) === Number(id)) setisOwner(true);
         },
-        [id, dispatch, loggedInUser]
+        [id, loadedUser]
     );
-        const user = isOwner? loggedInUser : loadedUser;
+        const user = loadedUser;
         return (
          !user? null
          :
@@ -35,7 +37,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             </div>
            </Card>
             <div className='ProfileUserActions'>
-                <Button clickHandler={() => history.push(`/chat?chatType=direct&id=${user.id}`) }>Message!</Button>
+                <Button className='mr-1' clickHandler={() => history.push(`/chat?chatType=direct&id=${user.id}`) }>Message!</Button>
             </div>
            </section>
             <div className='ProfileInfo'>
