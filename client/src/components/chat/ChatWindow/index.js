@@ -23,7 +23,6 @@ import classNames from 'classnames';
 import {Link} from "react-router-dom";
 import RichEditor from "../../reusable/UIKit/RichEditor";
 
-
 class ChatWindow extends Component {
     state = {
         companions: [],
@@ -60,10 +59,6 @@ class ChatWindow extends Component {
             this.setState({ userScrolled: false });
         }
         this.setState({lastScrollPosition: bodyRect.top });
-    }
-    scrollToBottom = () => {
-        window.focus();
-        window.scrollTo(0, document.scrollingElement.scrollHeight, { behavior: 'smooth' });
     }
     isDirectChat = () => this.props.queryParams.chatType === 'direct';
     onMessageReceived = message => {
