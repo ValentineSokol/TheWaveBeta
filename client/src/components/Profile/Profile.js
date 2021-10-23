@@ -9,6 +9,7 @@ import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import Button from "../reusable/UIKit/Forms/Button";
 import Avatar from "../reusable/Avatar";
 import ChangeAvatarModal from "./ChangeAvatarModal";
+import Toast from "../reusable/UIKit/Toast";
 
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
@@ -17,7 +18,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const history = useHistory();
     useEffect(
         () => {
-            if (!loadedUser) {
+            if (!loadedUser || loadedUser.id !== Number(id)) {
                 dispatch(loadProfile(id));
             }
             if (loggedInUser && Number(loggedInUser.id) === Number(id)) setisOwner(true);

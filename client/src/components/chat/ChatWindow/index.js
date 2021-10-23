@@ -5,7 +5,6 @@ import withTranslation from '../../reusable/withTranslation';
 import { actions as preferencesAPI } from '../../../redux/PreferencesSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faShare,
     faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
 import Message from "./Message";
@@ -16,37 +15,30 @@ import RelativeTime from "../../reusable/UIKit/RelativeTime";
 import {sendWsMessage} from '../../../redux/WebSocketSlice';
 import {createNotification} from '../../../redux/NotificationSlice';
 import {Redirect} from 'react-router';
-import {CSSTransition} from 'react-transition-group';
-import downArrow from '../../../assets/downArrow.svg';
 import ContextMenu from "./Message/ContextMenu";
 import Typed from "../../reusable/Typed";
 import ChatSelector from "../ChatSelector";
-import toggleBodyScroll from '../../../utils/toggleBodyScroll';
-import EmojiPicker from "./EmojiPicker";
+import setBodyScroll from '../../../utils/setBodyScroll';
 import classNames from 'classnames';
 import {Link} from "react-router-dom";
 import RichEditor from "../../reusable/UIKit/RichEditor";
 
 
 class ChatWindow extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            companions: [],
-            messages: [],
-            typers: [],
-            message: '',
-            loading: true,
-            redirect: false,
-            userScrolled: false,
-            lastScrollPosition: null,
-            showMessageContextMenu: false,
-            messageContextMenuX: null,
-            messageContextMenuY: null,
+    state = {
+        companions: [],
+        messages: [],
+        typers: [],
+        message: '',
+        loading: true,
+        redirect: false,
+        userScrolled: false,
+        lastScrollPosition: null,
+        showMessageContextMenu: false,
+        messageContextMenuX: null,
+        messageContextMenuY: null,
 
-        };
-    }
-
+    };
 
     hasUserScrolledToTheBottom = () => {
         const scrollPosFloat = document.scrollingElement.scrollTop + document.scrollingElement.clientHeight;
@@ -133,7 +125,7 @@ class ChatWindow extends Component {
     async componentDidMount() {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
-        toggleBodyScroll();
+        setBodyScroll(false);
         if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
         await this.fetchChatroom();
         if (this.props.isWsOpen) {
@@ -217,7 +209,7 @@ class ChatWindow extends Component {
     componentWillUnmount() {
         window.removeEventListener('click', this.closeContextMenu);
         window.removeEventListener('scroll', this.handleUserScroll);
-        toggleBodyScroll();
+        setBodyScroll(true);
         this.props.setNavbarVisibility(true);
         if (this.stopTypingTimeout) clearTimeout(this.stopTypingTimeout);
     }
@@ -323,7 +315,7 @@ class ChatWindow extends Component {
                 handler: this.deleteMessage
             }
         ]
-        const { isNavbarVisible } = this.props;
+
         if (this.state.redirect) {
             return <Redirect to='/' />
         }
@@ -375,17 +367,6 @@ class ChatWindow extends Component {
                                          emoji
                                      />
                                  </div>
-                                 {/*
-                        <CSSTransition
-                            in={this.state.userScrolled}
-                            unmountOnExit={true}
-                            appear={true}
-                            timeout={2000}
-                            classNames='scale-fade'
-                        >
-                        <img alt='scroll to the bottom' onClick={this.scrollToBottom} src={downArrow} className='ScrollDownIcon' />
-                        </CSSTransition>
-                        */}
                              </section>
                          </section>
                      }

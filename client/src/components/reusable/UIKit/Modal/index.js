@@ -2,19 +2,19 @@ import React from 'react';
 import './Modal.scss';
 import Card from "../Cards/Card/Card";
 import {CSSTransition} from "react-transition-group";
-import toggleBodyScroll from "../../../../utils/toggleBodyScroll";
+import setBodyScroll from "../../../../utils/setBodyScroll";
 import Button from "../Forms/Button";
 import Heading from "../Headings/Heading/Heading";
 import classNames from "classnames";
 
 class Modal extends React.Component {
     componentDidMount() {
-        toggleBodyScroll();
+        setBodyScroll(false);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.isOpen !== this.props.isOpen) {
-            toggleBodyScroll();
+            setBodyScroll(!this.props.isOpen);
         }
     }
 
