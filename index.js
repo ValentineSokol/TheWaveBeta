@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
+const fileRouter = require('./routes/files');
 
 const app = express();
 
@@ -40,6 +41,7 @@ server.emailer = nodemailer.createTransport({
      }
 });
 app.use('/auth', authRouter(server));
-app.use('/user', userRouter(server));
+app.use('/users', userRouter(server));
 app.use('/chat', chatRouter(server));
+app.use('/files', fileRouter(server));
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));

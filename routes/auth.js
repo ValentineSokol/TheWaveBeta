@@ -83,15 +83,6 @@ module.exports = (server) => {
         }
     }
     ));
-    router.post('/register', async (req, res) => {
-        const { username, password, email = null } = req.body;
-        const passwordHash = hashPassword(password);
-        const { user, created } = await createUser({ findBy: 'username', fields: { username, password: passwordHash, email } });
-        if (!created) {
-           return res.status(400).json({ code: 'usr_occupied' });
-        }
-        res.json({ user: user.id });
-    });
     router.post('/local', passport.authenticate('local'), (req, res) => res.json({ success: true }));
     router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }), (req, res) => res.json({ success: true }));
     router.get('/google/callback', passport.authenticate('google'));
@@ -99,25 +90,6 @@ module.exports = (server) => {
     router.get('/vk/callback', passport.authenticate('vkontakte'));
     router.get('/facebook/', passport.authenticate('facebook', { scope: ['email', 'user_photos'] }));
     router.get('/facebook/callback', passport.authenticate('facebook'));
-    router.get('/isLoggedIn', async (req, res) => {
-        if (!req.session || !req.session.passport || !req.session.passport.user) {
-            res.json({ isLoggedIn: false });
-            return;
-        }
-        const userId = req.session.passport.user;
-        const user = await Users.findByPk(userId, {
-                attributes: { exclude: ['password', 'googleId', 'vkId', 'facebookId'] },
-                paranoid: false
-        });
-        if (!user) {
-            res.status(400).json({ reason: 'There is no user for given id!' });
-            return;
-        }
-        res.json({
-            isLoggedIn: true,
-            ...user.dataValues
-        });
-    });
     router.delete('/logout', (req, res) => {
       req.logOut();
       res.json({ success: true }); 

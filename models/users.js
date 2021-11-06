@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Users.belongsToMany(models.Chatrooms, { through: models.ChatroomMembers, otherKey: 'chatroomId', foreignKey: 'memberId' });
+      Users.hasMany(models.Files, { foreignKey: 'owner' });
     }
     static findByUsername(username = '') {
       return this.findOne({ where: { username } });

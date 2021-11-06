@@ -2,9 +2,7 @@ const { Router } = require('express');
 const { Users, Chatrooms, Messages  } = require('../models');
 const auth = require('../middlewares/auth');
 const getUserFromSession = require('../utils/getUserFromSession');
-const {Sequelize, UniqueConstraintError} = require("sequelize");
 const { sequelize } = require('../models/index');
-const {Op} = require('sequelize');
 
 
 module.exports = (server) => {

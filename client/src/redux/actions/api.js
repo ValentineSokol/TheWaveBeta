@@ -31,8 +31,8 @@ export const login = createAsyncThunk(
         ))
 );
 export const checkLogin = createAsyncThunk(
-    'checkLogin',
-    () => fetcher('/auth/isLoggedIn')
+    'authenticate',
+    () => fetcher('/users/authenticate')
 )
 export const logout = createAsyncThunk(
     'logout',
@@ -40,15 +40,15 @@ export const logout = createAsyncThunk(
 )
 export const loadProfile = createAsyncThunk(
     'profile',
-    (id) => fetcher(`/user/profile/${id}`)
+    (id) => fetcher(`/users/${id}`)
 )
 export const uploadFiles = createAsyncThunk(
     'uploadFiles',
-    (...files) => fetcher('/user/files/upload', 'PUT', { files }, { isFormData: true } )
+    (...files) => fetcher('/files/upload', 'POST', { files }, { isFormData: true } )
 )
 export const updateUser = createAsyncThunk(
     'updateUser',
-    (payload) => fetcher('/user/update', 'PATCH', payload)
+    (payload) => fetcher(`/users`, 'PATCH', payload)
 )
 export const sendPasswordRecoveryCode = createAsyncThunk(
     'sendPasswordRecoveryCode',

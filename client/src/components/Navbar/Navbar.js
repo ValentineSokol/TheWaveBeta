@@ -3,7 +3,7 @@ import NavigationLink from "../reusable/UIKit/NavigationLink/NavigationLink";
 import { logout } from '../../redux/actions/api';
 import {actions as preferencesAPI } from '../../redux/PreferencesSlice';
 import './Navbar.scss';
-import { faHouseUser, faCommentDots, faSignOutAlt, faCog, faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+import { faHouseUser, faCommentDots, faSignOutAlt, faCog, faDoorOpen, faFeatherAlt } from "@fortawesome/free-solid-svg-icons";
 import withTranslation from '../reusable/withTranslation/index';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import classNames from 'classnames';
@@ -24,6 +24,11 @@ const Navbar = ({ user, logout, queryParams }) => {
                                 <NavigationLink to={`/profile/${user.id}`}>
                                 <FontAwesomeIcon icon={faHouseUser}/>
                             </NavigationLink>
+                            </li>
+                            <li>
+                                <NavigationLink to='/story/create' >
+                                    <FontAwesomeIcon icon={faFeatherAlt} />
+                                </NavigationLink>
                             </li>
                             <li><NavigationLink to='/chat'>
                                 <FontAwesomeIcon icon={faCommentDots}/>
