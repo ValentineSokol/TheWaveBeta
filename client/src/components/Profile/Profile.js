@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory, useParams} from 'react-router';
+import useUserStatus from '../../utils/hooks/useUserStatus';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../redux/actions/api';
 
@@ -9,12 +10,13 @@ import Heading from "../reusable/UIKit/Headings/Heading/Heading";
 import Button from "../reusable/UIKit/Forms/Button";
 import Avatar from "../reusable/Avatar";
 import ChangeAvatarModal from "./ChangeAvatarModal";
-import Toast from "../reusable/UIKit/Toast";
+import Circle from "../reusable/UIKit/Circle";
 
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
     const [isChangingAvatar, setIsChangingAvatar] = useState(false);
     const { id } = useParams();
+    const userStatus = useUserStatus(id);
     const history = useHistory();
     useEffect(
         () => {
@@ -42,7 +44,11 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             </div>
            </section>
             <div className='ProfileInfo'>
+                <div className='Username'>
                 <Heading size='2'>{user.username}</Heading>
+                { userStatus.online && <Circle className='ml-1' radius='15px' background="green" /> }
+                    { !userStatus.online && <div className='ml-1'>{userStatus.lastSeen} </div>}
+                </div>
                 <span>{user.privilege}</span>
             </div>
         </div>

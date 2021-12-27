@@ -5,6 +5,8 @@ const getRelativeTime = (timestamp) => {
     const millisToDays = millisToHours * 24;
     const millisToMonth = millisToDays * 30;
 
+    if (!timestamp) return '';
+
     const timeElapsed = Date.now() - timestamp;
 
     if (timeElapsed < millisToSeconds * 59) return 'just now';

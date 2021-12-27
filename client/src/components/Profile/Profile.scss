@@ -1,8 +1,7 @@
 .ProfileContainer {
     display: flex;
-    justify-content: space-around;
     align-items: flex-start;
-    width: 30%;
+    width: 50%;
     margin: 1% auto;
 }
 .ProfileInfo {
@@ -20,6 +19,12 @@
     .Button {
         width: 100%;
     }
+}
+
+.Username {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 }
 @media only screen and (max-width: 784px) {
     .ProfileContainer {

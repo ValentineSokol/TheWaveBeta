@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-
+import * as WsSelectors from './selectors';
 
 const WebSocketSlice = createSlice( {
     name: 'WebSocketSlice',
@@ -23,3 +23,4 @@ const WebSocketSlice = createSlice( {
 export const WebSocketReducer = WebSocketSlice.reducer;
 export const actions = WebSocketSlice.actions;
 export const sendWsMessage = actions.messageSent;
+export const selectors = WsSelectors;

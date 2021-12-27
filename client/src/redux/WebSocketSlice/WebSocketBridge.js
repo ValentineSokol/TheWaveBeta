@@ -24,7 +24,7 @@ export default ({ url, connectionCondition }) => {
       if (!connectionCondition || connectionCondition(action, getState())) {
           exponentialBackoff(connect, { jitter: true })
       }
-      if (action.type === actions.messageSent.toString() && ws.readyState === 1) {
+      if (action.type === actions.messageSent.toString() && ws?.readyState === 1) {
           ws.send(JSON.stringify(action.payload));
       }
 

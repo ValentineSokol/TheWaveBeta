@@ -4,7 +4,7 @@ import {createNotification} from "../../redux/NotificationSlice/index";
 
 export const register = createAsyncThunk(
     'register',
-    async (body, { dispatch}) => fetcher('/auth/register', 'POST', body)
+    async (body, { dispatch}) => fetcher('/users', 'POST', body)
         .then(res => {
             if (!res.success) {
                 return;
