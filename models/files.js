@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Files extends Model {
     /**
@@ -18,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     owner: DataTypes.INTEGER,
     visibility: DataTypes.ENUM(['public', 'private', 'friendsOnly']),
+    nsfw: { type: DataTypes.BOOLEAN, defaultValue: 0 },
     mimeType: DataTypes.STRING,
     toBeDeleted: DataTypes.BOOLEAN
   }, {

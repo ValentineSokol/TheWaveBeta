@@ -5,6 +5,7 @@ const B2 = require('backblaze-b2');
 const multer = require('multer');
 const sharp = require('sharp');
 const auth = require('../middlewares/auth');
+const isImageNSFW = require('../utils/nsfw/classifyImage');
 const fileConstants = require('../constants/fileConstants');
 
 const storage = multer.memoryStorage();
@@ -24,7 +25,8 @@ module.exports = (server) => {
             let [fileType, fileFormat] = file.mimetype.split('/');
             if (fileType === 'image') {
                 try {
-                    file.buffer = await sharp(file.buffer).webp({ quality: 100, lossless: true }).toFormat('webp').toBuffer();
+                    file.nsfw = await isImageNSFW(file.buffer);
+                    file.buffer = await sharp(file.buffer).webp({ quality: 100, lossless: true }).toBuffer();
                     file.mimetype = 'image/webp'
                     fileFormat = 'webp';
                 }
@@ -33,7 +35,7 @@ module.exports = (server) => {
                     return;
                 }
             }
-            fileInfos.push({ name: file.filename, mimeType: file.mimetype });
+            fileInfos.push({ name: file.filename, mimeType: file.mimetype, nsfw: file.nsfw });
             const uploadUrlRes = await b2.getUploadUrl({
                 bucketId: process.env.BACKBLAZE_BUCKET_ID
             });
@@ -68,6 +70,7 @@ module.exports = (server) => {
         });
         res.json({ success: true, urls: await Promise.all(urls) });
     });
+    router.head('/:id', auth(false));
     router.get('/:id', auth(false), async (req, res) => {
         await b2.authorize();
         const { id } = req.params;
@@ -85,8 +88,8 @@ module.exports = (server) => {
         });
          res.type(fileRecord.mimeType);
          res.set('Cache-Control', 'private');
+         res.set('NSFW-Content', fileRecord.nsfw ? true : '');
          res.end(data, 'binary');
-
     });
     return router;
 }

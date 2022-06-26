@@ -18,7 +18,7 @@ export const register = createAsyncThunk(
 );
 export const login = createAsyncThunk(
     'login',
-    async (body, { dispatch}) => fetcher('/auth/local', 'POST', body)
+    async (body, { dispatch}) => fetcher('/auth/local', { method: 'POST', payload: body })
         .then(res => {
             if (!res.success) {
              return;
@@ -36,7 +36,7 @@ export const checkLogin = createAsyncThunk(
 )
 export const logout = createAsyncThunk(
     'logout',
-    () => fetcher('/auth/logout', 'DELETE')
+    () => fetcher('/auth/logout', { method: 'DELETE' })
 )
 export const loadProfile = createAsyncThunk(
     'profile',
@@ -44,17 +44,17 @@ export const loadProfile = createAsyncThunk(
 )
 export const uploadFiles = createAsyncThunk(
     'uploadFiles',
-    (...files) => fetcher('/files/upload', 'POST', { files }, { isFormData: true } )
+    (...files) => fetcher('/files/upload', { method: 'POST', payload: { files }, isFormData: true })
 )
 export const updateUser = createAsyncThunk(
     'updateUser',
-    (payload) => fetcher(`/users`, 'PATCH', payload)
+    (payload) => fetcher(`/users`, { method: 'PATCH', payload })
 )
 export const sendPasswordRecoveryCode = createAsyncThunk(
     'sendPasswordRecoveryCode',
-    (payload) => fetcher('/auth/password/recover', 'PUT', payload)
+    (payload) => fetcher('/auth/password/recover', { method: 'PUT', payload })
 )
 export const changePassword = createAsyncThunk(
     'changePassword',
-    (payload) => fetcher('/auth/password/update', 'PATCH', payload)
+    (payload) => fetcher('/auth/password/update', { method: 'PATCH', payload })
 )

@@ -9,3 +9,9 @@
     scrollbar-width: none;  /* Firefox */
   }
 }
+@mixin centerOnTopOfParent() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

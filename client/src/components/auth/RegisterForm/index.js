@@ -72,6 +72,7 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
                     { tab === TABS.REGISTER && <LabeledInput inputClassName='m-auto mb-2' id='emailInput' name='email' value={state.email} onChange={onChange} type='email' label='Email'  />}
                     <LabeledInput inputClassName='m-auto mb-2' id='usernameInput' name='username' onChange={onChange} label='Username' value={state.username} required />
                     <LabeledInput inputClassName='m-auto mb-2' id='passwordInput' name='password' onChange={onChange} label='Password' type='password' value={state.password} required />
+                    { tab === TABS.REGISTER && <LabeledInput required inputClassName='m-auto mb-2' id='bdayInput' name='birthday' value={state.birthday} onChange={onChange} type='date' label='Birthday'  />}
                     {
                         tab === TABS.LOGIN &&
                         <div>

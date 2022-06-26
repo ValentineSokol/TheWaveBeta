@@ -1,0 +1,1 @@
+module.exports = { porn: 75, hentai: 60 };

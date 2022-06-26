@@ -1,1 +1,0 @@
-module.exports = { PORN_PERCENTAGE: 75, HENTAI_PERCENTAGE: 60 };
