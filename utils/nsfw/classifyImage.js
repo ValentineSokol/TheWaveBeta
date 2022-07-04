@@ -3,13 +3,15 @@ const nsfw = require('nsfwjs');
 const sharp = require('sharp');
 const nsfwTresholds = require('./nswfDetectionThresholds');
 
+let modal;
+
 
 async function isImageNSFW(buffer) {
     const predictions = await classifyImage(buffer);
     return compareThresholds(predictions);
 }
 async function classifyImage(buffer) {
-    const model = await nsfw.load();
+    model = modal ? modal : await nsfw.load();
     const obj = await sharp(buffer)
         .jpeg()
         .toBuffer({ resolveWithObject: true });
