@@ -80,7 +80,7 @@ module.exports = (server) => {
             res.sendStatus(404);
             return;
         }
-        if (fileRecord.nsfw && getAge(req.user.birthday < 18)) {
+        if (fileRecord.nsfw && getAge(req.user?.birthday < 18)) {
             return res.sendStatus(403);
         }
         const { data } = await b2.downloadFileById({
