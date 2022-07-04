@@ -7,6 +7,7 @@ const sharp = require('sharp');
 const auth = require('../middlewares/auth');
 const isImageNSFW = require('../utils/nsfw/classifyImage');
 const fileConstants = require('../constants/fileConstants');
+const getAge = () => 18;
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -79,8 +80,8 @@ module.exports = (server) => {
             res.sendStatus(404);
             return;
         }
-        if (fileRecord.visibility !== fileConstants.VISIBILITY.PUBLIC) {
-
+        if (fileRecord.nsfw && getAge(req.user.birthday < 18)) {
+            return res.sendStatus(403);
         }
         const { data } = await b2.downloadFileById({
             fileId: fileRecord.fileId,
