@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { actions as preferencesAPI } from '../../../../redux/PreferencesSlice';
 import './NavbarButtonPanel.scss';
 
-import ukrainianFlag from '../../../../assets/ukrainianFlag.svg';
-import ukFlag from '../../../../assets/ukFlag.svg';
-import russianFlag from '../../../../assets/russianFlag.svg';
+import ukrainianFlag from '../../../../assets/icons/ukrainianFlag.svg';
+import ukFlag from '../../../../assets/icons/ukFlag.svg';
+import russianFlag from '../../../../assets/icons/russianFlag.svg';
 // import settingsIcon from '../../../../assets/settings.svg';
 import {Link} from 'react-router-dom';
 

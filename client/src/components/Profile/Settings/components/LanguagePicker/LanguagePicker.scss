@@ -1,0 +1,10 @@
+.LanguagePicker {
+  img {
+    width: 5em;
+    cursor: pointer;
+    transition: transform .5s ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

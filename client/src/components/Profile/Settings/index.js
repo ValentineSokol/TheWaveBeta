@@ -3,6 +3,7 @@ import { actions } from '../../../redux/PreferencesSlice/index';
 import { createNotification } from '../../../redux/NotificationSlice';
 import withTranslation from '../../reusable/withTranslation';
 import Heading from '../../reusable/UIKit/Headings/Heading/Heading';
+import LanguagePicker from './components/LanguagePicker';
 
 import './Settings.scss';
 
@@ -23,6 +24,8 @@ class Settings extends React.Component {
                   <Heading size='3'>{translation.sections.notifications.heading}</Heading>
                   <label>{translation.sections.notifications.allowSound}</label>
                   <input name='notificationSound' onChange={this.applySettings} type='checkbox' defaultChecked={this.props.settings?.notificationSound}/>
+                  <Heading>{translation.sections.language.heading}</Heading>
+                  <LanguagePicker />
               </section>
           </div>
         );
