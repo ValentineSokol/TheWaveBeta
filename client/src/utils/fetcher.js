@@ -7,7 +7,6 @@ export default async (url, { method, payload, isFormData, withResHeaders } = {})
            if (!isFormData) fetcherOptions.headers = { 'Content-Type': 'application/json' };
         } 
         const res = await fetch(url, fetcherOptions);
-        console.log(res.headers.get('nsfw-content'))
         const parsePayload = res.headers.get('content-type').includes('application/json') ? 'json' : 'blob';
         const responsePayload = await res[parsePayload]();
         return withResHeaders ? { payload: responsePayload, headers: res.headers } : responsePayload;

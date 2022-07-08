@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import fetcher from '../../../utils/fetcher';
 import defaultImage from '../../../assets/defaultAvatar.webp';
-import Loader from '../Loader';
 import './Image.scss';
 
 const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
