@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1
+      MYSQL_DATABASE: thewavebeta
+    restart: always
+    logging:
+      driver: none
+    ports:
+      - "3306:3000"
+    expose:
+      - 3306
+  web:
+    build: .
+    environment:
+      WAIT_HOSTS: db:3306
+      MYSQL_DATABASE: thewavebeta
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1
+      DB_HOST: db
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    restart: on-failure
+
+  web-ui:
+    build: ./client
+    restart: on-failure
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
