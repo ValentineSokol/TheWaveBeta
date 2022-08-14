@@ -109,7 +109,7 @@ class ChatWindow extends Component {
         const idFromQuery = this.props.queryParams.id;
         if (!idFromQuery) return;
         const chatroomId = this.isDirectChat() ?
-            await fetcher(`/chat/findDirectChatroom/${idFromQuery}`,'PUT')
+            await fetcher(`/chat/findDirectChatroom/${idFromQuery}`, { method: 'PUT' })
             :
             idFromQuery;
         const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
