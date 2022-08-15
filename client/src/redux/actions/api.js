@@ -48,7 +48,7 @@ export const uploadFiles = createAsyncThunk(
 )
 export const updateUser = createAsyncThunk(
     'updateUser',
-    (payload) => fetcher(`/users`, { method: 'PATCH', payload })
+    (payload) => fetcher(`/users`, { method: 'PATCH', payload, isFormData: true })
 )
 export const sendPasswordRecoveryCode = createAsyncThunk(
     'sendPasswordRecoveryCode',

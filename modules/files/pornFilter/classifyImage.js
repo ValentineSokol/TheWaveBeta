@@ -18,7 +18,6 @@ async function classifyImage(buffer) {
     const image = await tf.node.decodeImage(obj.data, 3);
     const predictions = await model.classify(image);
     image.dispose();
-    console.log(predictions);
     const result = {};
     for (let obj of predictions) {
         result[obj.className.toLowerCase()] = obj.probability * 100;

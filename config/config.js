@@ -1,8 +1,8 @@
 module.exports = {
   "development": {
-    host: process.env.DB_HOST,
+    host: '127.0.0.1',
     "username": "root",
-    "password": "1",
+    "password": "pass",
     "database": "thewavebeta",
     "dialect": "mysql",
   },

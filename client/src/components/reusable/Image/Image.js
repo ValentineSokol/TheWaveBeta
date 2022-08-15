@@ -12,7 +12,7 @@ const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
             .then(response => {
                 setIsLoading(false);
                 setImageSrc(window.URL.createObjectURL(response.payload));
-                setIsNSFW(response.headers.get('nsfw-content'))
+                setIsNSFW(response.headers.get('pornFilter-content'))
             })
         return () => window.URL.revokeObjectURL(imageSrc);
     }, []);

@@ -29,14 +29,10 @@ class ChangeAvatarModal extends React.Component {
     };
     onSubmit = (croppedImageBlob) => {
         this.props.createNotification('Uploading your file', 'process');
-        this.props.uploadFiles(croppedImageBlob);
+        this.props.updateUser({ files: [croppedImageBlob] });
         this.onClose();
     }
-    onAvatarUploaded = url => this.props.updateUser({ avatarUrl: url});
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.avatarUrl !== this.props.avatarUrl) {
-            this.onAvatarUploaded(this.props.avatarUrl);
-        }
         if (!prevProps.userUpdated && this.props.userUpdated) {
             this.props.createNotification('Your avatar has been updated!', 'success');
         }

@@ -1,4 +1,4 @@
-import React from "react";
+    import React from "react";
 
 import ImageCard from "../../../components/reusable/UIKit/Cards/ImageCard/ImageCard";
 import Heading from '../../../components/reusable/UIKit/Headings/Heading/Heading';

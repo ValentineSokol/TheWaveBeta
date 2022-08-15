@@ -1,14 +1,7 @@
-const getUserFromSession = require('../utils/getUserFromSession');
-module.exports = ( mandatory = true) => async (req, res, next) => {
-    const userPromise = getUserFromSession(req);
-    if (!userPromise && mandatory) {
-        res.sendStatus(401);
-        return;
-    }
-    if (userPromise) {
-        const record = await userPromise;
-        req.user = record?.dataValues;
-    } else req.user = null;
+const AuthProvider = require('../modules/auth/AuthProvider');
 
+module.exports = ( mandatory = true) => async (req, res, next) => {
+    req.user = AuthProvider.getUserFromSession(req);
+    if (!userId && mandatory) return res.sendStatus(401);
     next();
 }
