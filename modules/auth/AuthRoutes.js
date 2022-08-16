@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const AuthProvider = require('./AuthProvider');
+const AuthMiddleware = require('../../middlewares/auth');
 const {
     authenticateUser,
     logout,
@@ -16,7 +17,7 @@ AuthProvider.initAuthStrategies().forEach(routes => {
   });
 });
 
-router.post('/authenticate', authenticateUser);
+router.post('/authenticate', AuthMiddleware(false), authenticateUser);
 router.delete('/logout', logout);
 router.post('/password/requestRecovery', requestPasswordRecovery);
 router.patch('/password/recover',  recoverPassword);

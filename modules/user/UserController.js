@@ -39,7 +39,6 @@ const updateUser = async (req, res) => {
 
 module.exports = {
     register,
-    authenticate,
     getProfile,
     updateUser,
 }

@@ -25,7 +25,7 @@ module.exports = {
       googleId: {
         type: Sequelize.STRING
       },
-      vkId: {
+      vkontakteId: {
         type: Sequelize.STRING
       },
       facebookId: {

@@ -13,9 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       Users.belongsToMany(models.Chatrooms, { through: models.ChatroomMembers, otherKey: 'chatroomId', foreignKey: 'memberId' });
       Users.hasMany(models.Files, { foreignKey: 'owner' });
     }
-    static findByUsername(username = '') {
-      return this.findOne({ where: { username } });
-    }
   }
   Users.init({
     username: DataTypes.STRING,
@@ -27,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }, 
     googleId: DataTypes.STRING,
-    vkId: DataTypes.STRING,
+    vkontakteId: DataTypes.STRING,
     facebookId: DataTypes.STRING,
     birthday: DataTypes.DATE,
     recoveryEmail: DataTypes.STRING,

@@ -32,7 +32,7 @@ export const login = createAsyncThunk(
 );
 export const checkLogin = createAsyncThunk(
     'authenticate',
-    () => fetcher('/users/authenticate')
+    () => fetcher('/auth/authenticate', { method: 'POST' })
 )
 export const logout = createAsyncThunk(
     'logout',

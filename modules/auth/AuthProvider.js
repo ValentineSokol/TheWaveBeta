@@ -2,7 +2,7 @@ const passport = require('passport');
 const UserModel = require('../user/UserModel');
 const LocalStrategy = require('passport-local').Strategy;
 const thirdPartyStrategies = require('./ThirdPartyAuthStrategies');
-const { verifyPassword } = require('./auth');
+const { verifyPassword } = require('./AuthModel');
 
 const init = (router) => {
     router.use([ passport.initialize(), passport.session()]);
@@ -24,6 +24,7 @@ const initLocalStrategy = () => {
         }
     ));
     return [
+       [
         {
             path: '/local',
             method: 'post',
@@ -32,16 +33,17 @@ const initLocalStrategy = () => {
                 (req, res) => res.json({ success: true })
             ]
         }
-        ];
+       ]
+    ];
 };
 
 const initThirdPartyStrategies = () => {
-    thirdPartyStrategies.map((service) => {
+    return thirdPartyStrategies.map((service) => {
        passport.use(new service.strategy({
            clientID: process.env[`${service.name.toUpperCase()}_CLIENT_ID`],
            clientSecret: process.env[`${service.name.toUpperCase()}_CLIENT_SECRET`],
            callbackURL: `${process.env.DOMAIN}/auth/${service.name}/callback`,
-           ...options
+           ...service.options
        },
        async function(accessToken, refreshToken, profile, cb) {
                try {
@@ -66,7 +68,7 @@ const initThirdPartyStrategies = () => {
             },
             {
                 method: 'get',
-                path: `/${serviceName}/callback`,
+                path: `/${service.name}/callback`,
                 handler: passport.authenticate(service.name)
             }
         ];

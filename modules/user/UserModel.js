@@ -1,6 +1,6 @@
 const { Users } = require('../../models');
 const ChatModel = require('../chat/ChatModel');
-const excludedFields = ['password', 'googleId', 'vkId', 'facebookId'];
+const excludedFields = ['password', 'googleId', 'vkontakteId', 'facebookId'];
 const commonReqOptions = { attributes: { exclude: excludedFields }};
 
 const findOrCreateUser = async function ({ findBy, fields, isSocialLogin }) {

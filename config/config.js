@@ -5,6 +5,7 @@ module.exports = {
     "password": "pass",
     "database": "thewavebeta",
     "dialect": "mysql",
+    logging: false,
   },
   "production": {
    "use_env_variable": "JAWSDB_URL"
