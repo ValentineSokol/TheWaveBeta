@@ -15,7 +15,7 @@ const getChatroom = async (req, res) => {
 };
 
 const getUserChatrooms = async (req, res) => {
-    const chatrooms = await ChatModel.getUserChatrooms(req.user.id);
+    const chatrooms = await ChatModel.getUserChatrooms(req.user);
     res.json(chatrooms);
 };
 

@@ -21,14 +21,15 @@ const findOrCreateChatroom = async (payload, members, options = {}) => {
 const findOrCreateDirectChatroom = async (userId, companionId, options = {}) => {
     const transaction = options.transaction || await sequelize.transaction();
     const directChatroomHash = getDirectChatroomHash(userId, companionId);
-    const members = [userId, companionId];
-    const chatroom = await findOrCreateChatroom({ directChatroomHash }, members, { transaction });
+    const members = userId === companionId ? [userId] : [userId, companionId];
+    let chatroom;
     try {
-        await transaction.commit();
+        chatroom = await findOrCreateChatroom({ directChatroomHash }, members, { transaction });
+        if (!options.transaction) await transaction.commit();
         return chatroom;
     }
     catch (err) {
-        await transaction.rollback();
+        if (!options.transaction) await transaction.rollback();
         throw err;
     }
 };
@@ -50,7 +51,7 @@ const getUserChatrooms = (userId) => {
        include: [
          {
            model: Users,
-           where: { memberId: userId }
+           where: { id: userId }
          },
          {
             model: Messages,

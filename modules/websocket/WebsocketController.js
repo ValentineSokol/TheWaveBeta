@@ -16,7 +16,7 @@ const notifyUserOnlineChange = (userId, isOnline) => {
     sendMessage(statusSubscribers, message);
 };
 const connect = (userId, ws) => {
-    const isFirstConnect = connections[userId].length;
+    const isFirstConnect = connections[userId]?.length;
     if (!connections[userId]) {
         connections[userId] = [ws];
     } else {

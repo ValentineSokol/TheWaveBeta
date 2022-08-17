@@ -1,5 +1,7 @@
 const { Users } = require('../../models');
 const ChatModel = require('../chat/ChatModel');
+const { sequelize } = require('../../models/index');
+
 const excludedFields = ['password', 'googleId', 'vkontakteId', 'facebookId'];
 const commonReqOptions = { attributes: { exclude: excludedFields }};
 

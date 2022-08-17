@@ -8,10 +8,10 @@ const authRouter = require('./modules/auth/AuthRoutes');
 const userRouter = require('./modules/user/UserRoutes');
 const chatRouter = require('./modules/chat/ChatRoutes');
 const fileRouter = require('./modules/files/FilesRoutes');
-
 const app = express();
 
 require('express-ws')(app);
+const websocketRouter = require('./modules/websocket/Routes');
 
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/client/build`));
@@ -38,6 +38,6 @@ app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/chat', chatRouter);
 app.use('/files', fileRouter);
-app.use('/realtime',  require('./modules/websocket/Routes'));
+app.use('/realtime', websocketRouter);
 
 app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));

@@ -5,7 +5,7 @@ const UserModel = require('../user/UserModel');
 
 const router = Router();
 router.ws('/connect', async (ws, req) => {
-    const userId =  AuthProvider.getUserFromSession(req);
+    const userId = AuthProvider.getUserFromSession(req);
     if (!userId) {
         ws.terminate();
         return;

@@ -14,6 +14,7 @@ import {
 import { notificationReducer } from "../NotificationSlice";
 import {preferencesReducer} from "../PreferencesSlice";
 import {WebSocketReducer} from "../WebSocketSlice";
+import { chatReducer } from '../ChatSlice';
 
 export default combineReducers({
     global: createReducer({
@@ -66,5 +67,6 @@ export default combineReducers({
     }),
     notifications: notificationReducer,
     preferences: preferencesReducer,
-    WebSocket: WebSocketReducer
+    WebSocket: WebSocketReducer,
+    chat: chatReducer,
 });
