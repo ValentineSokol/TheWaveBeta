@@ -50,7 +50,7 @@ const initThirdPartyStrategies = () => {
                    const { user } = await UserModel.findOrCreateUser(
                        {
                            findBy: `${service.name}Id`,
-                           fields: { facebookId: profile.id },
+                           fields: { [`${service.name}Id`]: profile.id },
                            isSocialLogin: true
                        });
                    return cb(null, user);
