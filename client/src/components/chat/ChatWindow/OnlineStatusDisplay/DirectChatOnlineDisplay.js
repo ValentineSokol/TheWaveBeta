@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserOnlineStatus } from '../../../../utils/hooks/useUserStatus';
+import { useUserOnlineStatus } from '../../../../utils/hooks/useUserOnlineStatuses';
 import RelativeTime from "../../../reusable/UIKit/RelativeTime";
 
 const DirectChatOnlineDisplay = ({ companionId }) => {

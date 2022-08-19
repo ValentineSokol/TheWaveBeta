@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useHistory, useParams} from 'react-router';
-import useUserStatus from '../../utils/hooks/useUserStatus';
+import { useUserOnlineStatus } from '../../utils/hooks/useUserOnlineStatuses';
 import { connect } from 'react-redux';
 import { loadProfile } from '../../redux/actions/api';
 
@@ -16,7 +16,8 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
     const [isOwner, setisOwner] = useState(false);
     const [isChangingAvatar, setIsChangingAvatar] = useState(false);
     const { id } = useParams();
-    const userStatus = useUserStatus(id);
+    const userStatus = useUserOnlineStatus(id);
+    console.log({ userStatus });
     const history = useHistory();
     useEffect(
         () => {
@@ -46,8 +47,8 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
             <div className='ProfileInfo'>
                 <div className='Username'>
                 <Heading size='2'>{user.username}</Heading>
-                { userStatus.online && <Circle className='ml-1' radius='15px' background="green" /> }
-                    { !userStatus.online && <div className='ml-1'>{userStatus.lastSeen} </div>}
+                { userStatus?.online && <Circle className='ml-1' radius='15px' background="green" /> }
+                    { !userStatus?.online && <div className='ml-1'>{userStatus?.lastSeen} </div>}
                 </div>
                 <span>{user.privilege}</span>
             </div>

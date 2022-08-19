@@ -10,9 +10,9 @@ const watchUserOnlineStatus = (userId, targetUserId) => {
 const notifyUserOnlineChange = (userId, isOnline) => {
     const statusSubscribers = userStatusSubscriptions[userId];
     if (!statusSubscribers) return;
-    const payload = { online: isOnline };
+    const payload = { id: userId, online: isOnline };
     if (!isOnline) payload.lastSeen = Date.now();
-    const message = { type: `user-status-${userId}`, payload  };
+    const message = { type: `user-status`, payload  };
     sendMessage(statusSubscribers, message);
 };
 const connect = (userId, ws) => {
