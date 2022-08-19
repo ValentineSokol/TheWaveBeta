@@ -1,19 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Avatar from "../../reusable/Avatar";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { getSelectedChatroomId } from '../../../redux/ChatSlice/selectors';
 
-
-export default ({ activeChatroom, chatroomId, isDirectChatroom, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
-
-    const [isActive, setIsActive] = useState(false);
-
-    useEffect(() => {
-        const isActiveChatroomDirect = activeChatroom?.chatType === 'direct';
-
-        if (isDirectChatroom === isActiveChatroomDirect && Number(chatroomId) === Number(activeChatroom.id)) setIsActive(true);
-        else setIsActive(false);
-    }, [activeChatroom, chatroomId, isDirectChatroom])
-
+export default ({ chatroomId, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
+    const selectedChatroomId = useSelector(getSelectedChatroomId);
+    const isActive =Number(chatroomId) === Number(selectedChatroomId);
     const wrapperClassNames =  isActive  ? 'ChatPaneContent  ChatPaneContentActive' : 'ChatPaneContent';
     return (
         <div className='ChatPane'>

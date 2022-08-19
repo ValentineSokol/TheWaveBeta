@@ -22,6 +22,8 @@ import setBodyScroll from '../../../utils/setBodyScroll';
 import classNames from 'classnames';
 import {Link} from "react-router-dom";
 import RichEditor from "../../reusable/UIKit/RichEditor";
+import { fetchChatroomFromQuery } from '../../../redux/actions/api/chat';
+import Header from "./Header/Header";
 
 class ChatWindow extends Component {
     state = {
@@ -105,24 +107,13 @@ class ChatWindow extends Component {
     closeContextMenu = (e) => {
         this.setState({ showMessageContextMenu: false });
     }
-    async fetchChatroom() {
-        const idFromQuery = this.props.queryParams.id;
-        if (!idFromQuery) return;
-        const chatroomId = this.isDirectChat() ?
-            await fetcher(`/chat/findDirectChatroom/${idFromQuery}`, { method: 'PUT' })
-            :
-            idFromQuery;
-        const chatroom = await fetcher(`/chat/getChatroom/${chatroomId}`);
-        const companions = chatroom?.Users ?? [];
-        const messages = chatroom ? chatroom.Messages : [];
-        this.setState({ chatroom, companions, messages });
-    }
+
     async componentDidMount() {
         window.addEventListener('click', this.closeContextMenu);
         window.addEventListener('scroll', this.handleUserScroll);
         setBodyScroll(false);
         if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
-        await this.fetchChatroom();
+        this.props.fetchChatroomFromQuery(this.props?.queryParams);
         if (this.props.isWsOpen) {
             this.watchCompanionStatuses();
         }
@@ -176,7 +167,7 @@ class ChatWindow extends Component {
             if (this.props.isWsOpen) {
                 this.watchCompanionStatuses();
             }
-            await this.fetchChatroom();
+            this.props.fetchChatroomFromQuery(this.props?.queryParams);
         }
         if (prevProps.queryParams.id && !this.props.queryParams.id) {
             this.setState({
@@ -335,10 +326,10 @@ class ChatWindow extends Component {
                             </div>
                         }
                     </div>
-                    { this.getTopOverlayContent()}
+                    <Header />
                 </section>
                 <div className='ChatContainer'>
-                    <ChatSelector activeChatroom={this.props.queryParams} />
+                    <ChatSelector />
                  <div className={classNames(
                      'ChatMainSection',
                      { 'Empty': !this.props.queryParams.id }
@@ -398,8 +389,8 @@ class ChatWindow extends Component {
             {
                 this.isDirectChat() &&
                 <span>{this.state.companionOnline ? 'Online' :
-                    <RelativeTime text='Last seen' timestamp={this.state.companions[0]?.lastSeen}/>}
-                            </span>
+                  <RelativeTime text='Last seen' timestamp={this.state.companions[0]?.lastSeen}/>}
+                </span>
             }
         </section>
         </>
@@ -420,6 +411,7 @@ export default  withTranslation(
     {
         setNavbarVisibility: preferencesAPI.setNavbarVisibility,
         sendWsMessage,
+        fetchChatroomFromQuery,
         createNotification
     },
     true);

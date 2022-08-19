@@ -1,16 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUserChatrooms } from '../actions/api/chat';
+import {fetchUserChatrooms, fetchDirectChatroom, fetchMultiUserChatroom} from '../actions/api/chat';
 
 const chatSlice = createSlice( {
     name: 'chatSlice',
-    initialState: { chatrooms: null },
+    initialState: { chatrooms: [], selectedChatroom: null },
     extraReducers: (builder) => {
         builder.addCase(fetchUserChatrooms.fulfilled, (
             state,
             { payload}
         ) => {
             state.chatrooms = payload;
-        })
+        });
+        builder.addCase(fetchDirectChatroom.fulfilled, (
+            state,
+            { payload: { id, Users, Messages }}
+        ) => {
+            state.selectedChatroomId = id;
+            state.selectedChatroomHistory = { users: Users, messages: Messages };
+        });
+        builder.addCase(fetchMultiUserChatroom.fulfilled, (
+            state,
+            { payload}
+        ) => {
+            state.selectedChatroomId = payload.id;
+            state.selectedChatroomHistory = { users: payload.Users, messages: payload.Messages };
+        });
     },
 });
 
