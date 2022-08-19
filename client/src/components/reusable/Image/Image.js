@@ -12,7 +12,7 @@ const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
             .then(response => {
                 setIsLoading(false);
                 setImageSrc(window.URL.createObjectURL(response.payload));
-                setIsNSFW(response.headers.get('pornFilter-content'))
+                setIsNSFW(response.headers.get('nsfw-content'))
             })
         return () => window.URL.revokeObjectURL(imageSrc);
     }, []);
@@ -24,7 +24,7 @@ const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
 
     return (
         <span onClick={onImageClick} className='Image' style={{ cursor: onClick || isNSFW ? 'pointer' : 'initial' }}>
-            <img onError={onError} className={className} src={imageSrc} style={{ filter: isNSFW ? 'blur(20px)' : isLoading ? 'blur(5px)' : '' }} alt={alt} />
+            <img onError={() => setImageSrc(defaultImage)} className={className} src={imageSrc} style={{ filter: isNSFW ? 'blur(20px)' : isLoading ? 'blur(5px)' : '' }} alt={alt} />
             {
             }
             {isNSFW &&
