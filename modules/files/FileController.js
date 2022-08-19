@@ -1,7 +1,7 @@
 const FileModel = require('./FileModel');
 
 const uploadFiles = async (req, res) => {
-    const urls = await FileModel.uploadFiles(req.files, req.user.id);
+    const urls = await FileModel.uploadFiles(req.files, req.user);
     res.status(201).json({ success: true, urls });
 };
 

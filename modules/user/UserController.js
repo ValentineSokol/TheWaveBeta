@@ -29,12 +29,12 @@ const updateUser = async (req, res) => {
     const fieldsToUpdate = {};
     const [newAvatar] = req.files;
     if (newAvatar) {
-        const [avatarUrl] = await FileModel.uploadFiles(req.files, req.user.id);
+        const [avatarUrl] = await FileModel.uploadFiles(req.files, req.user);
         if (avatarUrl) fieldsToUpdate.avatarUrl = avatarUrl;
     }
 
-    await UserModel.updateUser(req.user.id, fieldsToUpdate);
-    res.json({ id: req.user.id });
+    await UserModel.updateUser(req.user, fieldsToUpdate);
+    res.json({ id: req.user });
 }
 
 module.exports = {
