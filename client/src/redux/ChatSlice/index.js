@@ -4,6 +4,11 @@ import {fetchUserChatrooms, fetchDirectChatroom, fetchMultiUserChatroom} from '.
 const chatSlice = createSlice( {
     name: 'chatSlice',
     initialState: { chatrooms: [], selectedChatroom: null },
+    reducers: {
+        selectChatroom: (state, { payload }) => {
+            state.selectedChatroomId = payload;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchUserChatrooms.fulfilled, (
             state,

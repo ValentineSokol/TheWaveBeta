@@ -1,16 +1,17 @@
 import React from "react";
 import Avatar from "../../reusable/Avatar";
-import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedChatroomId } from '../../../redux/ChatSlice/selectors';
+import { actions } from '../../../redux/ChatSlice';
 
-export default ({ chatroomId, name, url, avatar, lastMessageAuthor, lastMessageText}) => {
+export default ({ chatroomId, name, avatar, lastMessageAuthor, lastMessageText}) => {
     const selectedChatroomId = useSelector(getSelectedChatroomId);
     const isActive =Number(chatroomId) === Number(selectedChatroomId);
     const wrapperClassNames =  isActive  ? 'ChatPaneContent  ChatPaneContentActive' : 'ChatPaneContent';
+    const dispatch = useDispatch();
+    const selectChatroom = () => dispatch(actions.selectChatroom(chatroomId));
     return (
-        <div className='ChatPane'>
-        <Link to={url}>
+        <div onClick={selectChatroom} className='ChatPane'>
             <div className={wrapperClassNames}>
                 <Avatar url={avatar}/>
                 <div className='ChatNameMessage'>
@@ -24,7 +25,6 @@ export default ({ chatroomId, name, url, avatar, lastMessageAuthor, lastMessageT
                     }
                 </div>
             </div>
-        </Link>
     </div>
    );
 };

@@ -24,6 +24,8 @@ import {Link} from "react-router-dom";
 import RichEditor from "../../reusable/UIKit/RichEditor";
 import { fetchChatroomFromQuery } from '../../../redux/actions/api/chat';
 import Header from "./Header/Header";
+import { getSelectedChatroomId } from '../../../redux/ChatSlice/selectors';
+import { sendMessage } from '../../../redux/actions/api/chat';
 
 class ChatWindow extends Component {
     state = {
@@ -100,10 +102,7 @@ class ChatWindow extends Component {
             result += 'are typing';
             return  wrapInHtml(result);
     }
-    watchCompanionStatuses = () => {
-        this.props.sendWsMessage({ type: 'watch-user-status', payload: this.props.queryParams.id });
-        this.setState({ loading: false });
-    }
+
     closeContextMenu = (e) => {
         this.setState({ showMessageContextMenu: false });
     }
@@ -114,9 +113,6 @@ class ChatWindow extends Component {
         setBodyScroll(false);
         if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
         this.props.fetchChatroomFromQuery(this.props?.queryParams);
-        if (this.props.isWsOpen) {
-            this.watchCompanionStatuses();
-        }
     }
 
     renderMessages = () => {
@@ -164,9 +160,6 @@ class ChatWindow extends Component {
   async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.queryParams.id !== this.props.queryParams.id || prevProps.queryParams.chatType !== this.props.queryParams.chatType) {
             if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
-            if (this.props.isWsOpen) {
-                this.watchCompanionStatuses();
-            }
             this.props.fetchChatroomFromQuery(this.props?.queryParams);
         }
         if (prevProps.queryParams.id && !this.props.queryParams.id) {
@@ -177,9 +170,6 @@ class ChatWindow extends Component {
             })
         }
         if (!prevProps.user && this.props.user) {
-        }
-        if (!prevProps.isWsOpen && this.props.isWsOpen) {
-            this.watchCompanionStatuses();
         }
         if (prevProps.wsMessage !== this.props.wsMessage) {
             this.onWsMessage(this.props.wsMessage);
@@ -240,11 +230,7 @@ class ChatWindow extends Component {
         });
         if (isMessageEmpty) return;
         try {
-            await fetcher(
-                `/chat/sendMessage/${this.state.chatroom.id}`,
-                 'PUT',
-                { text: this.state.message.trim() }
-            );
+           this.props.sendMessage({ chatroomId: this.props.selectedChatroomId, text: this.state.message });
         }
         catch (err) {
             console.error(err);
@@ -272,7 +258,6 @@ class ChatWindow extends Component {
         if (e.key === 'Shift') this.shiftPressed = false;
    }
     onContextMenu = (pageX, pageY, target) => {
-        console.log(target);
         this.setState({
             selectedMessage: { id: target.dataset.id, text: target.dataset.text },
             showMessageContextMenu: true,
@@ -332,14 +317,14 @@ class ChatWindow extends Component {
                     <ChatSelector />
                  <div className={classNames(
                      'ChatMainSection',
-                     { 'Empty': !this.props.queryParams.id }
+                     { 'Empty': !this.props.selectedChatroomId }
                  )}>
                 <div className='MessageBox' >
                     {this.renderMessages()}
                     {this.renderTypingMessage()}
                 </div>
                      {
-                         this.props.queryParams.id &&
+                         this.props.selectedChatroomId &&
                          <section className='BottomSection'>
                              <section className='SendMessagePanel'>
                                  <div className='RichArea'>
@@ -398,10 +383,11 @@ class ChatWindow extends Component {
     }
 }
 
-export default  withTranslation(
+export default withTranslation(
     ChatWindow,
     'chat',
         state => ({
+            selectedChatroomId: getSelectedChatroomId(state),
             queryParams: state.global.queryParams,
             isNavbarVisible: state.preferences.isNavbarVisible,
             user: state.global.user,
@@ -412,6 +398,7 @@ export default  withTranslation(
         setNavbarVisibility: preferencesAPI.setNavbarVisibility,
         sendWsMessage,
         fetchChatroomFromQuery,
+        sendMessage,
         createNotification
     },
     true);

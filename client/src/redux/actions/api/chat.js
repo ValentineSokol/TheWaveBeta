@@ -22,7 +22,17 @@ export const fetchChatroomFromQuery = createAsyncThunk(
         if (chatType === 'direct') return dispatch(fetchDirectChatroom(id));
         dispatch(fetchMultiUserChatroom(id));
     }
+);
 
-)
+export const sendMessage = createAsyncThunk(
+    'sendMessage',
+    ({ chatroomId, text }) => fetcher(
+        `/chat/${chatroomId}/message`,
+        {
+            method: 'PUT',
+            payload: { text: text.trim() }
+        }
+        )
+);
 
 
