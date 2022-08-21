@@ -11,7 +11,7 @@ export const fetchDirectChatroom = createAsyncThunk(
     (companionId) => fetcher(`/chat/direct/${companionId}`, { method: 'PUT' })
 );
 
-export const fetchMultiUserChatroom = createAsyncThunk(
+export const fetchChatroomById = createAsyncThunk(
     'fetchMultiUserChatroom',
     (id) => fetcher(`/chat/${id}`)
 );
@@ -20,7 +20,7 @@ export const fetchChatroomFromQuery = createAsyncThunk(
     'fetchChatroomFromQuery',
     ({ chatType, id }, { dispatch}) => {
         if (chatType === 'direct') return dispatch(fetchDirectChatroom(id));
-        dispatch(fetchMultiUserChatroom(id));
+        dispatch(fetchChatroomById(id));
     }
 );
 

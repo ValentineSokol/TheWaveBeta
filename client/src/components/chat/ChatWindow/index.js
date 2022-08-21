@@ -22,11 +22,10 @@ import setBodyScroll from '../../../utils/setBodyScroll';
 import classNames from 'classnames';
 import {Link} from "react-router-dom";
 import RichEditor from "../../reusable/UIKit/RichEditor";
-import { fetchChatroomFromQuery } from '../../../redux/actions/api/chat';
+import { fetchChatroomFromQuery, fetchChatroomById } from '../../../redux/actions/api/chat';
 import Header from "./Header/Header";
-import { getSelectedChatroomId } from '../../../redux/ChatSlice/selectors';
+import {getSelectedChatroomHistory, getSelectedChatroomId} from '../../../redux/ChatSlice/selectors';
 import { sendMessage } from '../../../redux/actions/api/chat';
-
 class ChatWindow extends Component {
     state = {
         companions: [],
@@ -65,12 +64,6 @@ class ChatWindow extends Component {
         this.setState({lastScrollPosition: bodyRect.top });
     }
     isDirectChat = () => this.props.queryParams.chatType === 'direct';
-    onMessageReceived = message => {
-        if (this.state.chatroom.id !== message.chatId) return;
-        const { messages } = this.state;
-        const messageWithAnimationData = { ...message, shouldPlayEnterAnimation: true };
-        this.setState({ messages: [...messages, messageWithAnimationData ]});
-    }
     onCompanionTypingChange = ({ username, isDirect, chatId}) => {
         if (Number(chatId) !==this.props.user?.id) return;
         if (this.isDirectChat() !== isDirect) return;
@@ -116,7 +109,7 @@ class ChatWindow extends Component {
     }
 
     renderMessages = () => {
-        const {messages} = this.state;
+        const { messages } = this.props.selectedChatroomHistory ?? {};
         if (!messages) return [];
         const result = [];
         const renderNewMessage = (message, displaySenderInfo) => {
@@ -124,8 +117,6 @@ class ChatWindow extends Component {
                 <Message
                     key={message.id}
                     message={message}
-                    user={this.props.user}
-                    companions={this.state.companions}
                     displaySenderInfo={displaySenderInfo}
                     onContextMenu={this.onContextMenu}
                     shouldPlayEnterAnimation={message.shouldPlayEnterAnimation}
@@ -158,18 +149,21 @@ class ChatWindow extends Component {
     }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.queryParams.id !== this.props.queryParams.id || prevProps.queryParams.chatType !== this.props.queryParams.chatType) {
+        if (prevProps.selectedChatroomId !== this.props.selectedChatroomId) {
+            this.props.fetchChatroomById(this.props.selectedChatroomId);
+        }
+        if (
+            prevProps.queryParams.id !== this.props.queryParams.id
+            || prevProps.queryParams.chatType !== this.props.queryParams.chatType
+        ) {
             if (Number.isNaN(Number(this.props?.queryParams?.id))) return;
             this.props.fetchChatroomFromQuery(this.props?.queryParams);
         }
         if (prevProps.queryParams.id && !this.props.queryParams.id) {
             this.setState({
                 typers: [],
-                messages: [],
                 companions: []
             })
-        }
-        if (!prevProps.user && this.props.user) {
         }
         if (prevProps.wsMessage !== this.props.wsMessage) {
             this.onWsMessage(this.props.wsMessage);
@@ -195,10 +189,6 @@ class ChatWindow extends Component {
         }
         if (message.type === 'stopped-typing' || message.type === 'is-typing') {
             this.onCompanionTypingChange(message.payload);
-        }
-
-        if (message.type === 'message') {
-            this.onMessageReceived(message.payload);
         }
     }
     onCompanionStatusChange = (message) => {
@@ -388,6 +378,7 @@ export default withTranslation(
     'chat',
         state => ({
             selectedChatroomId: getSelectedChatroomId(state),
+            selectedChatroomHistory: getSelectedChatroomHistory(state),
             queryParams: state.global.queryParams,
             isNavbarVisible: state.preferences.isNavbarVisible,
             user: state.global.user,
@@ -398,6 +389,7 @@ export default withTranslation(
         setNavbarVisibility: preferencesAPI.setNavbarVisibility,
         sendWsMessage,
         fetchChatroomFromQuery,
+        fetchChatroomById,
         sendMessage,
         createNotification
     },

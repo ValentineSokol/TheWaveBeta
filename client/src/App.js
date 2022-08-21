@@ -44,7 +44,7 @@ const App = class App extends  React.Component {
                 if (isDirectChat && Number(chatId) === Number(wsMessage.payload.from)) return;
                 if (Number(chatId) === Number(wsMessage.payload.chatId)) return;
             }
-                const message = `${wsMessage.payload.username} sent you a message.`;
+                const message = `${wsMessage.payload.author.username} sent you a message.`;
                 this.props.createNotification(message, 'mail');
         }
     }

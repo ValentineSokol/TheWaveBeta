@@ -35,25 +35,30 @@ const findOrCreateDirectChatroom = async (userId, companionId, options = {}) => 
     }
 };
 
-const getChatroom = (id, userId) => {
+const getChatroom = (id, userId, { withMembers } = {}) => {
+    const include = [
+        {
+            model: Users,
+            as: 'isMember',
+            where: { id: userId }
+        },
+        {
+            model: Messages,
+            include: {
+                model: Users,
+                as: 'author',
+                attributes: ['id', 'username', 'avatarUrl']
+            },
+            required: false
+        }
+    ];
+    if (withMembers) {
+        include.push({ model: Users, as: 'members' });
+    }
     return Chatrooms.findByPk(
         id,
         {
-            include: [
-                {
-                    model: Users,
-                    as: 'members',
-                    where: { id: userId }
-                },
-                {
-                    model: Messages,
-                    include: {
-                        model: Users,
-                        attributes: ['id', 'username', 'avatarUrl']
-                    },
-                    required: false
-                }
-            ]
+            include
         }
     );
 }

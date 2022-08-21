@@ -2,16 +2,11 @@ import React from 'react';
 import Avatar from "../../../reusable/Avatar";
 import {CSSTransition} from "react-transition-group";
 import {Link} from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faStar
-} from '@fortawesome/free-solid-svg-icons';
-import classNames from "classnames";
-import Button from "../../../reusable/UIKit/Forms/Button";
+import { useSelector } from 'react-redux';
 
 const isOutgoingMessage = (message, user) => message.from === user?.id;
-const StarIcon = <FontAwesomeIcon icon={faStar} />;
-const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions, user, displaySenderInfo }) => {
+const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, displaySenderInfo }) => {
+    const user = useSelector(state => state.global.user);
     const getMessageClass = () => {
         let className;
         if (isOutgoingMessage(message, user)) {
@@ -29,7 +24,6 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions,
         onContextMenu(e.pageX, e.pageY, e.target);
     };
  if (!user) return null;
- const messageAuthor = companions && companions.find(companion => companion.id === message.from);
 
  return (
     <CSSTransition
@@ -42,9 +36,9 @@ const Message = ({ onContextMenu, shouldPlayEnterAnimation, message, companions,
                 {
                     displaySenderInfo &&
                         <div className='SenderInfo'>
-                            <Avatar url={messageAuthor?.avatarUrl}/>
+                            <Avatar url={message.author.avatarUrl}/>
                             <span className='MessageAuthorName'><Link
-                                to={`/profile/${messageAuthor?.id}`}><h5>{messageAuthor?.username}</h5></Link></span>
+                                to={`/profile/${message.author.id}`}><h5>{message.author?.username}</h5></Link></span>
                         </div>
                 }
                 <span
