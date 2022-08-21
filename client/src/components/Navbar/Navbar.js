@@ -42,7 +42,7 @@ const Navbar = ({ user, logout, queryParams }) => {
                         </>
                         :
                         <>
-                            <li><NavigationLink to='/auth'>{
+                            <li data-testid="registerBtn"><NavigationLink to='/auth'>{
                                 <FontAwesomeIcon icon={faDoorOpen}/>
                             }</NavigationLink></li>
                         </>

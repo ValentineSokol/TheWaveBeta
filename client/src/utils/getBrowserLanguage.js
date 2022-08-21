@@ -5,6 +5,7 @@ const getBrowserLanguage = () => {
     if (!window?.navigator?.language) {
         return 'en';
     }
+    return 'en';
     return window.navigator.language.slice(0, 2);
 };
 

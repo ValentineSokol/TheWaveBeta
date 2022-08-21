@@ -2,7 +2,7 @@ import React from "react";
 import './Button.scss';
 import classNames from "classnames";
 
-const Button = ({ children, hover, color, size, type = 'button', transparent, className, disabled, clickHandler }) => (
+const Button = ({ children, hover, color, size, type = 'button', transparent, className, disabled, clickHandler, testId }) => (
         <button
                 type={type}
                 disabled={disabled}
@@ -18,6 +18,7 @@ const Button = ({ children, hover, color, size, type = 'button', transparent, cl
                             })
                 }
                 onClick={clickHandler}
+                data-testid={testId}
         >
                 {children}
         </button>

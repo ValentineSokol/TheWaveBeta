@@ -15,7 +15,7 @@ const findOrCreateChatroom = async (payload, members, options = {}) => {
         ...options
     });
     if (!created) return chatroom;
-    chatroom.addUsers(members);
+    chatroom.addMembers(members);
     return chatroom;
 };
 

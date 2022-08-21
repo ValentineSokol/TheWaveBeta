@@ -69,10 +69,10 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
             <div className='RegisterFormWrapper'>
                 <form onSubmit={onSubmit}>
                     <SocialLogin classNames='mt-2 mb-2' />
-                    { tab === TABS.REGISTER && <LabeledInput inputClassName='m-auto mb-2' id='emailInput' name='email' value={state.email} onChange={onChange} type='email' label='Email'  />}
-                    <LabeledInput inputClassName='m-auto mb-2' id='usernameInput' name='username' onChange={onChange} label='Username' value={state.username} required />
-                    <LabeledInput inputClassName='m-auto mb-2' id='passwordInput' name='password' onChange={onChange} label='Password' type='password' value={state.password} required />
-                    { tab === TABS.REGISTER && <LabeledInput required inputClassName='m-auto mb-2' id='bdayInput' name='birthday' value={state.birthday} onChange={onChange} type='date' label='Birthday'  />}
+                    { tab === TABS.REGISTER && <LabeledInput testId='registerEmailInput' inputClassName='m-auto mb-2' id='emailInput' name='email' value={state.email} onChange={onChange} type='email' label='Email'  />}
+                    <LabeledInput testId='registerUsernameInput' inputClassName='m-auto mb-2' id='usernameInput' name='username' onChange={onChange} label='Username' value={state.username} required />
+                    <LabeledInput testId='registerPasswordInput' inputClassName='m-auto mb-2' id='passwordInput' name='password' onChange={onChange} label='Password' type='password' value={state.password} required />
+                    { tab === TABS.REGISTER && <LabeledInput testId='registerBirthdayInput' required inputClassName='m-auto mb-2' id='bdayInput' name='birthday' value={state.birthday} onChange={onChange} type='date' label='Birthday'  />}
                     {
                         tab === TABS.LOGIN &&
                         <div>
@@ -87,13 +87,13 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
                             </Button>
                         </div>
                     }
-                            <Button type='submit' className='mt-2 mb-2 p-1'>Submit</Button>
+                            <Button testId='registerSubmitBtn' type='submit' className='mt-2 mb-2 p-1'>Submit</Button>
                     { tab &&
                         <>
                             <div style={{ position: 'relative'}}>
                                 <span className='TextOnTheLine'>or</span>
                             </div>
-                            <div className='mt-2'><Button color='green' size='medium' className='p-1' clickHandler={() => setTab(tabInfo[tab].button.to)}>{tabInfo[tab].button.text}</Button></div>
+                            <div className='mt-2'><Button testId='registerTabSwitchBtn' color='green' size='medium' className='p-1' clickHandler={() => setTab(tabInfo[tab].button.to)}>{tabInfo[tab].button.text}</Button></div>
                         </>
                     }
                         </form>

@@ -12,7 +12,7 @@ const register = async (req, res) => {
     if (!created) {
         return res.status(400).json({ code: 'usr_occupied' });
     }
-    res.json({ user: user.id });
+    res.status(201).json({ user: user.id });
 };
 const getProfile = async (req, res) => {
     const { id } = req.params;
