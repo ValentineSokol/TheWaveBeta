@@ -17,8 +17,6 @@ module.exports = (sequelize, DataTypes) => {
   };
   chatrooms.init({
     name: DataTypes.STRING,
-    isDirect: DataTypes.BOOLEAN,
-    maxMembers: DataTypes.INTEGER,
     avatarUrl: DataTypes.STRING,
     directChatroomHash: {
       type: DataTypes.STRING,

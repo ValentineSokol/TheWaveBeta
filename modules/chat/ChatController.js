@@ -15,18 +15,7 @@ const getChatroom = async (req, res) => {
 };
 
 const getUserChatrooms = async (req, res) => {
-    const chatrooms = await ChatModel.getUserChatrooms(req.user);
-    const result = chatrooms.map((room) => {
-        if (room.directChatroomHash) {
-            const companion = room.members.length === 1 ?
-                room.members[0]
-                : room.members.find(member => member.id !== req.user);
-            room.name = companion.username;
-            room.avatarUrl = companion.avatarUrl;
-            room.directWith = companion.id;
-        }
-        return { id: room.id, name: room.name, avatarUrl: room.avatarUrl, lastMessage: room.Messages[0], directWith: room.directWith };
-    });
+    const result = await ChatModel.getUserChatrooms(req.user);
     res.json(result);
 };
 

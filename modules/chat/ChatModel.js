@@ -1,5 +1,5 @@
 const { sequelize } = require('../../models/index');
-const { Op } = require("sequelize");
+const { Op, col } = require("sequelize");
 const { Users, Chatrooms, Messages  } = require('../../models');
 
 const getDirectChatroomHash = (userId, companionId) => {
@@ -69,18 +69,49 @@ const getUserChatrooms = (userId) => {
          },
          {
                model: Users,
-               limit: 2,
+               where: {
+                 '$Chatrooms.directChatroomHash$': { [Op.ne]: null },
+                   id: { [Op.ne]: userId }
+               },
+               required: false,
+               attributes: ['username', 'avatarUrl'],
+               through: { attributes: [] },
                as: 'members',
-               separate: false,
-               required: false
          },
          {
             model: Messages,
+            include: [
+                { model: Users, as: 'author', attributes: ['username'] }
+            ],
             required: false,
             limit: 1,
             order: [ ['createdAt', 'DESC'] ]
          }
        ]
+    });
+};
+const getUserDirectChatrooms = (userId) => {
+    return Chatrooms.findAll({
+        where: { directChatroomHash: { [Op.ne]: null } },
+        include: [
+            {
+                model: Users,
+                where: { id: userId },
+                attributes: [],
+                as: 'isMember',
+            },
+            {
+                model: Users,
+                attributes: ['username', 'avatarUrl'],
+                as: 'members',
+            },
+            {
+                model: Messages,
+                required: false,
+                limit: 1,
+                order: [ ['createdAt', 'DESC'] ]
+            }
+        ]
     });
 };
 

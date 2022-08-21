@@ -25,17 +25,7 @@ const ChatSelector = () => {
             { 'Expanded': !selectedChatroomId }
         )}>
             {
-                chatrooms.map(room => {
-                    return (
-                        <ChatItem
-                            chatroomId={room.id}
-                            name={room.name}
-                            avatar={room.avatarUrl}
-                            lastMessageText={room.lastMessage?.text}
-                            lastMessageAuthor={'Valentine'}
-                        />
-                    );
-                })
+                chatrooms.map(room => <ChatItem chatroom={room} />)
             }
             <Button className='CreateChatroomButton'><FontAwesomeIcon icon={faCommentMedical} /> Create chatroom</Button>
         </div>);
