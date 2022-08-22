@@ -5,6 +5,7 @@ import {
 } from '../actions/misc';
 import {
     checkLogin,
+    register,
     logout,
     loadProfile,
     uploadFiles,
@@ -15,6 +16,7 @@ import { notificationReducer } from "../NotificationSlice";
 import {preferencesReducer} from "../PreferencesSlice";
 import {WebSocketReducer} from "../WebSocketSlice";
 import { chatReducer } from '../ChatSlice';
+import { loadersReducer } from '../LoadersSlice';
 
 export default combineReducers({
     global: createReducer({
@@ -27,6 +29,9 @@ export default combineReducers({
         },
         [checkLogin.pending]: (state, action) => {
             state.loading = true;
+        },
+        [register.pending]: (state, action) => {
+          state.loading = true;
         },
         [checkLogin.fulfilled]: (state, action) => {
             if (!action.payload.isLoggedIn) return state;
@@ -67,6 +72,7 @@ export default combineReducers({
     }),
     notifications: notificationReducer,
     preferences: preferencesReducer,
+    loaders: loadersReducer,
     WebSocket: WebSocketReducer,
     chat: chatReducer,
 });

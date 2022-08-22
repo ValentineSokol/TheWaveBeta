@@ -6,7 +6,7 @@ export const register = createAsyncThunk(
     'register',
     async (body, { dispatch}) => fetcher('/users', { method: 'POST', payload: body })
         .then(res => {
-            if (!res.success) {
+            if (!res.ok) {
                 return;
             }
             dispatch(createNotification('Welcome!', 'success'));

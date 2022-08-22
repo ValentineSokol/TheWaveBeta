@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {createNotification} from '../../../redux/NotificationSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import './RegisterForm.scss';
-import { connect } from 'react-redux';
 import { register, login } from '../../../redux/actions/api';
 import SocialLogin from "../../reusable/SocialLogin/SocialLogin";
 import PasswordRecoveryForm from "../PasswordRecoveryForm/PasswordRecoveryForm";
 import Button from "../../reusable/UIKit/Forms/Button";
 import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput";
+import {getIsError, getIsLoading} from '../../../redux/LoadersSlice/selectors';
 
-
-const RegisterForm = ({ createNotification, register, login, user, history, redirect = true, redirectTo='' }) => {
+const RegisterForm = ({ history, redirect = true, redirectTo='' }) => {
     const TABS = {
         REGISTER: 'register',
         LOGIN: 'login',
@@ -37,7 +36,16 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
             }
         },
     };
-    const [state, setState] = useState({ tab: TABS.REGISTER });
+    const dispatch = useDispatch();
+    const isRegisterLoading = useSelector(getIsLoading(register));
+    const isRegisterError = useSelector(getIsError(register));
+    const user = useSelector(state => state.global.user);
+
+    const [state, setState] = useState({ tab: TABS.REGISTER, hasSubmitted: false });
+    useEffect(() => {
+        if (!state.hasSubmitted || isRegisterLoading || isRegisterError) return;
+        setTab(TABS.LOGIN);
+    }, [isRegisterLoading, isRegisterError]);
     useEffect(() => {
         if (!redirect || !user?.id) return;
         history.push(redirectTo || `/profile/${user.id}`)
@@ -59,7 +67,8 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
             );
             return;
         }
-        tabInfo[tab].handler(state);
+        setState({ ...state, hasSubmitted: true });
+        dispatch(tabInfo[tab].handler(state));
     }
 
     if (tab === TABS.RECOVERY) {
@@ -87,7 +96,7 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
                             </Button>
                         </div>
                     }
-                            <Button testId='registerSubmitBtn' type='submit' className='mt-2 mb-2 p-1'>Submit</Button>
+                            <Button disabled={isRegisterLoading} testId='registerSubmitBtn' type='submit' className='mt-2 mb-2 p-1'>Submit</Button>
                     { tab &&
                         <>
                             <div style={{ position: 'relative'}}>
@@ -100,4 +109,4 @@ const RegisterForm = ({ createNotification, register, login, user, history, redi
             </div>
     );
 }
-export default connect(state => ({ user: state.global.user }), { createNotification, register, login })(RegisterForm);
+export default RegisterForm;

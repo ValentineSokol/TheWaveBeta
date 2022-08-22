@@ -7,8 +7,10 @@ export default async (url, { method, payload, isFormData, withResHeaders } = {})
            if (!isFormData) fetcherOptions.headers = { 'Content-Type': 'application/json' };
         } 
         const res = await fetch(url, fetcherOptions);
+        const { ok } = res;
         const parsePayload = res.headers.get('content-type')?.includes('application/json') ? 'json' : 'blob';
         const responsePayload = await res[parsePayload]();
-        return withResHeaders ? { payload: responsePayload, headers: res.headers } : responsePayload;
+        responsePayload.ok = ok;
+        return withResHeaders ? { ok, payload: responsePayload, headers: res.headers } : responsePayload;
 
     }

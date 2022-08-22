@@ -20,7 +20,6 @@ describe('Register', () => {
         cy.wait('@register').then((req) => {
            assert.equal(req.response.statusCode, 201, 'should create a user successfully');
            const { user } = req.response.body;
-           getByTestId('registerTabSwitchBtn').click();
            submitBtn.click();
            cy.url().should('contain', `/profile/${user}`);
         });
