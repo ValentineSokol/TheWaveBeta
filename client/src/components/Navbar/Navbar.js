@@ -36,7 +36,7 @@ const Navbar = ({ user, logout, queryParams }) => {
                             <li><NavigationLink to={'/settings'}>
                                 <FontAwesomeIcon icon={faCog}/>
                             </NavigationLink></li>
-                            <li onClick={onLogout} className='NavbarLogout'>{
+                            <li data-testid='logoutBtn' onClick={onLogout} className='NavbarLogout'>{
                                 <FontAwesomeIcon icon={faSignOutAlt}/>
                             }</li>
                         </>

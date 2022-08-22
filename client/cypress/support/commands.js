@@ -23,3 +23,21 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', (
+    username,
+    password
+) => {
+    cy.request('POST', '/auth/local', { username, password })
+        .then((res) => {
+            const cookies = res.headers['set-cookie']
+            cookies.forEach(cookie => {
+                const firstPart = cookie.split(';')[0]
+                const separator = firstPart.indexOf('=')
+                const name = firstPart.substring(0, separator)
+                const value = firstPart.substring(separator + 1)
+                console.debug('cookie', name, value)
+                cy.setCookie(name, value);
+            })
+        })
+    });

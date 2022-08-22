@@ -4,7 +4,7 @@ describe('Register', () => {
     });
     const getByTestId = (testId) => cy.get(`[data-testid="${testId}"]`);
 
-    it('a user should be able to create a new account and log in', () => {
+    it('should be able to create a new account and log in', () => {
         const username = `cypressman-${Date.now()}`;
         cy.intercept({
             method: 'POST',
@@ -24,5 +24,11 @@ describe('Register', () => {
            cy.url().should('contain', `/profile/${user}`);
         });
 
-    })
+    });
+    it('should be able to log out', () => {
+        cy.login('Valentine', '123');
+        cy.visit('http://localhost:3000');
+        getByTestId('logoutBtn').click();
+        getByTestId('registerBtn').click();
+    });
 });
