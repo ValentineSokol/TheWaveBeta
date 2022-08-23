@@ -17,7 +17,8 @@ const chatSlice = createSlice( {
         ) => {
             if (message.type !== 'message') return state;
             if (message.payload.chatId != state.selectedChatroomId) return state;
-            state?.selectedChatroomHistory?.messages.push(message.payload);
+            if (!state?.selectedChatroomHistory?.messages) return state;
+            state.selectedChatroomHistory.messages.push(message.payload);
 
         });
         builder.addCase(fetchUserChatrooms.fulfilled, (
