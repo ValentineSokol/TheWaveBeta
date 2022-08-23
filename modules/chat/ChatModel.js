@@ -70,7 +70,6 @@ const getUserChatrooms = (userId) => {
            where: { id: userId },
            attributes: [],
            as: 'isMember',
-           required: false,
          },
          {
                model: Users,
