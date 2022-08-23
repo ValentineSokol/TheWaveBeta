@@ -41,7 +41,7 @@ export default class PhotoCropper extends React.Component {
                        }}
                    />
                }
-               <Button disabled={!this.props.src || this.state.buttonDisabled} clickHandler={this.onSubmit}>Upload</Button>
+               <Button testId='PhotoCropperSubmit' disabled={!this.props.src || this.state.buttonDisabled} clickHandler={this.onSubmit}>Upload</Button>
         </div>
        );
     }

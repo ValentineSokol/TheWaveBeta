@@ -13,22 +13,30 @@ import ChangeAvatarModal from "./ChangeAvatarModal";
 import Circle from "../reusable/UIKit/Circle";
 
 const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
-    const [isOwner, setisOwner] = useState(false);
-    const [isChangingAvatar, setIsChangingAvatar] = useState(false);
     const { id } = useParams();
+    const [isOwner, setisOwner] = useState(false);
+    const [user, setUser] = useState(loggedInUser);
+    const [isChangingAvatar, setIsChangingAvatar] = useState(false);
     const userStatus = useUserOnlineStatus(id);
-    console.log({ userStatus });
     const history = useHistory();
+    useEffect(() => {
+        const newIsOwner = Number(id) === loggedInUser?.id;
+        setisOwner(newIsOwner);
+        if (newIsOwner) setUser(loggedInUser);
+    }, [loggedInUser])
     useEffect(
         () => {
-            if (!loadedUser || loadedUser.id !== Number(id)) {
-                dispatch(loadProfile(id));
-            }
-            if (loggedInUser && Number(loggedInUser.id) === Number(id)) setisOwner(true);
+            if (!id || user?.id === Number(id)) return;
+            dispatch(loadProfile(id));
+            if (!user) setUser(loadedUser);
         },
         [id, loadedUser]
     );
-        const user = loadedUser;
+
+    useEffect(
+        () => {
+            if (isOwner) setUser(loggedInUser)
+        }, [loggedInUser]);
         return (
          !user? null
          :
@@ -37,7 +45,7 @@ const Profile = ({ dispatch, loadedUser, loggedInUser }) => {
            <section>
            <Card classes='AvatarCard'>
             <div className='ProfileAvatar'>
-                <Avatar clickHandler={() => isOwner && setIsChangingAvatar(true)} url={user.avatarUrl} />
+                <Avatar testId='ProfileAvatar' clickHandler={() => isOwner && setIsChangingAvatar(true)} url={user.avatarUrl} />
             </div>
            </Card>
             <div className='ProfileUserActions'>

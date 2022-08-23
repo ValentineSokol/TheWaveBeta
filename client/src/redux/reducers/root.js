@@ -66,8 +66,8 @@ export default combineReducers({
         [sendPasswordRecoveryCode.fulfilled]: (state, action) => {
             state.recoveryCodeSent = true;
         },
-        [updateUser.fulfilled]: (state) => {
-            state.userUpdated = true;
+        [updateUser.fulfilled]: (state, { payload }) => {
+            state.user = { ...state.user, ...payload?.user };
         }
     }),
     notifications: notificationReducer,

@@ -2,7 +2,6 @@ describe('Register', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000');
     });
-    const getByTestId = (testId) => cy.get(`[data-testid="${testId}"]`);
 
     it('should be able to create a new account and log in', () => {
         const username = `cypressman-${Date.now()}`;
@@ -10,12 +9,12 @@ describe('Register', () => {
             method: 'POST',
             url: '/users',
         }).as('register');
-        getByTestId('registerBtn').click();
-        getByTestId('registerEmailInput').type('cypress-e2e@gmail.com');
-        getByTestId('registerUsernameInput').type(username);
-        getByTestId('registerPasswordInput').type('KittensAreCute2022');
-        getByTestId('registerBirthdayInput').type('2002-12-11');
-        const submitBtn = getByTestId('registerSubmitBtn');
+        cy.getByTestId('registerBtn').click();
+        cy.getByTestId('registerEmailInput').type('cypress-e2e@gmail.com');
+        cy.getByTestId('registerUsernameInput').type(username);
+        cy.getByTestId('registerPasswordInput').type('KittensAreCute2022');
+        cy.getByTestId('registerBirthdayInput').type('2002-12-11');
+        const submitBtn = cy.getByTestId('registerSubmitBtn');
         submitBtn.click();
         cy.wait('@register').then((req) => {
            assert.equal(req.response.statusCode, 201, 'should create a user successfully');
@@ -26,9 +25,9 @@ describe('Register', () => {
 
     });
     it('should be able to log out', () => {
-        cy.login('Valentine', '123');
+        cy.login();
         cy.visit('http://localhost:3000');
-        getByTestId('logoutBtn').click();
-        getByTestId('registerBtn').click();
+        cy.getByTestId('logoutBtn').click();
+        cy.getByTestId('registerBtn').click();
     });
 });

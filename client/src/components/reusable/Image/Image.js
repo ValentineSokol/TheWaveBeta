@@ -3,7 +3,7 @@ import fetcher from '../../../utils/fetcher';
 import defaultImage from '../../../assets/defaultAvatar.webp';
 import './Image.scss';
 
-const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
+const Image = ({ testId, url, alt, className, onClick, onError = () => {} }) => {
     const [imageSrc, setImageSrc] = useState(defaultImage);
     const [isNSFW, setIsNSFW] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +15,7 @@ const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
                 setIsNSFW(response.headers.get('nsfw-content'))
             })
         return () => window.URL.revokeObjectURL(imageSrc);
-    }, []);
+    }, [url]);
 
     const onImageClick = (e) => {
         if (!isNSFW && onClick) onClick(e);
@@ -23,7 +23,7 @@ const Image = ({ url, alt, className, onClick, onError = () => {} }) => {
     }
 
     return (
-        <span onClick={onImageClick} className='Image' style={{ cursor: onClick || isNSFW ? 'pointer' : 'initial' }}>
+        <span data-testid={testId} onClick={onImageClick} className='Image' style={{ cursor: onClick || isNSFW ? 'pointer' : 'initial' }}>
             <img onError={() => setImageSrc(defaultImage)} className={className} src={imageSrc} style={{ filter: isNSFW ? 'blur(20px)' : isLoading ? 'blur(5px)' : '' }} alt={alt} />
             {
             }

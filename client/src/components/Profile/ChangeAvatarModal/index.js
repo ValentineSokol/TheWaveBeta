@@ -46,7 +46,7 @@ class ChangeAvatarModal extends React.Component {
         <Heading size={2}>Change your Avatar: </Heading>
            {
                !this.state.fileSrc &&
-               <input accept="image/*" onChange={this.onFileSelected} ref={this.fileInputRef} type='file'/>
+               <input data-testid='ChangeAvatarFileInput' accept="image/*" onChange={this.onFileSelected} ref={this.fileInputRef} type='file'/>
            }
         <PhotoCropper onSubmit={this.onSubmit} src={this.state.fileSrc} />
        </div>

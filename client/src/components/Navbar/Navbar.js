@@ -20,7 +20,7 @@ const Navbar = ({ user, logout, queryParams }) => {
                 {
                     user && user.isLoggedIn ?
                         <>
-                            <li>
+                            <li data-testid='profileBtn'>
                                 <NavigationLink to={`/profile/${user.id}`}>
                                 <FontAwesomeIcon icon={faHouseUser}/>
                             </NavigationLink>

@@ -23,10 +23,15 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import 'cypress-file-upload';
+import '@4tw/cypress-drag-drop';
+const compareSnapshotCommand = require('cypress-image-diff-js/dist/command')
+compareSnapshotCommand();
 
+Cypress.Commands.add('getByTestId', (testId) => cy.get(`[data-testid="${testId}"]`))
 Cypress.Commands.add('login', (
-    username,
-    password
+    username = 'Valentine',
+    password = '123'
 ) => {
     cy.request('POST', '/auth/local', { username, password })
         .then((res) => {

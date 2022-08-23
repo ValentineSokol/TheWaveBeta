@@ -26,15 +26,15 @@ const getProfile = async (req, res) => {
     res.json({ user });
 };
 const updateUser = async (req, res) => {
-    const fieldsToUpdate = {};
-    const [newAvatar] = req.files;
+    const fieldsToUpdate = req.body  || {};
+    const newAvatar = req?.files?.[0];
     if (newAvatar) {
         const [avatarUrl] = await FileModel.uploadFiles(req.files, req.user);
         if (avatarUrl) fieldsToUpdate.avatarUrl = avatarUrl;
     }
 
-    await UserModel.updateUser(req.user, fieldsToUpdate);
-    res.json({ id: req.user });
+    const user = await UserModel.updateUser(req.user, fieldsToUpdate);
+    res.json({ user });
 }
 
 module.exports = {
