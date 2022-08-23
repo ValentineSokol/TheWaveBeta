@@ -7,6 +7,7 @@ import PasswordRecoveryForm from "../PasswordRecoveryForm/PasswordRecoveryForm";
 import Button from "../../reusable/UIKit/Forms/Button";
 import LabeledInput from "../../reusable/UIKit/Forms/Inputs/LabeledInput";
 import {getIsError, getIsLoading} from '../../../redux/LoadersSlice/selectors';
+import { createNotification } from "../../../redux/NotificationSlice";
 
 const RegisterForm = ({ history, redirect = true, redirectTo='' }) => {
     const TABS = {
@@ -61,10 +62,10 @@ const RegisterForm = ({ history, redirect = true, redirectTo='' }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         if (!state.username) {
-            createNotification(
+            dispatch(createNotification(
                 'Please, provide a valid username!',
                 'warning'
-            );
+            ));
             return;
         }
         setState({ ...state, hasSubmitted: true });
