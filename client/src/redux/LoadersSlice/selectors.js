@@ -1,2 +1,0 @@
-export const getIsLoading = loadingAction => state => state.loaders.activeRequests.includes(loadingAction.pending.toString());
-export const getIsError = loadingAction => state => state.loaders.failedRequests.includes(loadingAction.rejected.toString());
