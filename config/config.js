@@ -8,7 +8,7 @@ module.exports = {
     logging: false,
   },
   "test": {
-    "use_env_variable": "CI_JAWSDB_URL"
+    "use_env_variable": "JAWSDB_MARIA_URL"
   },
   "production": {
    "use_env_variable": "JAWSDB_URL"
