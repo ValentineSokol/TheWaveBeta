@@ -7,6 +7,9 @@ module.exports = {
     "dialect": "mysql",
     logging: false,
   },
+  "test": {
+    "use_env_variable": "CI_JAWSDB_URL"
+  },
   "production": {
    "use_env_variable": "JAWSDB_URL"
   }

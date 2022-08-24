@@ -7,7 +7,16 @@ const router = Router();
 router.ws('/connect', async (ws, req) => {
     const userId = AuthProvider.getUserFromSession(req);
 
+    if (!userId) {
+        ws.terminate();
+        return;
+    }
     const user = await UserModel.getUser(userId);
+
+    if (!user) {
+        ws.terminate();
+        console.info('Connection terminated!')
+    }
 
     ws.on('message', json => {
         console.log({ json })
