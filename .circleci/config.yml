@@ -1,0 +1,38 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.1
+  heroku: circleci/heroku@1.2
+jobs:
+  build:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - checkout
+      - node/install:
+          node-version: 16.0.0
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install --omit=dev
+      - run: npm run lint
+      - run: npm test
+workflows:
+  deploy:
+    jobs:
+      - build
+      - heroku/deploy-via-git:
+          app-name: $HEROKU_CI_APP_NAME
+          force: true
+          requires:
+            - build
+          filters:
+            branches:
+               only: master
+      - heroku/deploy-via-git:
+         app-name: $HEROKU_APP_NAME
+         force: true
+         requires:
+           - build
+         filters:
+           branches:
+              only: master
