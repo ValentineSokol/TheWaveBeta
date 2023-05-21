@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express =  require('express');
 const session = require('express-session');
+const cors = require('cors');
+
 const SessionStore = require('connect-session-sequelize')(session.Store);
 const db = require('./models');
 const bodyParser = require('body-parser');
@@ -10,6 +12,7 @@ const chatRouter = require('./modules/chat/ChatRoutes');
 const fileRouter = require('./modules/files/FilesRoutes');
 const app = express();
 
+app.use(cors({ origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000' }))
 require('express-ws')(app);
 const websocketRouter = require('./modules/websocket/Routes');
 
@@ -39,5 +42,3 @@ app.use('/users', userRouter);
 app.use('/chat', chatRouter);
 app.use('/files', fileRouter);
 app.use('/realtime', websocketRouter);
-
-app.get('*', (req, res) => res.sendFile(`${__dirname}/client/build/index.html`));
