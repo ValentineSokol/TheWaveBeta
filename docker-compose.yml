@@ -7,4 +7,10 @@ services:
       MYSQL_DATABASE: thewavebeta
     restart: always
     ports:
-    - 3366:3306
+    - 3306:3306
+    expose: [3306]
+    volumes:
+    - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
