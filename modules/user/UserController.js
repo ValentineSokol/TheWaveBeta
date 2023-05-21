@@ -1,7 +1,6 @@
 const UserModel = require('./UserModel');
 const FileModel = require('../files/FileModel');
 const AuthModel = require('../auth/AuthModel');
-
 const register = async (req, res) => {
     const { username, password, email = null } = req.body;
     const passwordHash = AuthModel.hashPassword(password);
@@ -37,7 +36,14 @@ const updateUser = async (req, res) => {
     res.json({ user });
 }
 
+const checkUsername = async (req, res) => {
+    const { username } = req.params;
+    const existingUser = await UserModel.findByUsername(username);
+    res.json({ available: !existingUser });
+};
+
 module.exports = {
+    checkUsername,
     register,
     getProfile,
     updateUser,
