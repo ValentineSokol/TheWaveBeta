@@ -3,8 +3,10 @@ const AuthModel = require('./AuthModel');
 const emailTemplates = require('../email/EmailTemplates');
 const EmailManager = require('../email/EmailManager');
 
-const logout = (req, res) => {
-    req.logOut();
+const util = require('util');
+const logout = async  (req, res) => {
+    const logOut = util.promisify(req.logOut);
+    req.logOut((err) => res.json({ success: !!err }))
     res.json({ success: true });
 };
 
@@ -48,24 +50,8 @@ const recoverPassword = async (req, res) => {
     ]);
     res.json({ success: true });
 };
-const authenticateUser = async (req, res) => {
-    if (!req.user) {
-        res.json({ isLoggedIn: false });
-        return;
-    }
-    const user = await UserModel.getUser(req.user);
-    if (!user) {
-        res.status(404).json({ reason: 'There is no user for given id!' });
-        return;
-    }
-    res.json({
-        isLoggedIn: true,
-        ...user.dataValues
-    });
-};
 
 module.exports = {
-    authenticateUser,
     logout,
     requestPasswordRecovery,
     recoverPassword

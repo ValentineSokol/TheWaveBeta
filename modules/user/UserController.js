@@ -1,6 +1,7 @@
 const UserModel = require('./UserModel');
 const FileModel = require('../files/FileModel');
 const AuthModel = require('../auth/AuthModel');
+
 const register = async (req, res) => {
     const { username, password, email = null } = req.body;
     const passwordHash = AuthModel.hashPassword(password);
@@ -11,7 +12,23 @@ const register = async (req, res) => {
     if (!created) {
         return res.status(400).json({ code: 'usr_occupied' });
     }
+
     res.status(201).json({ user: user.id });
+};
+const getCurrentUser = async (req, res) => {
+    if (!req.user) {
+        res.json({ isLoggedIn: false });
+        return;
+    }
+    const user = await UserModel.getUser(req.user);
+    if (!user) {
+        res.status(404).json({ reason: 'There is no user for given id!' });
+        return;
+    }
+    res.json({
+        isLoggedIn: true,
+        ...user.dataValues
+    });
 };
 const getProfile = async (req, res) => {
     const { id } = req.params;
@@ -43,6 +60,7 @@ const checkUsername = async (req, res) => {
 };
 
 module.exports = {
+    getCurrentUser,
     checkUsername,
     register,
     getProfile,
