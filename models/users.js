@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Users.belongsToMany(models.Chatrooms, { through: models.ChatroomMembers, otherKey: 'chatroomId', foreignKey: 'memberId' });
       Users.hasMany(models.Files, { foreignKey: 'owner' });
       Users.hasMany(models.Messages, { foreignKey: 'from' });
+      Users.hasMany(models.stories, { foreignKey: 'creator' });
     }
   }
   Users.init({
@@ -23,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('User','Admin'),
       defaultValue: 'User',
       allowNull: false
-    }, 
+    },
     googleId: DataTypes.STRING,
     vkontakteId: DataTypes.STRING,
     facebookId: DataTypes.STRING,
