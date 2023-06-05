@@ -3,7 +3,7 @@ const {Op} = require("sequelize");
 
 const createStory = (body) => stories.create(body);
 
-const getById = (id) => stories.findByPk(id);
+const getById = (id) => stories.findByPk(id, { include: [fandoms, characters, chapters] });
 const addFandoms = async (storyId, fandomIds) => {
     const promises = fandomIds.map((fandomId) => {
        return storiesFandoms.create({ storyId, fandomId });
@@ -24,7 +24,6 @@ const createCharacter = async (data) => characters.create(data);
 const postChapter = async (storyId, body) => {
     return chapters.create({ storyId, ...body });
 }
-
 const search = async (entity, query, filters) => {
   const locales = ['en', 'uk'];
   const fuzzyQuery = { [Op.like]: `%${query}%` };
@@ -46,4 +45,4 @@ const search = async (entity, query, filters) => {
   }
 };
 
-module.exports = { createStory, addFandoms, addCharacters, postChapter, createFandom, createCharacter, search };
+module.exports = { getById, createStory, addFandoms, addCharacters, postChapter, createFandom, createCharacter, search };

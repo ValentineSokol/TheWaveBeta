@@ -1,10 +1,12 @@
 const { Router } = require('express');
 
-const { createStory, createCharacter, createFandom, search} = require('./StoryController');
+const { createStory, createCharacter, createFandom, search, getById} = require('./StoryController');
+const AuthMiddleware = require("../../middlewares/auth");
 
 const router = Router();
 
-router.post('/', createStory);
+router.get('/:id', getById);
+router.post('/', AuthMiddleware(),  createStory);
 router.post('/fandoms', createFandom);
 router.post('/characters', createCharacter);
 

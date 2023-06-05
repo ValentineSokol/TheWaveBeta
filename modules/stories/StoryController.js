@@ -1,7 +1,7 @@
 const StoryModel = require('./StoryModel');
 
 const createStory = async (req, res) => {
-    const story = await StoryModel.createStory({ creator: req.user.id, ...req.body.storyData });
+    const story = await StoryModel.createStory({ creator: req.user.id, name: req.body.name, description: req.body.description  });
     await Promise.all([
         StoryModel.addFandoms(story.id, req.body.fandoms),
         StoryModel.addCharacters(story.id, req.body.characters),
@@ -30,4 +30,10 @@ const search = async (req, res) => {
   res.json({ matches });
 
 }
-module.exports = { createStory, createCharacter, createFandom, search };
+
+const getById = async  (req, res) => {
+    const { id } = req.params;
+    const story = await StoryModel.getById(id);
+    res.json({ story });
+}
+module.exports = { createStory, getById, createCharacter, createFandom, search };

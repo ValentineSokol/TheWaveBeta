@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       stories.characterAssociation = stories.belongsToMany(models.characters, { through: models.storiesCharacters, foreignKey: 'storyId', otherKey: 'characterId' });
       stories.belongsToMany(models.Users, { through: models.storiesLikes, foreignKey: 'storyId', otherKey: 'userId', as: 'userLikes' });
       stories.belongsTo(models.Users, { foreignKey: 'creator' });
+      stories.hasMany(models.chapters, { foreignKey: 'storyId'});
 
     }
   }
