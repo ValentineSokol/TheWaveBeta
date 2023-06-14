@@ -20,7 +20,7 @@ const initLocalStrategy = () => {
                 done(null, false);
                 return;
             }
-            done(null, user);
+            done(null, UserModel.sanitizeUserObj(user));
         }
     ));
     return [
@@ -30,7 +30,7 @@ const initLocalStrategy = () => {
             method: 'post',
             handler: [
                 passport.authenticate('local'),
-                (req, res) => res.json({ success: true })
+                (req, res) => res.json({ isLoggedIn: true, ...req.user })
             ]
         }
        ]

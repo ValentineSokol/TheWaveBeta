@@ -3,11 +3,8 @@ const AuthModel = require('./AuthModel');
 const emailTemplates = require('../email/EmailTemplates');
 const EmailManager = require('../email/EmailManager');
 
-const util = require('util');
 const logout = async  (req, res) => {
-    const logOut = util.promisify(req.logOut);
-    req.logOut((err) => res.json({ success: !!err }))
-    res.json({ success: true });
+    req.logOut((err) => res.json({ success: !!err }));
 };
 
 const requestPasswordRecovery = async (req, res) => {

@@ -2,6 +2,7 @@ const { Users } = require('../../models');
 const ChatModel = require('../chat/ChatModel');
 const { sequelize } = require('../../models/index');
 const {Op} = require("sequelize");
+const { stories, fandoms, characters } = require('../../models');
 
 const excludedFields = ['password', 'googleId', 'vkontakteId', 'facebookId'];
 const commonReqOptions = { attributes: { exclude: excludedFields }};
@@ -38,6 +39,7 @@ const findAllByUsername = async (username, options) => {
 const getUser = async (id, { paranoid = true } = {}) => {
 return Users.findByPk(id, {
     ...commonReqOptions,
+    include: [{ model: stories, include: [ fandoms, characters ] }],
     paranoid
 });
 };
@@ -46,10 +48,19 @@ const updateUser = async (id, fieldsToUpdate) => {
     return user.update(fieldsToUpdate);
 };
 
+const sanitizeUserObj = ({ dataValues }) => {
+    const result = { ...dataValues };
+    excludedFields.forEach((field) => {
+        delete result[field];
+    });
+    return result;
+}
+
 module.exports = {
     findOrCreateUser,
     findByUsername,
     findAllByUsername,
     getUser,
-    updateUser
+    updateUser,
+    sanitizeUserObj
 };
